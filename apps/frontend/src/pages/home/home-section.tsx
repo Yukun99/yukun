@@ -11,7 +11,7 @@ const HomeSection = ({ width, children, style }: HomeSectionProps) => {
         width,
         display: width ? undefined : 'flex',
         flexDirection: width ? undefined : 'column',
-        margin: '24px',
+        margin: '16px',
         padding: '24px',
         border: '1px solid',
         borderColor: 'divider',

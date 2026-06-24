@@ -1,4 +1,4 @@
-import RoundIconButton, { ButtonProps } from '@/common/components/round-icon-button';
+import RoundIconButton, { ButtonProps } from '@/common/components/buttons/round-icon-button';
 import MenuIcon from '@mui/icons-material/Menu';
 
 type NavigationMenuButtonProps = ButtonProps & { isOpen: boolean };

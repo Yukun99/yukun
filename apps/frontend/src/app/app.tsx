@@ -1,14 +1,17 @@
 import Navigation from '@/features/navigation/navigation';
-import { BrowserRouter, useRoutes } from 'react-router-dom';
+import { useRoutes } from 'react-router-dom';
 import routes from '@/app/routes';
 import { Suspense } from 'react';
 import bg from '@/assets/bg.jpg';
 import Box from '@mui/material/Box';
 import { OPACITY } from '@/app/palette';
+import useDocumentTitle from '@/common/hooks/use-document-title';
 
 const AppRoutes = () => useRoutes(routes);
 
 const App = () => {
+  useDocumentTitle();
+
   return (
     <Box
       sx={{
@@ -27,11 +30,9 @@ const App = () => {
       }}
     >
       <Navigation />
-      <BrowserRouter>
-        <Suspense fallback={null}>
-          <AppRoutes />
-        </Suspense>
-      </BrowserRouter>
+      <Suspense fallback={null}>
+        <AppRoutes />
+      </Suspense>
     </Box>
   );
 };

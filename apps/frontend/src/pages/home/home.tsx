@@ -12,7 +12,7 @@ const Home = () => {
   const linkedin = t('common.linkedin');
 
   return (
-    <Box sx={{ gap: '8px', background: 'transparent' }}>
+    <Box sx={{ gap: '8px', marginX: '16px', width: 'calc(100vw - 32px)' }}>
       <Box sx={{ display: 'flex', flexDirection: isMobileOnly ? 'column' : 'row' }}>
         <HomeSection>
           <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
@@ -32,7 +32,7 @@ const Home = () => {
           </Typography>
         </HomeSection>
         <HomeSection>
-          <Box sx={{ width: 480 }}>
+          <Box sx={{ width: '25vw' }}>
             <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
               {t('home.details.title')}
             </Typography>
@@ -62,10 +62,10 @@ const Home = () => {
           </Box>
         </HomeSection>
         <HomeSection style={{ justifyContent: 'center' }}>
-          <Box component='img' src={me} sx={{ width: 240, height: 'auto' }} />
+          <Box component='img' src={me} sx={{ width: '15vw', height: 'auto' }} />
         </HomeSection>
       </Box>
-      <HomeSection width='calc(100vw - 48px)'>
+      <HomeSection>
         <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
           {t('home.project.title')}
         </Typography>
