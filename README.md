@@ -1,2 +1,2 @@
-#About This Project
+# About This Project
 This project is my personal portfolio, a showcase of my design and technical skills, as well as a challenge to myself to be displined enough to keep up the pace of developing something cool for this page. It is also a way for me to detox after reading production code from work, while keeping me sharp during downtime.
