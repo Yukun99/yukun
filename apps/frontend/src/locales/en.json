@@ -1,0 +1,18 @@
+{
+  "home": {
+    "intro": {
+      "title": "About Me",
+      "1": "Hello! I am Yukun, a software developer currently working at Bank Julius Baer. I studied at National University of Singapore, majoring in Computer Science.",
+      "2": "I am trained in full stack development, however most of my working experience remains in frontend development. That said, I am quick to pick things up, whether it's something new or something I haven't worked with for a while.",
+      "3": "I am proficient in React, Redux, Typescript, Jest and MaterialUI elements, and also have experience with backend technologies such as Node.js and Express. I am also fluent in both English and Chinese.",
+      "4": "In my free time, I enjoy designing and 3D printing different cosplay props, organisers, tools and trinkets. I also rock climb occasionally and play some video games. In fact, playing Minecraft is why I learnt how to develop applications in Java, and very likely why I do what I do today!"
+    },
+    "project": {
+      "title": "What is This?",
+      "1": "This site is a portfolio of my abilities, a more aesthetic resume, and a challenge to myself bundled into a single page.",
+      "2": "This site will receive 1 new component implementation per week (when time permits) as a challenge to myself both in terms of design and implementation.",
+      "3": "Enjoy what I do here? Contact me at <email>{{email}}</email> for job opportunities, or if you just think something on here is really cool! Otherwise, please enjoy browsing around :)",
+      "email": "yukunxu123@gmail.com"
+    }
+  }
+}

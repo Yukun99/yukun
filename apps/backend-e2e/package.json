@@ -1,0 +1,29 @@
+{
+  "name": "backend-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "axios": "1.18.0"
+  },
+  "nx": {
+    "implicitDependencies": [
+      "backend"
+    ],
+    "targets": {
+      "e2e": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{projectRoot}/test-output/jest/coverage"
+        ],
+        "dependsOn": [
+          "backend:build",
+          "backend:serve"
+        ],
+        "options": {
+          "jestConfig": "apps/backend-e2e/jest.config.cts",
+          "passWithNoTests": true
+        }
+      }
+    }
+  }
+}
