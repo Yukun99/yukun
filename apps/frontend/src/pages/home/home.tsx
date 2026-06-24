@@ -4,30 +4,67 @@ import { Trans, useTranslation } from 'react-i18next';
 import HomeSection from '@/pages/home/home-section';
 import { isMobileOnly } from 'react-device-detect';
 import Link from '@mui/material/Link';
+import me from '@/assets/me.jpg';
 
 const Home = () => {
   const { t } = useTranslation();
-  const email = t('home.project.email');
+  const email = t('common.email');
+  const linkedin = t('common.linkedin');
 
   return (
     <Box sx={{ gap: '8px', background: 'transparent' }}>
-      <HomeSection width={isMobileOnly ? 'calc(100vw - 48px)' : '60vw'}>
-        <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
-          {t('home.intro.title')}
-        </Typography>
-        <Typography variant={'body1'} sx={{ textAlign: 'justify' }}>
-          {t('home.intro.1')}
-          <br />
-          <br />
-          {t('home.intro.2')}
-          <br />
-          <br />
-          {t('home.intro.3')}
-          <br />
-          <br />
-          {t('home.intro.4')}
-        </Typography>
-      </HomeSection>
+      <Box sx={{ display: 'flex', flexDirection: isMobileOnly ? 'column' : 'row' }}>
+        <HomeSection>
+          <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
+            {t('home.intro.title')}
+          </Typography>
+          <Typography variant={'body1'} sx={{ textAlign: 'justify' }}>
+            {t('home.intro.1')}
+            <br />
+            <br />
+            {t('home.intro.2')}
+            <br />
+            <br />
+            {t('home.intro.3')}
+            <br />
+            <br />
+            {t('home.intro.4')}
+          </Typography>
+        </HomeSection>
+        <HomeSection>
+          <Box sx={{ width: 480 }}>
+            <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
+              {t('home.details.title')}
+            </Typography>
+            {t('home.details.name', { name: t('common.name') })}
+            <br />
+            <br />
+            {t('home.details.gender', { gender: t('common.gender') })}
+            <br />
+            <br />
+            <Trans
+              i18nKey='home.details.email'
+              values={{ email }}
+              components={{ email: <Link href={`mailto:${email}`} /> }}
+            />
+            <br />
+            <br />
+            {t('home.details.mobile', { mobile: t('common.mobile') })}
+            <br />
+            <br />
+            <Trans
+              i18nKey='home.details.linkedin'
+              values={{ linkedin }}
+              components={{
+                linkedin: <Link href={linkedin} target='_blank' rel='noopener noreferrer' />,
+              }}
+            />
+          </Box>
+        </HomeSection>
+        <HomeSection style={{ justifyContent: 'center' }}>
+          <Box component='img' src={me} sx={{ width: 240, height: 'auto' }} />
+        </HomeSection>
+      </Box>
       <HomeSection width='calc(100vw - 48px)'>
         <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
           {t('home.project.title')}
@@ -39,11 +76,7 @@ const Home = () => {
           {t('home.project.2')}
           <br />
           <br />
-          <Trans
-            i18nKey='home.project.3'
-            values={{ email }}
-            components={{ email: <Link href={`mailto:${email}`} /> }}
-          />
+          {t('home.project.3')}
         </Typography>
       </HomeSection>
     </Box>

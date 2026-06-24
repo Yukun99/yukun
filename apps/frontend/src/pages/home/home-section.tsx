@@ -2,13 +2,15 @@ import Box from '@mui/material/Box';
 import React from 'react';
 import { getColor, GRAY, OPACITY } from '@/app/palette';
 
-type HomeSectionProps = { width: number | string; children: React.ReactNode };
+type HomeSectionProps = { width?: number | string; children: React.ReactNode; style?: any };
 
-const HomeSection = ({ width, children }: HomeSectionProps) => {
+const HomeSection = ({ width, children, style }: HomeSectionProps) => {
   return (
     <Box
       sx={{
         width,
+        display: width ? undefined : 'flex',
+        flexDirection: width ? undefined : 'column',
         margin: '24px',
         padding: '24px',
         border: '1px solid',
@@ -28,7 +30,8 @@ const HomeSection = ({ width, children }: HomeSectionProps) => {
             ${getColor(GRAY[30], OPACITY[20])},
             ${getColor(GRAY[70], OPACITY[10])}
           ) border-box
-    `,
+        `,
+        ...style,
       }}
     >
       {children}
