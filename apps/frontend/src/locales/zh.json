@@ -7,28 +7,5 @@
     "linkedin": "https://www.linkedin.com/in/xu-yukun/",
     "github": "https://github.com/yukun99"
   },
-  "home": {
-    "intro": {
-      "title": "关于我",
-      "1": "你好，我是宇崑，目前在 Julius Baer 银行开发软件。我是新加坡国立大学的计算机科学专业毕业生。",
-      "2": "我接受过全栈开发的训练，但大部分工作经验集中在前端开发。不过无论是全新技术，还是久未接触的东西，我都能快速上手。",
-      "3": "我熟练掌握 React、Redux、Typescript、Jest 和 MaterialUI 元素，也具备 Node.js 和 Express 等后端技术的经验。我能用英语和普通话流利地进行商务沟通。",
-      "4": "在业余时间，我喜欢设计还有3D打印各种cosplay道具、收纳用品、工具和小玩意儿。我偶尔也会攀岩，还会玩一些电脑游戏。其实，【我的世界】是我学习如何用Java开发程序的原因，也是我今天从事这项工作的原因！"
-    },
-    "details": {
-      "title": "名片",
-      "name": "姓名: {{name}}",
-      "gender": "性别: {{gender}}",
-      "email": "邮件: <email>{{email}}</email>",
-      "mobile": "电话: {{mobile}}",
-      "linkedin": "LinkedIn: <linkedin>{{linkedin}}</linkedin>",
-      "github": "GitHub: <github>{{github}}</github>"
-    },
-    "project": {
-      "title": "这是什么？",
-      "1": "这是我的能力作品集、一份更具有美感的简历，也是我对自己的挑战，全部包装在这一个页面里。",
-      "2": "在时间允许的情况下，本网页每周会出现一个新组件，作为我在设计与实现两方面对自己的挑战。",
-      "3": "喜欢我的网页吗？如果有工作机会，或者觉得这里某样东西很酷的话，欢迎通过 <email>{{email}}</email> 联系我！不然的话，请尽情浏览吧:)"
-    }
-  }
+  "routeNames": { "/": "首页", "/resume": "简历", "/catalog": "目录" }
 }

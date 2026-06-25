@@ -1,7 +1,10 @@
 import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
+import i18n from 'i18next';
 
-export const PATH_LABELS: Record<string, string> = { '/': 'Home' };
+export function getPathLabel(path: string): string {
+  return i18n.t(`routeNames.${path}`);
+}
 
 const Home = lazy(() => import('@/pages/home/home'));
 

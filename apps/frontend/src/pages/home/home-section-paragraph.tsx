@@ -14,7 +14,8 @@ type PlaceholderProps = { name: string; i18nKey: string; placeholderType: PLACEH
 type HomeSectionParagraphProps = { i18nKey: string; placeholders?: PlaceholderProps[] };
 
 const HomeSectionParagraph = ({ i18nKey, placeholders }: HomeSectionParagraphProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('home');
+
   function getFormattedContent(): string | ReactElement {
     if (!placeholders) return t(i18nKey);
     const values: Record<string, string> = {};
@@ -39,7 +40,7 @@ const HomeSectionParagraph = ({ i18nKey, placeholders }: HomeSectionParagraphPro
           break;
       }
     }
-    return <Trans i18nKey={i18nKey} values={values} components={components} />;
+    return <Trans t={t} i18nKey={i18nKey} values={values} components={components} />;
   }
 
   return (
