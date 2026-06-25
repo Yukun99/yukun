@@ -13,7 +13,7 @@ const Home = () => {
 
   return (
     <Box sx={{ gap: '8px', marginX: '16px', width: 'calc(100vw - 32px)' }}>
-      <Box sx={{ display: 'flex', flexDirection: isMobileOnly ? 'column' : 'row' }}>
+      <Box sx={{ display: 'flex', flexDirection: isMobileOnly ? 'column-reverse' : 'row' }}>
         <HomeSection>
           <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
             {t('home.intro.title')}
