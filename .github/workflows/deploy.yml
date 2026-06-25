@@ -10,43 +10,34 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Get Latest Code
-      uses: actions/checkout@v4
+      - name: Get Latest Code
+        uses: actions/checkout@v4
 
-    - name: Install pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: 11.8.0
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.8.0
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 24.17.0
-        cache: pnpm
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.17.0
+          cache: pnpm
 
-    - name: Install Dependencies
-      run: pnpm install --frozen-lockfile
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
 
-    - name: Build Project with Nx
-      run: pnpm build
+      - name: Build Project with Nx
+        run: pnpm build
 
-    - name: Clean Previous Deployment
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.SSH_SERVER }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        passphrase: ${{ secrets.SSH_PASSKEY }}
-        port: 22
-        script: rm -rf ~/public_html/*
-
-    - name: Deploy Build Folder via SFTP
-      uses: wlixcc/SFTP-Deploy-Action@v1.2.5
-      with:
-        server: ${{ secrets.SSH_SERVER }}
-        username: ${{ secrets.SSH_USERNAME }}
-        ssh_private_key: ${{ secrets.SSH_KEY }}
-        port: 22
-        local_path: ./apps/frontend/dist/*
-        remote_path: ~/public_html
-        sftp_only: true
+      - name: Deploy Build via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftps
+          local-dir: ./apps/frontend/dist/
+          server-dir: ./
+          dangerous-clean-slate: true
