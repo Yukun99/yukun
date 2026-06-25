@@ -8,12 +8,12 @@
   },
   "details": {
     "title": "Namecard",
-    "name": "Name: {{name}}",
-    "gender": "Gender: {{gender}}",
-    "email": "Email: <email>{{email}}</email>",
-    "mobile": "Mobile: {{mobile}}",
-    "linkedin": "LinkedIn: <linkedin>{{linkedin}}</linkedin>",
-    "github": "GitHub: <github>{{github}}</github>"
+    "name": "Name:<br/>{{name}}",
+    "gender": "Gender:<br/>{{gender}}",
+    "email": "Email:<br/><email>{{email}}</email>",
+    "mobile": "Mobile:<br/>{{mobile}}",
+    "linkedin": "LinkedIn:<br/><linkedin>{{linkedin}}</linkedin>",
+    "github": "GitHub:<br/><github>{{github}}</github>"
   },
   "project": {
     "title": "What is This?",

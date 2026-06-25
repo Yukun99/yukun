@@ -18,30 +18,35 @@ const Home = () => {
         <HomeSection width={isMobileOnly ? undefined : '40%'} title='details'>
           <HomeSectionParagraph
             i18nKey='details.name'
+            textAlign='left'
             placeholders={[
               { name: 'name', i18nKey: 'common.name', placeholderType: PLACEHOLDER_TYPE.TEXT },
             ]}
           />
           <HomeSectionParagraph
             i18nKey='details.gender'
+            textAlign='left'
             placeholders={[
               { name: 'gender', i18nKey: 'common.gender', placeholderType: PLACEHOLDER_TYPE.TEXT },
             ]}
           />
           <HomeSectionParagraph
             i18nKey='details.email'
+            textAlign='left'
             placeholders={[
               { name: 'email', i18nKey: 'common.email', placeholderType: PLACEHOLDER_TYPE.EMAIL },
             ]}
           />
           <HomeSectionParagraph
             i18nKey='details.mobile'
+            textAlign='left'
             placeholders={[
               { name: 'mobile', i18nKey: 'common.mobile', placeholderType: PLACEHOLDER_TYPE.TEXT },
             ]}
           />
           <HomeSectionParagraph
             i18nKey='details.linkedin'
+            textAlign='left'
             placeholders={[
               {
                 name: 'linkedin',
@@ -52,6 +57,7 @@ const Home = () => {
           />
           <HomeSectionParagraph
             i18nKey='details.github'
+            textAlign='left'
             placeholders={[
               { name: 'github', i18nKey: 'common.github', placeholderType: PLACEHOLDER_TYPE.LINK },
             ]}

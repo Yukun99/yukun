@@ -11,9 +11,17 @@ export enum PLACEHOLDER_TYPE {
 
 type PlaceholderProps = { name: string; i18nKey: string; placeholderType: PLACEHOLDER_TYPE };
 
-type HomeSectionParagraphProps = { i18nKey: string; placeholders?: PlaceholderProps[] };
+type HomeSectionParagraphProps = {
+  i18nKey: string;
+  textAlign?: string;
+  placeholders?: PlaceholderProps[];
+};
 
-const HomeSectionParagraph = ({ i18nKey, placeholders }: HomeSectionParagraphProps) => {
+const HomeSectionParagraph = ({
+  i18nKey,
+  textAlign = 'justify',
+  placeholders,
+}: HomeSectionParagraphProps) => {
   const { t } = useTranslation('home');
 
   function getFormattedContent(): string | ReactElement {
@@ -44,7 +52,7 @@ const HomeSectionParagraph = ({ i18nKey, placeholders }: HomeSectionParagraphPro
   }
 
   return (
-    <Typography variant={'body1'} sx={{ textAlign: 'justify', marginBottom: '16px' }}>
+    <Typography variant={'body1'} sx={{ textAlign: textAlign, marginBottom: '16px' }}>
       {getFormattedContent()}
     </Typography>
   );
