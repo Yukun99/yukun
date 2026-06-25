@@ -1,10 +1,16 @@
 import Box from '@mui/material/Box';
 import React from 'react';
 import { getColor, GRAY, OPACITY } from '@/app/palette';
+import HomeSectionTitle from '@/pages/home/home-section-title';
 
-type HomeSectionProps = { width?: number | string; children: React.ReactNode; style?: any };
+type HomeSectionProps = {
+  width?: number | string;
+  title?: string;
+  children: React.ReactNode;
+  style?: any;
+};
 
-const HomeSection = ({ width, children, style }: HomeSectionProps) => {
+const HomeSection = ({ width, title, children, style }: HomeSectionProps) => {
   return (
     <Box
       sx={{
@@ -34,6 +40,7 @@ const HomeSection = ({ width, children, style }: HomeSectionProps) => {
         ...style,
       }}
     >
+      {title && <HomeSectionTitle title={title} />}
       {children}
     </Box>
   );

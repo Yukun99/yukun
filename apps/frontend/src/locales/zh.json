@@ -4,7 +4,8 @@
     "gender": "男",
     "email": "yukunxu123@gmail.com",
     "mobile": "+65 98757192",
-    "linkedin": "https://www.linkedin.com/in/xu-yukun/"
+    "linkedin": "https://www.linkedin.com/in/xu-yukun/",
+    "github": "https://github.com/yukun99"
   },
   "home": {
     "intro": {
@@ -20,7 +21,8 @@
       "gender": "性别: {{gender}}",
       "email": "邮件: <email>{{email}}</email>",
       "mobile": "电话: {{mobile}}",
-      "linkedin": "LinkedIn: <linkedin>{{linkedin}}</linkedin>"
+      "linkedin": "LinkedIn: <linkedin>{{linkedin}}</linkedin>",
+      "github": "GitHub: <github>{{github}}</github>"
     },
     "project": {
       "title": "这是什么？",
