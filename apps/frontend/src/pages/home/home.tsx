@@ -15,7 +15,7 @@ const Home = () => {
     <Box sx={{ gap: '8px', marginX: '16px', width: 'calc(100vw - 32px)' }}>
       <Box sx={{ display: 'flex', flexDirection: isMobileOnly ? 'column-reverse' : 'row' }}>
         <HomeSection width={isMobileOnly ? undefined : '80%'}>
-          <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
+          <Typography variant='h3' sx={{ fontWeight: 'bold', marginBottom: '16px' }}>
             {t('home.intro.title')}
           </Typography>
           <Typography variant={'body1'} sx={{ textAlign: 'justify' }}>
@@ -32,7 +32,7 @@ const Home = () => {
           </Typography>
         </HomeSection>
         <HomeSection width={isMobileOnly ? undefined : '40%'}>
-          <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
+          <Typography variant='h3' sx={{ fontWeight: 'bold', marginBottom: '16px' }}>
             {t('home.details.title')}
           </Typography>
           {t('home.details.name', { name: t('common.name') })}
@@ -66,7 +66,7 @@ const Home = () => {
         </HomeSection>
       </Box>
       <HomeSection>
-        <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
+        <Typography variant='h3' sx={{ fontWeight: 'bold', marginBottom: '16px' }}>
           {t('home.project.title')}
         </Typography>
         <Typography variant={'body1'} sx={{ textAlign: 'justify' }}>
