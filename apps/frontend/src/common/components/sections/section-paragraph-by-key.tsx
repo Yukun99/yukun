@@ -1,7 +1,7 @@
-import Typography from '@mui/material/Typography';
 import { ReactElement } from 'react';
 import Link from '@mui/material/Link';
 import { Trans, useTranslation } from 'react-i18next';
+import SectionParagraph from '@/common/components/sections/section-paragraph';
 
 export enum PLACEHOLDER_TYPE {
   TEXT,
@@ -11,18 +11,22 @@ export enum PLACEHOLDER_TYPE {
 
 type PlaceholderProps = { name: string; i18nKey: string; placeholderType: PLACEHOLDER_TYPE };
 
-type HomeSectionParagraphProps = {
+type SectionParagraphByKeyProps = {
+  page: string;
   i18nKey: string;
-  textAlign?: string;
   placeholders?: PlaceholderProps[];
+  textAlign?: string;
+  style?: any;
 };
 
-const HomeSectionParagraph = ({
+const SectionParagraphByKey = ({
+  page,
   i18nKey,
-  textAlign = 'justify',
   placeholders,
-}: HomeSectionParagraphProps) => {
-  const { t } = useTranslation('home');
+  textAlign = 'justify',
+  style,
+}: SectionParagraphByKeyProps) => {
+  const { t } = useTranslation(page);
 
   function getFormattedContent(): string | ReactElement {
     if (!placeholders) return t(i18nKey);
@@ -52,10 +56,10 @@ const HomeSectionParagraph = ({
   }
 
   return (
-    <Typography variant={'body1'} sx={{ textAlign: textAlign, marginBottom: '16px' }}>
+    <SectionParagraph textAlign={textAlign} style={style}>
       {getFormattedContent()}
-    </Typography>
+    </SectionParagraph>
   );
 };
 
-export default HomeSectionParagraph;
+export default SectionParagraphByKey;

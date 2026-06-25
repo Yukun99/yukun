@@ -5,7 +5,8 @@
     "email": "yukunxu123@gmail.com",
     "mobile": "+65 98757192",
     "linkedin": "https://www.linkedin.com/in/xu-yukun/",
-    "github": "https://github.com/yukun99"
+    "github": "https://github.com/yukun99",
+    "website": "https://yukunxu.com"
   },
   "routeNames": { "/": "Home", "/resume": "Resume", "/catalog": "Catalog" }
 }

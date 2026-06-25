@@ -1,1 +1,55 @@
-{}
+{
+  "contact": {
+    "title": "Contact Info",
+    "name": "Name:<br/>{{name}}",
+    "mobile": "Mobile:<br/>{{mobile}}",
+    "email": "Email:<br/><email>{{email}}</email>",
+    "github": "GitHub:<br/><github>{{github}}</github>",
+    "website": "Website:<br/><website>{{website}}</website>",
+    "linkedin": "LinkedIn:<br/><linkedin>{{linkedin}}</linkedin>"
+  },
+  "education": {
+    "title": "Education",
+
+    "trainingCompany": "HCLTech",
+    "trainingProgramme": "3-month IMDA Fullstack Developer Graduate Training Programme @ HCLTech",
+
+    "university": "National University of Singapore",
+    "period": "Aug 2020 - May 2024",
+    "degree": "Bachelor of Computing (2nd Lower Honours) in Computer Science",
+    "CAP": "CAP: 3.82",
+    "focusAreas": "Focus Areas: Computer Graphics and Games / Networking and Distributed Systems",
+
+    "jc": "Raffles Institution",
+    "aLevels": "A-Level: H2 Physics / H2 Chemistry / H2 Mathematics / H2 Economics / General Paper / Project Work",
+    "oLevels": "O-Level: Higher Chinese Language"
+  },
+  "experience": {
+    "title": "Work Experience",
+    "point": "•",
+    "jobs": [
+      {
+        "company": "AsTrio Pte. Ltd.",
+        "period": "Jan 2018 - Feb 2018",
+        "position": "Software Engineer Intern",
+        "work": [
+          "Created work reporting application solo in Android SDK with guidance from senior employee",
+          "Picked up programming with Android SDK while building application from scratch in 2 weeks",
+          "Researched and implemented camera, image picker and upload libraries into application",
+          "Assisted in hooking Android application into C# backend"
+        ]
+      },
+      {
+        "company": "Thermo Fisher Scientific",
+        "period": "May 2022 - Aug 2022",
+        "position": "Assistant Software Engineer",
+        "work": [
+          "Initiated project documentation efforts on GitHub repository wiki for future hires",
+          "Fixed multiple UI and backend bugs in Qt/C++ codebase across 3 different upcoming releases",
+          "Refactored deprecated C++ code to reduce tech debt and code smell",
+          "Optimised Qt/C++ to display elements properly on embedded devices with limited performance"
+        ]
+      }
+    ]
+  }
+}

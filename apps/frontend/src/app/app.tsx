@@ -8,6 +8,9 @@ import { OPACITY } from '@/app/palette';
 import useDocumentTitle from '@/common/hooks/use-document-title';
 import useTheme from '@mui/system/useTheme';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import 'overlayscrollbars/overlayscrollbars.css';
+import { useColorScheme } from '@mui/material/styles';
 
 const AppRoutes = () => useRoutes(routes);
 
@@ -16,6 +19,7 @@ const App = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [wasMobile, setWasMobile] = useState<boolean>(isMobile);
+  const { mode } = useColorScheme();
 
   useEffect(() => {
     if (isMobile !== wasMobile) {
@@ -29,6 +33,8 @@ const App = () => {
       sx={{
         height: '100vh',
         width: '100vw',
+        display: 'flex',
+        flexDirection: 'column',
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -42,9 +48,17 @@ const App = () => {
       }}
     >
       <Navigation />
-      <Suspense fallback={null}>
-        <AppRoutes />
-      </Suspense>
+      <OverlayScrollbarsComponent
+        defer
+        options={{
+          scrollbars: { theme: `os-theme-${mode}`, autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        style={{ flexGrow: 1, minHeight: 0 }}
+      >
+        <Suspense fallback={null}>
+          <AppRoutes />
+        </Suspense>
+      </OverlayScrollbarsComponent>
     </Box>
   );
 };

@@ -1,16 +1,17 @@
-import Box from '@mui/material/Box';
-import React from 'react';
+import { ReactNode } from 'react';
 import { getColor, GRAY, OPACITY } from '@/app/palette';
-import HomeSectionTitle from '@/pages/home/home-section-title';
+import Box from '@mui/material/Box';
+import SectionTitle from '@/common/components/sections/section-title';
 
-type HomeSectionProps = {
-  width?: number | string;
+export type SectionProps = {
   title?: string;
-  children: React.ReactNode;
+  page: string;
+  width?: number | string;
   style?: any;
+  children?: ReactNode;
 };
 
-const HomeSection = ({ width, title, children, style }: HomeSectionProps) => {
+const Section = ({ title, page, width, style, children }: SectionProps) => {
   return (
     <Box
       sx={{
@@ -40,10 +41,10 @@ const HomeSection = ({ width, title, children, style }: HomeSectionProps) => {
         ...style,
       }}
     >
-      {title && <HomeSectionTitle title={title} />}
+      {title && <SectionTitle title={title} page={page} />}
       {children}
     </Box>
   );
 };
 
-export default HomeSection;
+export default Section;

@@ -7,7 +7,11 @@ export function getPathLabel(path: string): string {
 }
 
 const Home = lazy(() => import('@/pages/home/home'));
+const Resume = lazy(() => import('@/pages/resume/resume'));
 
-const Routes: RouteObject[] = [{ path: '/', element: <Home /> }];
+const Routes: RouteObject[] = [
+  { path: '/', element: <Home /> },
+  { path: '/resume', element: <Resume /> },
+];
 
 export default Routes;
