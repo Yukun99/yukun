@@ -43,8 +43,8 @@ jobs:
     - name: Deploy Build Folder via SFTP
       uses: wlixcc/SFTP-Deploy-Action@v1.2.5
       with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
+        server: ${{ secrets.SSH_SERVER }}
+        username: ${{ secrets.SSH_USERNAME }}
         ssh_private_key: ${{ secrets.SSH_KEY }}
         port: 22
         local_path: ./apps/frontend/dist/*
