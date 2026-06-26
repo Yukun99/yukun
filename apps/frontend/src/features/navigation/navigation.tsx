@@ -25,7 +25,7 @@ const Navigation = () => {
         top: 0,
         zIndex: 1000,
         backgroundColor:
-          mode === 'dark' ? getColor(GRAY[80], OPACITY[100]) : getColor(GRAY[20], OPACITY[100]),
+          mode === 'light' ? getColor(GRAY[20], OPACITY[100]) : getColor(GRAY[80], OPACITY[100]),
       }}
     >
       <Portal>
