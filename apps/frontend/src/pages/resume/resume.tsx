@@ -79,39 +79,52 @@ const Resume = () => {
         <Section page={PAGE} title={'education'} width='50%'>
           <SectionParagraphByKey
             page={PAGE}
-            i18nKey={'education.trainingCompany'}
-            style={{ fontWeight: 'bold', textDecoration: 'underline' }}
-          />
-          <SectionParagraphByKey page={PAGE} i18nKey={'education.trainingProgramme'} />
-          <SectionDivider />
-          <SectionParagraphByKey
-            page={PAGE}
-            i18nKey={'education.university'}
+            i18nKey={'education.hcltech.name'}
             style={{ fontWeight: 'bold', textDecoration: 'underline' }}
           />
           <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            <SectionParagraphByKey page={PAGE} i18nKey={'education.degree'} />
+            <SectionParagraphByKey page={PAGE} i18nKey={'education.hcltech.programme'} />
             <Box sx={{ marginLeft: 'auto' }}>
-              <SectionParagraphByKey page={PAGE} i18nKey={'education.period'} />
-            </Box>
-          </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            <SectionParagraphByKey page={PAGE} i18nKey={'education.focusAreas'} />
-            <Box sx={{ marginLeft: 'auto' }}>
-              <SectionParagraphByKey page={PAGE} i18nKey={'education.CAP'} />
+              <SectionParagraphByKey page={PAGE} i18nKey={'education.hcltech.period'} />
             </Box>
           </Box>
           <SectionDivider />
           <SectionParagraphByKey
             page={PAGE}
-            i18nKey={'education.jc'}
+            i18nKey={'education.university.name'}
             style={{ fontWeight: 'bold', textDecoration: 'underline' }}
           />
-          <SectionParagraphByKey page={PAGE} i18nKey={'education.aLevels'} />
-          <SectionParagraphByKey page={PAGE} i18nKey={'education.oLevels'} />
+          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+            <SectionParagraphByKey page={PAGE} i18nKey={'education.university.degree'} />
+            <Box sx={{ marginLeft: 'auto' }}>
+              <SectionParagraphByKey page={PAGE} i18nKey={'education.university.period'} />
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+            <SectionParagraphByKey page={PAGE} i18nKey={'education.university.focusAreas'} />
+            <Box sx={{ marginLeft: 'auto' }}>
+              <SectionParagraphByKey page={PAGE} i18nKey={'education.university.CAP'} />
+            </Box>
+          </Box>
+          <SectionDivider />
+          <SectionParagraphByKey
+            page={PAGE}
+            i18nKey={'education.jc.name'}
+            style={{ fontWeight: 'bold', textDecoration: 'underline' }}
+          />
+          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+            <SectionParagraphByKey page={PAGE} i18nKey={'education.jc.aLevels'} />
+            <Box sx={{ marginLeft: 'auto' }}>
+              <SectionParagraphByKey page={PAGE} i18nKey={'education.jc.period'} />
+            </Box>
+          </Box>
+          <SectionParagraphByKey page={PAGE} i18nKey={'education.jc.oLevels'} />
         </Section>
       </Box>
       <Section page={PAGE} title={'experience'}>
+        {/*TODO: make this responsive by displaying 2 columns if page is wide enough, 1 if not*/}
+        {/*basically, 2x2 grid if wide enough, 1x4 if not :)*/}
+        {/*will also need a vertical divider component, maybe rename current one*/}
         {jobs.map((job) => (
           <Box key={job.company}>
             <SectionParagraph style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
