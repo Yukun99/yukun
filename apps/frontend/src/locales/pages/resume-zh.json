@@ -1,1 +1,87 @@
-{}
+{
+  "contact": {
+    "title": "联系方式",
+    "name": "姓名：<br/>{{name}}",
+    "mobile": "电话：<br/>{{mobile}}",
+    "email": "邮箱：<br/><email>{{email}}</email>",
+    "github": "GitHub：<br/><github>{{github}}</github>",
+    "website": "网站：<br/><website>{{website}}</website>",
+    "linkedin": "领英：<br/><linkedin>{{linkedin}}</linkedin>"
+  },
+  "education": {
+    "title": "学历",
+    "hcltech": {
+      "name": "HCLTech",
+      "programme": "IMDA 全栈开发毕业生培训计划",
+      "period": "2024年9月 - 2025年12月"
+    },
+    "university": {
+      "name": "新加坡国立大学",
+      "degree": "计算机科学计算机学士（二等下荣誉学位）",
+      "period": "2020年8月 - 2024年5月",
+      "focusAreas": "专业方向：计算机图形与游戏 / 网络与分布式系统",
+      "CAP": "平均绩点：3.82"
+    },
+    "jc": {
+      "name": "莱佛士书院",
+      "aLevels": "A-Level：H2 物理 / H2 化学 / H2 数学 / H2 经济学 / 综合论文 / 专题研究",
+      "period": "2012年 - 2017年",
+      "oLevels": "O-Level：高级华文"
+    }
+  },
+  "experience": {
+    "title": "工作经历",
+    "point": "•",
+    "jobs": [
+      {
+        "company": "Julius Bär Group Ltd.",
+        "period": "2024年9月 - 现在",
+        "position": "软件工程师",
+        "work": [
+          "将应用缓冲速度提升2–5倍，并将部署/构建时间缩短2倍",
+          "重构关键页面与组件，消除跨1000+文件的技术债务",
+          "为 Redux slice 强制实施严格的 TypeScript 类型，并整合冗余的 API 端点",
+          "在单个冲刺周期内将基于 CRA 的遗留构建流程升级为现代 Nx 配置",
+          "通过加速弃用遗留供应商应用，助力实现预计每年数百万美元的成本节约",
+          "在印度、亚太及欧洲市场交付10+功能，稳定在每月1–2个发布周期内上线",
+          "改造前端测试框架与文档，扩大 Jest 单元测试覆盖率",
+          "解决依赖项、代码库及构建管线中的安全漏洞",
+          "与多个团队协作，提升银行内部应用的跨应用兼容性"
+        ]
+      },
+      {
+        "company": "Central Provident Fund Board",
+        "period": "2023年1月 - 2023年6月",
+        "position": "软件工程师实习生",
+        "work": [
+          "与团队成员协作，在 Java 代码库中实现多个新的 Spring Batch 程序",
+          "协助将遗留代码从 CoBoL 弃用并迁移至 Java Spring",
+          "运用 CoBoL / Java 进行调试并实现新功能",
+          "探索 SoapUI / UIPath 实现代码与 UI 的自动化测试"
+        ]
+      },
+      {
+        "company": "Thermo Fisher Scientific",
+        "period": "2022年5月 - 2022年8月",
+        "position": "助理软件工程师",
+        "work": [
+          "在 GitHub 仓库 wiki 上发起项目文档工作，供未来新员工参考",
+          "修复 Qt/C++ 代码库中跨3个即将发布版本的多个 UI 与后端缺陷",
+          "重构已弃用的 C++ 代码，减少技术债务与代码异味",
+          "优化 Qt/C++ 使元素在性能受限的嵌入式设备上正确显示"
+        ]
+      },
+      {
+        "company": "AsTrio Pte. Ltd.",
+        "period": "2018年1月 - 2018年2月",
+        "position": "软件工程师实习生",
+        "work": [
+          "在资深员工指导下，独立使用 Android SDK 开发工作报告应用",
+          "在2周内从零构建应用的同时掌握 Android SDK 编程",
+          "调研并将相机、图片选择器及上传库集成到应用中",
+          "协助将 Android 应用对接到 C# 后端"
+        ]
+      }
+    ]
+  }
+}

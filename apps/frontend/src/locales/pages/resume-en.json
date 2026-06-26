@@ -12,7 +12,7 @@
     "title": "Education",
     "hcltech": {
       "name": "HCLTech",
-      "programme": "3-month IMDA Fullstack Developer Graduate Training Programme @ HCLTech",
+      "programme": "IMDA Fullstack Developer Graduate Training Programme",
       "period": "Sep 2024 - Dec 2025"
     },
     "university": {
@@ -25,7 +25,7 @@
     "jc": {
       "name": "Raffles Institution",
       "aLevels": "A-Level: H2 Physics / H2 Chemistry / H2 Mathematics / H2 Economics / General Paper / Project Work",
-      "period": "2012-2017",
+      "period": "2012 - 2017",
       "oLevels": "O-Level: Higher Chinese Language"
     }
   },
@@ -34,14 +34,30 @@
     "point": "•",
     "jobs": [
       {
-        "company": "AsTrio Pte. Ltd.",
-        "period": "Jan 2018 - Feb 2018",
+        "company": "Julius Bär Group Ltd.",
+        "period": "Sep 2024 - present",
+        "position": "Software Engineer",
+        "work": [
+          "Improved application performance by 2–5x and cut deployment/build times by 2x",
+          "Refactored critical pages and components, eliminating technical debt across 1000+ files",
+          "Enforced strict TypeScript typing for Redux slices and consolidated redundant API endpoints",
+          "Upgraded legacy CRA-based build process to modern Nx setup across a single sprint",
+          "Contributed to projected million-dollar annual savings through accelerated legacy vendor application deprecation",
+          "Delivered 10+ features across Indian, APAC, and European markets, consistently shipping within 1–2 monthly release cycles",
+          "Revamped frontend test framework and documentation, expanding Jest unit test coverage",
+          "Resolved security vulnerabilities across dependencies, codebase, and build pipeline",
+          "Partnered with multiple teams to improve cross-application compatibility"
+        ]
+      },
+      {
+        "company": "Central Provident Fund Board",
+        "period": "Jan 2023 - Jun 2023",
         "position": "Software Engineer Intern",
         "work": [
-          "Created work reporting application solo in Android SDK with guidance from senior employee",
-          "Picked up programming with Android SDK while building application from scratch in 2 weeks",
-          "Researched and implemented camera, image picker and upload libraries into application",
-          "Assisted in hooking Android application into C# backend"
+          "Implemented multiple new Spring Batch jobs in Java codebase while collaborating with team members",
+          "Assisted in deprecation and migration of legacy code from CoBoL to Java Spring",
+          "Utilised CoBoL / Java to debug and implement new features",
+          "Explored SoapUI / UIPath to automate testing of code and UI"
         ]
       },
       {
@@ -53,6 +69,17 @@
           "Fixed multiple UI and backend bugs in Qt/C++ codebase across 3 different upcoming releases",
           "Refactored deprecated C++ code to reduce tech debt and code smell",
           "Optimised Qt/C++ to display elements properly on embedded devices with limited performance"
+        ]
+      },
+      {
+        "company": "AsTrio Pte. Ltd.",
+        "period": "Jan 2018 - Feb 2018",
+        "position": "Software Engineer Intern",
+        "work": [
+          "Created work reporting application solo in Android SDK with guidance from senior employee",
+          "Picked up programming with Android SDK while building application from scratch in 2 weeks",
+          "Researched and implemented camera, image picker and upload libraries into application",
+          "Assisted in hooking Android application into C# backend"
         ]
       }
     ]

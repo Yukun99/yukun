@@ -12,7 +12,7 @@
     "gender": "性别: {{gender}}",
     "email": "邮件: <email>{{email}}</email>",
     "mobile": "电话: {{mobile}}",
-    "linkedin": "LinkedIn: <linkedin>{{linkedin}}</linkedin>",
+    "linkedin": "领英: <linkedin>{{linkedin}}</linkedin>",
     "github": "GitHub: <github>{{github}}</github>"
   },
   "project": {

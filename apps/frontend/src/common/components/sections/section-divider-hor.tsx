@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 
-const SectionDivider = () => {
+const SectionDividerHor = () => {
   return (
     <Box
       sx={{
@@ -13,4 +13,4 @@ const SectionDivider = () => {
   );
 };
 
-export default SectionDivider;
+export default SectionDividerHor;
