@@ -213,6 +213,9 @@ importers:
       '@mui/utils':
         specifier: 9.1.1
         version: 9.1.1(@types/react@19.2.17)(react@19.2.7)
+      devicons-react:
+        specifier: 1.5.0
+        version: 1.5.0(react@19.2.7)
       i18next:
         specifier: 26.3.1
         version: 26.3.1(typescript@5.9.3)
@@ -228,6 +231,9 @@ importers:
       react:
         specifier: 19.2.7
         version: 19.2.7
+      react-country-flag:
+        specifier: 3.1.0
+        version: 3.1.0(react@19.2.7)
       react-device-detect:
         specifier: 2.2.3
         version: 2.2.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -4040,6 +4046,11 @@ packages:
     engines: {node: '>= 16.0.0'}
     hasBin: true
 
+  devicons-react@1.5.0:
+    resolution: {integrity: sha512-8DYsWpgdbwI7ENDyC6Z9eqV72H01zUIAeRRo+UxBAq4clpPWcFhtqDrWSm0i5GUqbn/iNyiIfT1K69y0XLsscg==}
+    peerDependencies:
+      react: '*'
+
   diff@4.0.4:
     resolution: {integrity: sha512-X07nttJQkwkfKfvTPG/KSnE2OMdcUCao6+eXF3wmnIQRn2aPAHH3VxDbDOdegkd6JbPsXqShpvEOHfAT+nCNwQ==}
     engines: {node: '>=0.3.1'}
@@ -6373,6 +6384,12 @@ packages:
   raw-body@3.0.2:
     resolution: {integrity: sha512-K5zQjDllxWkf7Z5xJdV0/B0WTNqx6vxG70zJE4N0kBs4LovmEYWJzQGxC9bS9RAKu3bgM40lrd5zoLJ12MQ5BA==}
     engines: {node: '>= 0.10'}
+
+  react-country-flag@3.1.0:
+    resolution: {integrity: sha512-JWQFw1efdv9sTC+TGQvTKXQg1NKbDU2mBiAiRWcKM9F1sK+/zjhP2yGmm8YDddWyZdXVkR8Md47rPMJmo4YO5g==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16'
 
   react-device-detect@2.2.3:
     resolution: {integrity: sha512-buYY3qrCnQVlIFHrC5UcUoAj7iANs/+srdkwsnNjI7anr3Tt7UY6MqNxtMLlr0tMBied0O49UZVK8XKs3ZIiPw==}
@@ -12296,6 +12313,10 @@ snapshots:
     dependencies:
       address: 2.0.3
 
+  devicons-react@1.5.0(react@19.2.7):
+    dependencies:
+      react: 19.2.7
+
   diff@4.0.4: {}
 
   dns-packet@5.6.1:
@@ -15103,6 +15124,10 @@ snapshots:
       http-errors: 2.0.1
       iconv-lite: 0.7.2
       unpipe: 1.0.0
+
+  react-country-flag@3.1.0(react@19.2.7):
+    dependencies:
+      react: 19.2.7
 
   react-device-detect@2.2.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:

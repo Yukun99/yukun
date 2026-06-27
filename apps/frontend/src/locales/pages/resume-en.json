@@ -83,5 +83,50 @@
         ]
       }
     ]
+  },
+  "skills": {
+    "title": "Skills / Interests",
+    "languages": {
+      "title": "Languages",
+      "list": [
+        { "name": "English", "level": "Native" },
+        { "name": "Chinese", "level": "Native" }
+      ]
+    },
+    "technical": {
+      "title": "Technical Skills",
+      "frontend": [
+        { "name": "React", "duration": "2 years", "confidence": "★★★★★", "icon": "react" },
+        { "name": "React Redux", "duration": "2 years", "confidence": "★★★★★", "icon": "redux" },
+        { "name": "Nx", "duration": "0.5 years", "confidence": "★★★★☆", "icon": "nx" },
+        { "name": "Nx Rspack", "duration": "0.5 years", "confidence": "★★★☆☆", "icon": "rspack" },
+        { "name": "Webpack", "duration": "1.5 years", "confidence": "★★★☆☆", "icon": "webpack" },
+        {
+          "name": "Module Federation",
+          "duration": "0.5 years",
+          "confidence": "★★★★☆",
+          "icon": "moduleFederation"
+        },
+        {
+          "name": "Material UI",
+          "duration": "2 years",
+          "confidence": "★★★★★",
+          "icon": "materialUI"
+        },
+        { "name": "React Jest", "duration": "2 years", "confidence": "★★★★★", "icon": "jest" }
+      ],
+      "backend": []
+    },
+    "interests": {
+      "title": "Interests",
+      "list": [
+        { "name": "CAD and 3D Printing" },
+        { "name": "Playing Computer Games" },
+        { "name": "Programming Personal Projects" },
+        { "name": "Building Mechanical Keyboards" },
+        { "name": "Building Custom PCs" },
+        { "name": "Running / Swimming / HIIT" }
+      ]
+    }
   }
 }

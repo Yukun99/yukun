@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { getColor, GRAY, OPACITY } from '@/app/palette';
 import Box from '@mui/material/Box';
 import SectionTitle from '@/common/components/sections/section-title';
+import { GLOBAL_MARGIN, GLOBAL_PADDING } from '@/pages/page';
 
 export type SectionProps = {
   title?: string;
@@ -18,11 +19,11 @@ const Section = ({ title, page, width, style, children }: SectionProps) => {
         width,
         display: width ? undefined : 'flex',
         flexDirection: width ? undefined : 'column',
-        margin: '16px',
-        padding: '24px',
+        margin: `${GLOBAL_MARGIN}px`,
+        padding: `${GLOBAL_PADDING}px`,
         border: '1px solid',
         borderColor: 'divider',
-        borderRadius: '24px',
+        borderRadius: `${GLOBAL_PADDING}px`,
         boxShadow: (theme) => theme.shadows[16],
         backdropFilter: 'blur(20px) saturate(250%)',
         WebkitBackdropFilter: 'blur(20px) saturate(250%)',
@@ -41,7 +42,7 @@ const Section = ({ title, page, width, style, children }: SectionProps) => {
         ...style,
       }}
     >
-      {title && <SectionTitle title={title} page={page} />}
+      {title && <SectionTitle title={title} page={page} underline />}
       {children}
     </Box>
   );

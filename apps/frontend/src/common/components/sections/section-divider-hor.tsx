@@ -1,13 +1,15 @@
 import Box from '@mui/material/Box';
 
-const SectionDividerHor = () => {
+type SectionDividerHorProps = { slim?: boolean };
+
+const SectionDividerHor = ({ slim }: SectionDividerHorProps) => {
   return (
     <Box
       sx={{
         display: 'flex',
         borderBottom: '1px solid',
         borderColor: 'divider',
-        marginBottom: '16px',
+        marginBottom: slim ? undefined : '16px',
       }}
     />
   );

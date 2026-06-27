@@ -1,5 +1,9 @@
 import Box from '@mui/material/Box';
 import { ReactNode } from 'react';
+import { isMobileOnly } from 'react-device-detect';
+
+export const GLOBAL_MARGIN = isMobileOnly ? 8 : 16;
+export const GLOBAL_PADDING = isMobileOnly ? 18 : 24;
 
 type PageProps = { children: ReactNode };
 
@@ -9,9 +13,8 @@ const Page = ({ children }: PageProps) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '8px',
-        margin: '16px',
-        width: 'calc(100vw - 32px)',
+        margin: `${GLOBAL_MARGIN}px`,
+        width: `calc(100vw - ${GLOBAL_MARGIN * 2}px)`,
       }}
     >
       {children}
