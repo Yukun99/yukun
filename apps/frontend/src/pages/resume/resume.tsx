@@ -14,7 +14,7 @@ import { isMobileOnly } from 'react-device-detect';
 type Job = { company: string; period: string; position: string; work: string[] };
 
 const PAGE = 'resume';
-const DOUBLE_WIDE_WIDTH = 2000;
+const WIDE_WIDTH = 2000;
 const FLEX_DIRECTION = isMobileOnly ? 'column' : 'row';
 const REVERSE_FLEX_DIRECTION = isMobileOnly ? 'column-reverse' : 'row';
 const EDUCATION_WIDE_WIDTH = isMobileOnly ? undefined : '65%';
@@ -24,13 +24,16 @@ const EDUCATION_NARROW_MARGIN = isMobileOnly ? undefined : 'auto';
 const Resume = () => {
   const { t } = useTranslation(PAGE);
   const jobs = t('experience.jobs', { returnObjects: true }) as Job[];
-  const [isDoubleWide, setIsDoubleWide] = useState<boolean>(false);
+  const [isWide, setisWide] = useState<boolean>(false);
 
-  function updateDoubleWide() {
+  function updateIsWide() {
     const currentWidth = window.innerWidth;
-    if (currentWidth >= DOUBLE_WIDE_WIDTH && !isDoubleWide) return setIsDoubleWide(true);
-    if (isDoubleWide) return setIsDoubleWide(false);
+    if (currentWidth >= WIDE_WIDTH && !isWide) return setisWide(true);
+    if (isWide) return setisWide(false);
   }
+
+  useEffect(() => updateIsWide(), []);
+  window.addEventListener('resize', updateIsWide);
 
   function getJobComponent(job: Job) {
     return (
@@ -39,8 +42,11 @@ const Resume = () => {
           {job.company}
         </SectionParagraph>
         <Box sx={{ display: 'flex', flexDirection: FLEX_DIRECTION }}>
-          <SectionParagraph>{`${job.position} `}</SectionParagraph>
-          <SectionParagraph>{`[${job.period}]`}</SectionParagraph>
+          <SectionParagraph>
+            {job.position}
+            {isMobileOnly ? <br /> : ' '}
+            {`[${job.period}]`}
+          </SectionParagraph>
         </Box>
         {job.work.map((work) => (
           <Box key={`${job.company}-${work}`} sx={{ marginLeft: '16px' }}>
@@ -51,9 +57,6 @@ const Resume = () => {
       </Box>
     );
   }
-
-  useEffect(() => updateDoubleWide(), []);
-  window.addEventListener('resize', updateDoubleWide);
 
   return (
     <Page>
@@ -183,15 +186,15 @@ const Resume = () => {
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              width: isDoubleWide ? 'calc(50% - 16px)' : '100%',
+              width: isWide ? 'calc(50% - 16px)' : '100%',
             }}
           >
-            {(isDoubleWide ? jobs.slice(0, 2) : jobs).map((job) => getJobComponent(job))}
+            {(isWide ? jobs.slice(0, jobs.length / 2) : jobs).map((job) => getJobComponent(job))}
           </Box>
-          {isDoubleWide && <SectionDividerVert />}
-          {isDoubleWide && (
+          {isWide && <SectionDividerVert />}
+          {isWide && (
             <Box sx={{ display: 'flex', flexDirection: 'column', width: 'calc(50% - 16px)' }}>
-              {jobs.slice(2, 4).map((job) => getJobComponent(job))}
+              {jobs.slice(jobs.length / 2, jobs.length).map((job) => getJobComponent(job))}
             </Box>
           )}
         </Box>
