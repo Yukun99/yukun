@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { isMobileOnly } from 'react-device-detect';
-import me from '@/assets/me.jpg';
+import me from '@/assets/home/me.jpg';
 import SectionParagraphByKey, {
   PLACEHOLDER_TYPE,
 } from '@/common/components/sections/section-paragraph-by-key';
