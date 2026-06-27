@@ -1,13 +1,15 @@
 import Box from '@mui/material/Box';
 
-const SectionDividerVert = () => {
+type SectionDividerVertProps = { isSolid?: boolean };
+
+const SectionDividerVert = ({ isSolid }: SectionDividerVertProps) => {
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        // borderLeft: '1px solid',
-        // borderColor: 'divider',
+        borderLeft: isSolid ? '1px solid' : undefined,
+        borderColor: isSolid ? 'divider' : undefined,
         marginX: '16px',
       }}
     />
