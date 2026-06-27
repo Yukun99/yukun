@@ -31,6 +31,7 @@ const Resume = () => {
 
   const [isWide, setisWide] = useState<boolean>(false);
   const [skillDialogContent, setSkillDialogContent] = useState<ReactNode | undefined>(undefined);
+  const [expandedAccordion, setExpandedAccordion] = useState<number | undefined>(undefined);
 
   function updateIsWide() {
     const currentWidth = window.innerWidth;
@@ -212,7 +213,13 @@ const Resume = () => {
         </Box>
       </Section>
       <Section page={PAGE} title='skills' style={{ overflow: 'hidden' }}>
-        <SectionAccordion title={'skills.languages'} page={PAGE}>
+        <SectionAccordion
+          title={'skills.languages'}
+          page={PAGE}
+          accordionNumber={0}
+          expandedAccordion={expandedAccordion}
+          setExpandedAccordion={setExpandedAccordion}
+        >
           {languageSkills.map((language) => (
             <SkillButton
               setSkillDialogContent={setSkillDialogContent}
@@ -222,13 +229,26 @@ const Resume = () => {
           ))}
         </SectionAccordion>
         <SectionDividerHor slim />
-        <SectionAccordion title={'skills.technical'} page={PAGE}>
+        <SectionAccordion
+          title={'skills.technical'}
+          page={PAGE}
+          accordionNumber={1}
+          expandedAccordion={expandedAccordion}
+          setExpandedAccordion={setExpandedAccordion}
+        >
           {'Under Construction'}
         </SectionAccordion>
         <SectionDividerHor slim />
-        <SectionAccordion title={'skills.interests'} page={PAGE}>
+        <SectionAccordion
+          title={'skills.interests'}
+          page={PAGE}
+          accordionNumber={2}
+          expandedAccordion={expandedAccordion}
+          setExpandedAccordion={setExpandedAccordion}
+        >
           {'Under Construction'}
         </SectionAccordion>
+        <SectionDividerHor slim />
       </Section>
       <SkillDialog content={skillDialogContent} setSkillDialogContent={setSkillDialogContent} />
     </Page>
