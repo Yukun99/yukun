@@ -9,15 +9,21 @@ import { useTranslation } from 'react-i18next';
 import SectionParagraph from '@/common/components/sections/section-paragraph';
 import { useEffect, useState } from 'react';
 import SectionDividerVert from '@/common/components/sections/section-divider-vert';
+import { isMobileOnly } from 'react-device-detect';
 
-type Company = { company: string; period: string; position: string; work: string[] };
+type Job = { company: string; period: string; position: string; work: string[] };
 
 const PAGE = 'resume';
 const DOUBLE_WIDE_WIDTH = 2000;
+const FLEX_DIRECTION = isMobileOnly ? 'column' : 'row';
+const REVERSE_FLEX_DIRECTION = isMobileOnly ? 'column-reverse' : 'row';
+const EDUCATION_WIDE_WIDTH = isMobileOnly ? undefined : '65%';
+const EDUCATION_NARROW_WIDTH = isMobileOnly ? undefined : '25%';
+const EDUCATION_NARROW_MARGIN = isMobileOnly ? undefined : 'auto';
 
 const Resume = () => {
   const { t } = useTranslation(PAGE);
-  const jobs = t('experience.jobs', { returnObjects: true }) as Company[];
+  const jobs = t('experience.jobs', { returnObjects: true }) as Job[];
   const [isDoubleWide, setIsDoubleWide] = useState<boolean>(false);
 
   function updateDoubleWide() {
@@ -26,13 +32,33 @@ const Resume = () => {
     if (isDoubleWide) return setIsDoubleWide(false);
   }
 
+  function getJobComponent(job: Job) {
+    return (
+      <Box key={job.company}>
+        <SectionParagraph style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
+          {job.company}
+        </SectionParagraph>
+        <Box sx={{ display: 'flex', flexDirection: FLEX_DIRECTION }}>
+          <SectionParagraph>{`${job.position} `}</SectionParagraph>
+          <SectionParagraph>{`[${job.period}]`}</SectionParagraph>
+        </Box>
+        {job.work.map((work) => (
+          <Box key={`${job.company}-${work}`} sx={{ marginLeft: '16px' }}>
+            <SectionParagraph>{`${t('experience.point')} ${work}`}</SectionParagraph>
+          </Box>
+        ))}
+        <SectionDividerHor />
+      </Box>
+    );
+  }
+
   useEffect(() => updateDoubleWide(), []);
   window.addEventListener('resize', updateDoubleWide);
 
   return (
     <Page>
-      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-        <Section page={PAGE} title='contact' width='50%'>
+      <Box sx={{ display: 'flex', width: '100%', flexDirection: FLEX_DIRECTION }}>
+        <Section page={PAGE} title='contact' width={isMobileOnly ? undefined : '50%'}>
           <SectionParagraphByKey
             page={PAGE}
             i18nKey={'contact.name'}
@@ -90,19 +116,19 @@ const Resume = () => {
             ]}
           />
         </Section>
-        <Section page={PAGE} title={'education'} width='50%'>
+        <Section page={PAGE} title={'education'} width={isMobileOnly ? undefined : '50%'}>
           <SectionParagraphByKey
             page={PAGE}
             i18nKey={'education.hcltech.name'}
             style={{ fontWeight: 'bold', textDecoration: 'underline' }}
           />
-          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+          <Box sx={{ display: 'flex', flexDirection: REVERSE_FLEX_DIRECTION }}>
             <SectionParagraphByKey
               page={PAGE}
               i18nKey={'education.hcltech.programme'}
-              style={{ maxWidth: '65%' }}
+              style={{ maxWidth: EDUCATION_WIDE_WIDTH }}
             />
-            <Box sx={{ marginLeft: 'auto', maxWidth: '25%' }}>
+            <Box sx={{ marginLeft: EDUCATION_NARROW_MARGIN, maxWidth: EDUCATION_NARROW_WIDTH }}>
               <SectionParagraphByKey page={PAGE} i18nKey={'education.hcltech.period'} />
             </Box>
           </Box>
@@ -112,23 +138,23 @@ const Resume = () => {
             i18nKey={'education.university.name'}
             style={{ fontWeight: 'bold', textDecoration: 'underline' }}
           />
-          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+          <Box sx={{ display: 'flex', flexDirection: REVERSE_FLEX_DIRECTION }}>
             <SectionParagraphByKey
               page={PAGE}
               i18nKey={'education.university.degree'}
-              style={{ maxWidth: '65%' }}
+              style={{ maxWidth: EDUCATION_WIDE_WIDTH }}
             />
-            <Box sx={{ marginLeft: 'auto', maxWidth: '25%' }}>
+            <Box sx={{ marginLeft: EDUCATION_NARROW_MARGIN, maxWidth: EDUCATION_NARROW_WIDTH }}>
               <SectionParagraphByKey page={PAGE} i18nKey={'education.university.period'} />
             </Box>
           </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+          <Box sx={{ display: 'flex', flexDirection: REVERSE_FLEX_DIRECTION }}>
             <SectionParagraphByKey
               page={PAGE}
               i18nKey={'education.university.focusAreas'}
-              style={{ maxWidth: '65%' }}
+              style={{ maxWidth: EDUCATION_WIDE_WIDTH }}
             />
-            <Box sx={{ marginLeft: 'auto', maxWidth: '25%' }}>
+            <Box sx={{ marginLeft: EDUCATION_NARROW_MARGIN, maxWidth: EDUCATION_NARROW_WIDTH }}>
               <SectionParagraphByKey page={PAGE} i18nKey={'education.university.CAP'} />
             </Box>
           </Box>
@@ -138,13 +164,13 @@ const Resume = () => {
             i18nKey={'education.jc.name'}
             style={{ fontWeight: 'bold', textDecoration: 'underline' }}
           />
-          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+          <Box sx={{ display: 'flex', flexDirection: REVERSE_FLEX_DIRECTION }}>
             <SectionParagraphByKey
               page={PAGE}
               i18nKey={'education.jc.aLevels'}
-              style={{ maxWidth: '65%' }}
+              style={{ maxWidth: EDUCATION_WIDE_WIDTH }}
             />
-            <Box sx={{ marginLeft: 'auto', maxWidth: '25%' }}>
+            <Box sx={{ marginLeft: EDUCATION_NARROW_MARGIN, maxWidth: EDUCATION_NARROW_WIDTH }}>
               <SectionParagraphByKey page={PAGE} i18nKey={'education.jc.period'} />
             </Box>
           </Box>
@@ -160,38 +186,12 @@ const Resume = () => {
               width: isDoubleWide ? 'calc(50% - 16px)' : '100%',
             }}
           >
-            {(isDoubleWide ? jobs.slice(0, 2) : jobs).map((job) => (
-              <Box key={job.company}>
-                <SectionParagraph style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
-                  {job.company}
-                </SectionParagraph>
-                <SectionParagraph>{`${job.position} [${job.period}]`}</SectionParagraph>
-                {job.work.map((work) => (
-                  <Box key={`${job.company}-${work}`} sx={{ marginLeft: '16px' }}>
-                    <SectionParagraph>{`${t('experience.point')} ${work}`}</SectionParagraph>
-                  </Box>
-                ))}
-                <SectionDividerHor />
-              </Box>
-            ))}
+            {(isDoubleWide ? jobs.slice(0, 2) : jobs).map((job) => getJobComponent(job))}
           </Box>
           {isDoubleWide && <SectionDividerVert />}
           {isDoubleWide && (
             <Box sx={{ display: 'flex', flexDirection: 'column', width: 'calc(50% - 16px)' }}>
-              {jobs.slice(2, 4).map((job) => (
-                <Box key={job.company}>
-                  <SectionParagraph style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
-                    {job.company}
-                  </SectionParagraph>
-                  <SectionParagraph>{`${job.position} [${job.period}]`}</SectionParagraph>
-                  {job.work.map((work) => (
-                    <Box key={`${job.company}-${work}`} sx={{ marginLeft: '16px' }}>
-                      <SectionParagraph>{`${t('experience.point')} ${work}`}</SectionParagraph>
-                    </Box>
-                  ))}
-                  <SectionDividerHor />
-                </Box>
-              ))}
+              {jobs.slice(2, 4).map((job) => getJobComponent(job))}
             </Box>
           )}
         </Box>
