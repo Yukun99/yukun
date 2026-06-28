@@ -5,7 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ReactNode } from 'react';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
-import { GLOBAL_PADDING } from '@/pages/page';
+import { GLOBAL_MARGIN } from '@/pages/page';
 import { isMobileOnly } from 'react-device-detect';
 
 type SectionAccordionProps = {
@@ -41,10 +41,17 @@ const SectionAccordion = ({
       >
         <SectionTitle page={page} title={title} variant='h5' />
       </AccordionSummary>
-      <AccordionDetails
-        sx={{ display: 'flex', justifyContent: isMobileOnly ? 'center' : undefined, padding: 0 }}
-      >
-        <Box sx={{ paddingY: `${GLOBAL_PADDING}px` }}>{children}</Box>
+      <AccordionDetails sx={{ padding: 0 }}>
+        <Box
+          sx={{
+            paddingY: `${GLOBAL_MARGIN}px`,
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: isMobileOnly ? 'center' : undefined,
+          }}
+        >
+          {children}
+        </Box>
       </AccordionDetails>
     </Accordion>
   );

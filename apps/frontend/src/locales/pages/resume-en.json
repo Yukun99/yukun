@@ -95,8 +95,10 @@
     },
     "technical": {
       "title": "Technical Skills",
+      "frontendTitle": "Frontend",
       "frontend": [
         { "name": "React", "duration": "2 years", "confidence": "★★★★★", "icon": "react" },
+        { "name": "React Router", "duration": "2 years", "confidence": "★★★★★", "icon": "router" },
         { "name": "React Redux", "duration": "2 years", "confidence": "★★★★★", "icon": "redux" },
         { "name": "Nx", "duration": "0.5 years", "confidence": "★★★★☆", "icon": "nx" },
         { "name": "Nx Rspack", "duration": "0.5 years", "confidence": "★★★☆☆", "icon": "rspack" },
@@ -113,9 +115,13 @@
           "confidence": "★★★★★",
           "icon": "materialUI"
         },
-        { "name": "React Jest", "duration": "2 years", "confidence": "★★★★★", "icon": "jest" }
+        { "name": "React Jest", "duration": "2 years", "confidence": "★★★★★", "icon": "jest" },
+        { "name": "Node.js", "duration": "2 years", "confidence": "★★★★☆", "icon": "nodejs" }
       ],
-      "backend": []
+      "backendTitle": "Backend",
+      "backend": [],
+      "click": "Click on a skill button for details",
+      "return": "Click here to return to all skills"
     },
     "interests": {
       "title": "Interests",

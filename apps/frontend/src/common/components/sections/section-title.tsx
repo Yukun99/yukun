@@ -3,13 +3,14 @@ import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 
 type SectionTitleProps = {
-  page: string;
-  title: string;
+  page?: string;
+  title?: string;
+  message?: string;
   underline?: boolean;
   variant?: TypographyVariant;
 };
 
-const SectionTitle = ({ page, title, underline, variant = 'h4' }: SectionTitleProps) => {
+const SectionTitle = ({ page, title, message, underline, variant = 'h4' }: SectionTitleProps) => {
   const { t } = useTranslation(page);
   return (
     <Typography
@@ -22,7 +23,8 @@ const SectionTitle = ({ page, title, underline, variant = 'h4' }: SectionTitlePr
         borderColor: underline ? 'divider' : undefined,
       }}
     >
-      {t(`${title}.title`)}
+      {page && title && t(`${title}.title`)}
+      {message && message}
     </Typography>
   );
 };

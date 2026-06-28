@@ -12,7 +12,9 @@ import SectionDividerVert from '@/common/components/sections/section-divider-ver
 import { isMobileOnly } from 'react-device-detect';
 import SectionAccordion from '@/common/components/sections/section-accordion';
 import SkillDialog from '@/pages/resume/components/skill-dialog';
-import SkillButton, { Skill, SkillType } from '@/pages/resume/components/skill-button';
+import SkillButton from '@/pages/resume/components/skill-button';
+import { Skill, SkillType } from '@/pages/resume/utils/skill-button-utils';
+import SectionTitle from '@/common/components/sections/section-title';
 
 type Job = { company: string; period: string; position: string; work: string[] };
 
@@ -28,6 +30,8 @@ const Resume = () => {
   const { t } = useTranslation(PAGE);
   const jobs = t('experience.jobs', { returnObjects: true }) as Job[];
   const languageSkills = t('skills.languages.list', { returnObjects: true }) as Skill[];
+  const technicalSkillsFE = t('skills.technical.frontend', { returnObjects: true }) as Skill[];
+  const technicalSkillsBE = t('skills.technical.backend', { returnObjects: true }) as Skill[];
 
   const [isWide, setisWide] = useState<boolean>(false);
   const [skillDialogContent, setSkillDialogContent] = useState<ReactNode | undefined>(undefined);
@@ -225,6 +229,7 @@ const Resume = () => {
               setSkillDialogContent={setSkillDialogContent}
               skill={language}
               skillType={SkillType.LANGUAGE}
+              key={language.name}
             />
           ))}
         </SectionAccordion>
@@ -236,7 +241,30 @@ const Resume = () => {
           expandedAccordion={expandedAccordion}
           setExpandedAccordion={setExpandedAccordion}
         >
-          {'Under Construction'}
+          <Section page={PAGE} style={{ alignItems: 'center' }}>
+            <SectionTitle page={PAGE} message={t('skills.technical.frontendTitle')} variant='h6' />
+            <SectionParagraph style={{ color: 'text.secondary' }}>
+              {t('skills.technical.click')}
+            </SectionParagraph>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {technicalSkillsFE.map((frontend) => (
+                <SkillButton
+                  setSkillDialogContent={setSkillDialogContent}
+                  skill={frontend}
+                  skillType={SkillType.TECHNICAL}
+                  key={frontend.name}
+                />
+              ))}
+            </Box>
+          </Section>
+          {technicalSkillsBE.map((backend) => (
+            <SkillButton
+              setSkillDialogContent={setSkillDialogContent}
+              skill={backend}
+              skillType={SkillType.TECHNICAL}
+              key={backend.name}
+            />
+          ))}
         </SectionAccordion>
         <SectionDividerHor slim />
         <SectionAccordion

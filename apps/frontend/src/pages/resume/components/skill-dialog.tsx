@@ -1,5 +1,6 @@
 import Dialog from '@mui/material/Dialog';
 import { ReactNode } from 'react';
+import { GLOBAL_PADDING } from '@/pages/page';
 
 type SkillDialogProps = {
   content?: ReactNode;
@@ -8,7 +9,13 @@ type SkillDialogProps = {
 
 const SkillDialog = ({ content, setSkillDialogContent }: SkillDialogProps) => {
   return (
-    <Dialog open={Boolean(content)} onClose={() => setSkillDialogContent(undefined)}>
+    <Dialog
+      open={Boolean(content)}
+      onClose={() => setSkillDialogContent(undefined)}
+      slotProps={{
+        paper: { sx: { padding: `${GLOBAL_PADDING}px`, borderRadius: `${GLOBAL_PADDING}px` } },
+      }}
+    >
       {content}
     </Dialog>
   );

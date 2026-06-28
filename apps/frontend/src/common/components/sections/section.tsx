@@ -6,7 +6,7 @@ import { GLOBAL_MARGIN, GLOBAL_PADDING } from '@/pages/page';
 
 export type SectionProps = {
   title?: string;
-  page: string;
+  page?: string;
   width?: number | string;
   style?: any;
   children?: ReactNode;
@@ -42,7 +42,7 @@ const Section = ({ title, page, width, style, children }: SectionProps) => {
         ...style,
       }}
     >
-      {title && <SectionTitle title={title} page={page} underline />}
+      {page && title && <SectionTitle title={title} page={page} underline />}
       {children}
     </Box>
   );
