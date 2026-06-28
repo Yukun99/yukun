@@ -45,16 +45,16 @@ export const getDialogContent: Record<SkillType, (skill: Skill) => ReactNode | u
 function getTechnicalDialogContent(skill: Skill): ReactNode {
   const ButtonIcon = nameIconMap[skill.icon!];
   return (
-    <Section centered>
+    <Section centered blurless snug>
       <SectionTitle message={skill.name} variant='h5' />
       <SectionDividerHor />
       <ButtonIcon size={isMobileOnly ? '40%' : '20%'} />
       <Box sx={{ display: 'flex', flexDirection: isMobileOnly ? 'column' : 'row' }}>
-        <Section centered>
+        <Section centered blurless>
           <SectionTitle message={'Experience'} variant='h5' />
           {skill.duration}
         </Section>
-        <Section centered>
+        <Section centered blurless>
           <SectionTitle message={'Proficiency'} variant='h5' />
           {skill.confidence}
         </Section>
