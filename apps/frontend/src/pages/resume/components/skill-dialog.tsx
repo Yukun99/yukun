@@ -13,7 +13,15 @@ const SkillDialog = ({ content, setSkillDialogContent }: SkillDialogProps) => {
       open={Boolean(content)}
       onClose={() => setSkillDialogContent(undefined)}
       slotProps={{
-        paper: { sx: { padding: `${GLOBAL_PADDING}px`, borderRadius: `${GLOBAL_PADDING}px` } },
+        paper: {
+          sx: {
+            padding: `${GLOBAL_PADDING}px`,
+            borderRadius: `${GLOBAL_PADDING}px`,
+            bgcolor: 'transparent',
+            boxShadow: 'none',
+            backgroundImage: 'none',
+          },
+        },
       }}
     >
       {content}

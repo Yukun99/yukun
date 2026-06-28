@@ -74,7 +74,7 @@ const Home = () => {
             ]}
           />
         </Section>
-        <Section page={PAGE} style={{ justifyContent: 'center' }}>
+        <Section page={PAGE} centered>
           <Box component='img' src={me} sx={{ height: 'auto', width: '100%' }} />
         </Section>
       </Box>

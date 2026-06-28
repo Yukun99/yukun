@@ -9,16 +9,19 @@ export type SectionProps = {
   page?: string;
   width?: number | string;
   style?: any;
+  centered?: boolean;
   children?: ReactNode;
 };
 
-const Section = ({ title, page, width, style, children }: SectionProps) => {
+const Section = ({ title, page, width, style, centered, children }: SectionProps) => {
   return (
     <Box
       sx={{
         width,
         display: width ? undefined : 'flex',
         flexDirection: width ? undefined : 'column',
+        alignItems: centered ? 'center' : undefined,
+        justifyContent: centered ? 'center' : undefined,
         margin: `${GLOBAL_MARGIN}px`,
         padding: `${GLOBAL_PADDING}px`,
         border: '1px solid',

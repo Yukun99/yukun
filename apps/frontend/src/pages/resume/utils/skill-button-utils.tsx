@@ -13,9 +13,9 @@ import MaterialuiOriginal from 'devicons-react/icons/MaterialuiOriginal';
 import JestPlain from 'devicons-react/icons/JestPlain';
 import NodejsOriginal from 'devicons-react/icons/NodejsOriginal';
 import SectionTitle from '@/common/components/sections/section-title';
-import { GLOBAL_MARGIN } from '@/pages/page';
 import Section from '@/common/components/sections/section';
 import { isMobileOnly } from 'react-device-detect';
+import SectionDividerHor from '@/common/components/sections/section-divider-hor';
 
 const RspackOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
   <img src={Rspack} style={{ width: size, height: size }} alt='Rspack' />
@@ -42,38 +42,24 @@ export const getDialogContent: Record<SkillType, (skill: Skill) => ReactNode | u
   [SkillType.INTEREST]: () => undefined,
 };
 
-type DialogContentContainerProps = { children: ReactNode };
-const DialogContentContainer = ({ children }: DialogContentContainerProps) => (
-  <Box
-    sx={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexDirection: 'column',
-      gap: `${GLOBAL_MARGIN}px`,
-    }}
-  >
-    {children}
-  </Box>
-);
-
 function getTechnicalDialogContent(skill: Skill): ReactNode {
   const ButtonIcon = nameIconMap[skill.icon!];
   return (
-    <DialogContentContainer>
+    <Section centered>
       <SectionTitle message={skill.name} variant='h5' />
+      <SectionDividerHor />
       <ButtonIcon size={isMobileOnly ? '40%' : '20%'} />
       <Box sx={{ display: 'flex', flexDirection: isMobileOnly ? 'column' : 'row' }}>
-        <Section>
+        <Section centered>
           <SectionTitle message={'Experience'} variant='h5' />
           {skill.duration}
         </Section>
-        <Section>
+        <Section centered>
           <SectionTitle message={'Proficiency'} variant='h5' />
           {skill.confidence}
         </Section>
       </Box>
-    </DialogContentContainer>
+    </Section>
   );
 }
 

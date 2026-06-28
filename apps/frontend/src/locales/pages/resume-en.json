@@ -100,13 +100,13 @@
         { "name": "React", "duration": "2 years", "confidence": "★★★★★", "icon": "react" },
         { "name": "React Router", "duration": "2 years", "confidence": "★★★★★", "icon": "router" },
         { "name": "React Redux", "duration": "2 years", "confidence": "★★★★★", "icon": "redux" },
-        { "name": "Nx", "duration": "0.5 years", "confidence": "★★★★☆", "icon": "nx" },
-        { "name": "Nx Rspack", "duration": "0.5 years", "confidence": "★★★☆☆", "icon": "rspack" },
-        { "name": "Webpack", "duration": "1.5 years", "confidence": "★★★☆☆", "icon": "webpack" },
+        { "name": "Nx", "duration": "0.5 years", "confidence": "★★★★", "icon": "nx" },
+        { "name": "Nx Rspack", "duration": "0.5 years", "confidence": "★★★", "icon": "rspack" },
+        { "name": "Webpack", "duration": "1.5 years", "confidence": "★★★", "icon": "webpack" },
         {
           "name": "Module Federation",
           "duration": "0.5 years",
-          "confidence": "★★★★☆",
+          "confidence": "★★★★",
           "icon": "moduleFederation"
         },
         {
@@ -116,12 +116,13 @@
           "icon": "materialUI"
         },
         { "name": "React Jest", "duration": "2 years", "confidence": "★★★★★", "icon": "jest" },
-        { "name": "Node.js", "duration": "2 years", "confidence": "★★★★☆", "icon": "nodejs" }
+        { "name": "Node.js", "duration": "2 years", "confidence": "★★★★", "icon": "nodejs" }
       ],
       "backendTitle": "Backend",
       "backend": [],
-      "click": "Click on a skill button for details",
-      "return": "Click here to return to all skills"
+      "miscTitle": "Miscellaneous",
+      "misc": [],
+      "click": "Click on a skill button for details"
     },
     "interests": {
       "title": "Interests",

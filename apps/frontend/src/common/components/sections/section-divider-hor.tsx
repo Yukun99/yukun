@@ -7,6 +7,7 @@ const SectionDividerHor = ({ slim }: SectionDividerHorProps) => {
     <Box
       sx={{
         display: 'flex',
+        width: '100%',
         borderBottom: '1px solid',
         borderColor: 'divider',
         marginBottom: slim ? undefined : '16px',
