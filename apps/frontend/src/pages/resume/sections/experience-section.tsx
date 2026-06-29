@@ -1,14 +1,14 @@
-import Box from '@mui/material/Box';
-import SectionParagraph from '@/common/components/sections/section-paragraph';
-import { isMobileOnly } from 'react-device-detect';
-import { GLOBAL_MARGIN } from '@/pages/page';
-import SectionDividerHor from '@/common/components/sections/section-divider-hor';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { FLEX_DIRECTION, PAGE } from '@/pages/resume/resume';
 import Section from '@/common/components/sections/section';
+import SectionDividerHor from '@/common/components/sections/section-divider-hor';
 import SectionDividerVert from '@/common/components/sections/section-divider-vert';
+import SectionParagraph from '@/common/components/sections/section-paragraph';
+import { GLOBAL_MARGIN } from '@/pages/page';
+import { FLEX_DIRECTION, PAGE } from '@/pages/resume/resume';
+import Box from '@mui/material/Box';
 import { TFunction } from 'i18next';
+import { useEffect, useState } from 'react';
+import { isMobileOnly } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
 
 function getJobComponent(t: TFunction, job: Job) {
   return (

@@ -1,6 +1,6 @@
-import { type MouseEvent, type Ref, useImperativeHandle, useState } from 'react';
 import Box from '@mui/material/Box';
 import { keyframes } from '@mui/system';
+import { type MouseEvent, type Ref, useImperativeHandle, useState } from 'react';
 
 const STAR_COUNT = 5;
 const STAR_SPEED = 0.05;

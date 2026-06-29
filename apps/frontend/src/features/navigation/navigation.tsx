@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import Box from '@mui/material/Box';
-import Portal from '@mui/material/Portal';
-import NavigationMenuButton from '@/features/navigation/buttons/navigation-menu-button';
-import NavigationThemeButton from '@/features/navigation/buttons/navigation-theme-button';
-import NavigationLanguageButton from '@/features/navigation/buttons/navigation-lang-button';
-import NavigationDrawer from '@/features/navigation/navigation-drawer';
+import { getColor, GRAY, OPACITY } from '@/app/palette';
 import logo from '@/assets/logo.svg';
 import RoundIconButton from '@/common/components/buttons/round-icon-button';
-import { getColor, GRAY, OPACITY } from '@/app/palette';
+import NavigationLanguageButton from '@/features/navigation/buttons/navigation-lang-button';
+import NavigationMenuButton from '@/features/navigation/buttons/navigation-menu-button';
+import NavigationThemeButton from '@/features/navigation/buttons/navigation-theme-button';
+import NavigationDrawer from '@/features/navigation/navigation-drawer';
+import Box from '@mui/material/Box';
+import Portal from '@mui/material/Portal';
 import { useColorScheme } from '@mui/material/styles';
+import { useState } from 'react';
 
 export function getPageElementBgColor(mode?: 'light' | 'dark' | 'system') {
   return mode === 'light' ? getColor(GRAY[20], OPACITY[100]) : getColor(GRAY[80], OPACITY[100]);

@@ -1,9 +1,9 @@
 import { getPathLabel } from '@/app/routes';
-import { useLocation, useNavigate } from 'react-router-dom';
-import ToggleButton from '@mui/material/ToggleButton';
-import Typography from '@mui/material/Typography';
 import { ChevronRight } from '@mui/icons-material';
 import Box from '@mui/material/Box';
+import ToggleButton from '@mui/material/ToggleButton';
+import Typography from '@mui/material/Typography';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type NavigationDrawerButtonProps = { path: string };
 

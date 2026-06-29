@@ -1,9 +1,9 @@
-import { isMobileOnly } from 'react-device-detect';
-import SectionParagraphByKey from '@/common/components/sections/section-paragraph-by-key';
-import Box from '@mui/material/Box';
-import SectionDividerHor from '@/common/components/sections/section-divider-hor';
 import Section from '@/common/components/sections/section';
+import SectionDividerHor from '@/common/components/sections/section-divider-hor';
+import SectionParagraphByKey from '@/common/components/sections/section-paragraph-by-key';
 import { PAGE } from '@/pages/resume/resume';
+import Box from '@mui/material/Box';
+import { isMobileOnly } from 'react-device-detect';
 
 const REVERSE_FLEX_DIRECTION = isMobileOnly ? 'column-reverse' : 'row';
 const EDUCATION_WIDE_WIDTH = isMobileOnly ? undefined : '65%';

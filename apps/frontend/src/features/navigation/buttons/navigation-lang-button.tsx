@@ -1,7 +1,7 @@
-import { Public } from '@mui/icons-material';
 import RoundIconButton from '@/common/components/buttons/round-icon-button';
-import { useTranslation } from 'react-i18next';
+import { Public } from '@mui/icons-material';
 import type { i18n } from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 function getLanguageLabel(i18n: i18n) {
   return i18n.language.startsWith('zh') ? '中文' : 'English';

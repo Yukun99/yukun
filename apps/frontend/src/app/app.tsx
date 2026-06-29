@@ -1,19 +1,19 @@
-import Navigation from '@/features/navigation/navigation';
-import { useRoutes } from 'react-router-dom';
-import routes from '@/app/routes';
-import { Suspense, useEffect, useRef, useState } from 'react';
-import bg from '@/assets/bg.jpg';
-import Box from '@mui/material/Box';
 import { OPACITY } from '@/app/palette';
+import routes from '@/app/routes';
+import { ScrollToTopContext } from '@/app/scroll-context';
+import bg from '@/assets/bg.jpg';
 import useDocumentTitle from '@/common/hooks/use-document-title';
-import useTheme from '@mui/system/useTheme';
+import Footer from '@/features/footer/footer';
+import Navigation from '@/features/navigation/navigation';
+import Box from '@mui/material/Box';
+import { useColorScheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import useTheme from '@mui/system/useTheme';
 import type { OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import 'overlayscrollbars/overlayscrollbars.css';
-import { useColorScheme } from '@mui/material/styles';
-import Footer from '@/features/footer/footer';
-import { ScrollToTopContext } from '@/app/scroll-context';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import { useRoutes } from 'react-router-dom';
 
 const AppRoutes = () => useRoutes(routes);
 

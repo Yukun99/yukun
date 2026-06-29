@@ -1,6 +1,6 @@
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useScrollToTop } from '@/app/scroll-context';
 import RoundIconButton from '@/common/components/buttons/round-icon-button';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 const FooterScrollTopButton = () => {
   const scrollToTop = useScrollToTop();

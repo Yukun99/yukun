@@ -1,8 +1,5 @@
-import Button from '@mui/material/Button';
-import { ReactNode } from 'react';
-import { BUTTON_SIZE } from '@/common/components/buttons/round-icon-button';
 import { getColor, GRAY, OPACITY } from '@/app/palette';
-import { isMobileOnly } from 'react-device-detect';
+import { BUTTON_SIZE } from '@/common/components/buttons/round-icon-button';
 import { GLOBAL_MARGIN, GLOBAL_PADDING } from '@/pages/page';
 import {
   getButtonContent,
@@ -10,6 +7,9 @@ import {
   Skill,
   SkillType,
 } from '@/pages/resume/utils/skill-button-utils';
+import Button from '@mui/material/Button';
+import { ReactNode } from 'react';
+import { isMobileOnly } from 'react-device-detect';
 
 type SkillButtonProps = {
   setSkillDialogContent: (children?: ReactNode) => void;
@@ -22,7 +22,7 @@ const SkillButton = ({
   setSkillDialogContent,
   skill,
   skillType,
-  size = isMobileOnly ? BUTTON_SIZE * 1.5 : BUTTON_SIZE * 2.5,
+  size = isMobileOnly ? BUTTON_SIZE * 1.45 : BUTTON_SIZE * 2.5,
 }: SkillButtonProps) => {
   return (
     <Button

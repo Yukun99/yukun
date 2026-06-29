@@ -1,11 +1,11 @@
-import Box from '@mui/material/Box';
-import { isMobileOnly } from 'react-device-detect';
 import me from '@/assets/home/me.jpg';
+import Section from '@/common/components/sections/section';
 import SectionParagraphByKey, {
   PLACEHOLDER_TYPE,
 } from '@/common/components/sections/section-paragraph-by-key';
-import Section from '@/common/components/sections/section';
 import Page from '@/pages/page';
+import Box from '@mui/material/Box';
+import { isMobileOnly } from 'react-device-detect';
 
 const PAGE = 'home';
 

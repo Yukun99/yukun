@@ -1,17 +1,18 @@
-import { type MouseEvent, useRef } from 'react';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import { SvgIconComponent } from '@mui/icons-material';
-import { isMobileOnly } from 'react-device-detect';
-import Typography from '@mui/material/Typography';
-import StarBurst, { type StarBurstHandle } from '@/common/components/effects/star-burst';
 import { PURPLE } from '@/app/palette';
+import StarBurst, { type StarBurstHandle } from '@/common/components/effects/star-burst';
+import { SvgIconComponent } from '@mui/icons-material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import { type MouseEvent, useRef } from 'react';
+import { isMobileOnly } from 'react-device-detect';
 
 const ICON_GRADIENT_ID = 'round-icon-button-purple-gradient';
 
-export function getFormattedIcon(Icon: SvgIconComponent | string, size: number) {
+export function getFormattedIcon(Icon: SvgIconComponent | string, size: number | string) {
+  const parsedSize = typeof size === 'number' ? size * 0.5 : size;
   if (typeof Icon === 'string') {
-    return <Box component='img' src={Icon} sx={{ width: size * 0.6, height: size * 0.6 }} />;
+    return <Box component='img' src={Icon} sx={{ width: parsedSize, height: parsedSize }} />;
   }
   return (
     <>
@@ -21,12 +22,12 @@ export function getFormattedIcon(Icon: SvgIconComponent | string, size: number) 
           <stop offset={1} stopColor={PURPLE[4]} />
         </linearGradient>
       </svg>
-      <Icon sx={{ fontSize: size * 0.6, fill: `url(#${ICON_GRADIENT_ID})` }} />
+      <Icon sx={{ width: parsedSize, height: parsedSize, fill: `url(#${ICON_GRADIENT_ID})` }} />
     </>
   );
 }
 
-export const BUTTON_SIZE: number = 60;
+export const BUTTON_SIZE: number = 75;
 export type ButtonProps = { onClick?: () => void; style?: any; size?: number; label?: string };
 type RoundIconButtonProps = ButtonProps & { icon: SvgIconComponent | string; isSpecial?: boolean };
 
@@ -47,9 +48,9 @@ const RoundIconButton = ({
   return (
     <Button
       sx={{
-        minWidth: size,
-        minHeight: size,
-        borderRadius: size,
+        width: size,
+        height: size,
+        borderRadius: '50%',
         margin: isMobileOnly ? '6px' : '8px',
         padding: 0,
         flexDirection: 'column',
@@ -63,7 +64,7 @@ const RoundIconButton = ({
       <StarBurst ref={starBurst} size={size} />
       {getFormattedIcon(Icon, size)}
       {label && (
-        <Typography sx={{ fontSize: size * 0.2, color: PURPLE[0] }} variant='button'>
+        <Typography sx={{ fontSize: size * 0.16, color: PURPLE[0] }} variant='button'>
           {label}
         </Typography>
       )}

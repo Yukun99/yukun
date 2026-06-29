@@ -100,7 +100,7 @@
         { "name": "React", "duration": "2 years", "confidence": "★★★★★", "icon": "react" },
         { "name": "React Router", "duration": "2 years", "confidence": "★★★★★", "icon": "router" },
         { "name": "React Redux", "duration": "2 years", "confidence": "★★★★★", "icon": "redux" },
-        { "name": "Nx", "duration": "0.5 years", "confidence": "★★★★", "icon": "nx" },
+        { "name": "Nx", "duration": "0.5 years", "confidence": "★★★", "icon": "nx" },
         { "name": "Nx Rspack", "duration": "0.5 years", "confidence": "★★★", "icon": "rspack" },
         { "name": "Webpack", "duration": "1.5 years", "confidence": "★★★", "icon": "webpack" },
         {
@@ -119,20 +119,44 @@
         { "name": "Node.js", "duration": "2 years", "confidence": "★★★★", "icon": "nodejs" }
       ],
       "backendTitle": "Backend",
-      "backend": [],
+      "backend": [
+        { "name": "Java", "duration": "4 years", "confidence": "★★★★★", "icon": "java" },
+        {
+          "name": "Java Hibernate",
+          "duration": "0.5 years",
+          "confidence": "★★★",
+          "icon": "hibernate"
+        },
+        { "name": "Java Spring", "duration": "0.5 years", "confidence": "★★★", "icon": "spring" },
+        { "name": "JUnit", "duration": "1.5 years", "confidence": "★★★★", "icon": "junit" },
+        { "name": "MySQL", "duration": "0.5 years", "confidence": "★★★", "icon": "mysql" },
+        { "name": "C++", "duration": "1 year", "confidence": "★★★", "icon": "cpp" },
+        { "name": "Qt", "duration": "1 year", "confidence": "★★★★", "icon": "qt" },
+        { "name": "C#", "duration": "1 year", "confidence": "★★★★", "icon": "csharp" },
+        { "name": "Unity", "duration": "1 year", "confidence": "★★★★", "icon": "unity" }
+      ],
       "miscTitle": "Miscellaneous",
-      "misc": [],
+      "misc": [
+        { "name": "Git", "duration": "8 years", "confidence": "★★★★★", "icon": "git" },
+        { "name": "Github", "duration": "6 years", "confidence": "★★★★★", "icon": "github" },
+        { "name": "Gitlab", "duration": "2 years", "confidence": "★★★★★", "icon": "gitlab" },
+        { "name": "Kubernetes", "duration": "1 year", "confidence": "★★★", "icon": "kube" },
+        { "name": "Debugging", "duration": "5 years", "confidence": "★★★★★", "icon": "debug" },
+        { "name": "Documentation", "duration": "4 years", "confidence": "★★★★★", "icon": "docs" },
+        { "name": "CI/CD", "duration": "2 years", "confidence": "★★★★★", "icon": "cicd" },
+        { "name": "Claude Code", "duration": "1 year", "confidence": "★★★★★", "icon": "claude" }
+      ],
       "click": "Click on a skill button for details"
     },
     "interests": {
       "title": "Interests",
       "list": [
-        { "name": "CAD and 3D Printing" },
-        { "name": "Playing Computer Games" },
-        { "name": "Programming Personal Projects" },
-        { "name": "Building Mechanical Keyboards" },
-        { "name": "Building Custom PCs" },
-        { "name": "Running / Swimming / HIIT" }
+        { "name": "CAD Modelling and 3D Printing", "icon": "handyman" },
+        { "name": "Playing Computer Games", "icon": "esports" },
+        { "name": "Programming Personal Projects", "icon": "code" },
+        { "name": "Building Mechanical Keyboards", "icon": "keyboard" },
+        { "name": "Building Custom PCs", "icon": "devices" },
+        { "name": "Running / Swimming / HIIT", "icon": "fitness" }
       ]
     }
   }

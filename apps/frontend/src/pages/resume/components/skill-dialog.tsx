@@ -1,8 +1,8 @@
+import { GLOBAL_PADDING } from '@/pages/page';
+import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import Fade from '@mui/material/Fade';
-import Box from '@mui/material/Box';
 import { ReactNode } from 'react';
-import { GLOBAL_PADDING } from '@/pages/page';
 
 type SkillDialogProps = {
   content?: ReactNode;

@@ -1,7 +1,7 @@
+import { BUTTON_SIZE } from '@/common/components/buttons/round-icon-button';
+import NavigationDrawerButton from '@/features/navigation/buttons/navigation-drawer-button';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import NavigationDrawerButton from '@/features/navigation/buttons/navigation-drawer-button';
-import { BUTTON_SIZE } from '@/common/components/buttons/round-icon-button';
 import { isMobileOnly } from 'react-device-detect';
 
 type NavigationDrawerProps = { isOpen: boolean; onClose: () => void };

@@ -1,7 +1,7 @@
-import { ReactElement } from 'react';
-import Link from '@mui/material/Link';
-import { Trans, useTranslation } from 'react-i18next';
 import SectionParagraph from '@/common/components/sections/section-paragraph';
+import Link from '@mui/material/Link';
+import { ReactElement } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
 export enum PLACEHOLDER_TYPE {
   TEXT,

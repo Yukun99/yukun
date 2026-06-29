@@ -1,6 +1,6 @@
+import { GLOBAL_MARGIN } from '@/pages/page';
 import Typography from '@mui/material/Typography';
 import { ReactNode } from 'react';
-import { GLOBAL_MARGIN } from '@/pages/page';
 
 export type SectionParagraphProps = {
   children: ReactNode;

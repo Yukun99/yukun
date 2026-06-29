@@ -1,21 +1,46 @@
-import { FunctionComponent, ReactNode } from 'react';
+import Claude from '@/assets/resume/Claude.svg';
+import ModuleFederation from '@/assets/resume/ModuleFederation.png';
+import Nx from '@/assets/resume/Nx.svg';
+import Rspack from '@/assets/resume/Rspack.svg';
+import { getFormattedIcon } from '@/common/components/buttons/round-icon-button';
+import Section from '@/common/components/sections/section';
+import SectionDividerHor from '@/common/components/sections/section-divider-hor';
+import SectionTitle from '@/common/components/sections/section-title';
+import { SvgIconComponent } from '@mui/icons-material';
+import BugReportIcon from '@mui/icons-material/BugReport';
+import CallMergeIcon from '@mui/icons-material/CallMerge';
+import CodeIcon from '@mui/icons-material/Code';
+import DescriptionIcon from '@mui/icons-material/Description';
+import DevicesIcon from '@mui/icons-material/Devices';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import HandymanIcon from '@mui/icons-material/Handyman';
+import KeyboardIcon from '@mui/icons-material/Keyboard';
+import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import Box from '@mui/material/Box';
-import ReactCountryFlag from 'react-country-flag';
 import Typography from '@mui/material/Typography';
+import CplusplusOriginal from 'devicons-react/icons/CplusplusOriginal';
+import CsharpOriginal from 'devicons-react/icons/CsharpOriginal';
+import GitOriginal from 'devicons-react/icons/GitOriginal';
+import GithubOriginal from 'devicons-react/icons/GithubOriginal';
+import GitlabOriginal from 'devicons-react/icons/GitlabOriginal';
+import HibernateOriginal from 'devicons-react/icons/HibernateOriginal';
+import JavaOriginal from 'devicons-react/icons/JavaOriginal';
+import JestPlain from 'devicons-react/icons/JestPlain';
+import JunitOriginal from 'devicons-react/icons/JunitOriginal';
+import KubernetesOriginal from 'devicons-react/icons/KubernetesOriginal';
+import MaterialuiOriginal from 'devicons-react/icons/MaterialuiOriginal';
+import MysqlOriginal from 'devicons-react/icons/MysqlOriginal';
+import NodejsOriginal from 'devicons-react/icons/NodejsOriginal';
+import QtOriginal from 'devicons-react/icons/QtOriginal';
 import ReactOriginal from 'devicons-react/icons/ReactOriginal';
 import ReactrouterOriginal from 'devicons-react/icons/ReactrouterOriginal';
 import ReduxOriginal from 'devicons-react/icons/ReduxOriginal';
-import Rspack from '@/assets/resume/Rspack.svg';
-import Nx from '@/assets/resume/Nx.svg';
+import SpringOriginal from 'devicons-react/icons/SpringOriginal';
+import UnityOriginal from 'devicons-react/icons/UnityOriginal';
 import WebpackOriginal from 'devicons-react/icons/WebpackOriginal';
-import ModuleFederation from '@/assets/resume/ModuleFederation.png';
-import MaterialuiOriginal from 'devicons-react/icons/MaterialuiOriginal';
-import JestPlain from 'devicons-react/icons/JestPlain';
-import NodejsOriginal from 'devicons-react/icons/NodejsOriginal';
-import SectionTitle from '@/common/components/sections/section-title';
-import Section from '@/common/components/sections/section';
+import { FunctionComponent, ReactNode } from 'react';
+import ReactCountryFlag from 'react-country-flag';
 import { isMobileOnly } from 'react-device-detect';
-import SectionDividerHor from '@/common/components/sections/section-divider-hor';
 
 const RspackOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
   <img src={Rspack} style={{ width: size, height: size }} alt='Rspack' />
@@ -25,6 +50,18 @@ const NxOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => 
 );
 const ModuleFederationOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
   <img src={ModuleFederation} style={{ width: size, height: size }} alt='MF' />
+);
+const ClaudeOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
+  <img src={Claude} style={{ width: size, height: size }} alt='Claude' />
+);
+const BugReportIconOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
+  <BugReportIcon style={{ width: size, height: size }} />
+);
+const DescriptionIconOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
+  <DescriptionIcon style={{ width: size, height: size }} />
+);
+const CallMergeIconOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
+  <CallMergeIcon style={{ width: size, height: size, transform: 'rotate(90deg)' }} />
 );
 
 export type Skill = { name: string } & Language & Technical;
@@ -43,7 +80,7 @@ export const getDialogContent: Record<SkillType, (skill: Skill) => ReactNode | u
 };
 
 function getTechnicalDialogContent(skill: Skill): ReactNode {
-  const ButtonIcon = nameIconMap[skill.icon!];
+  const ButtonIcon = technicalNameIconMap[skill.icon!];
   return (
     <Section centered blurless snug>
       <SectionTitle message={skill.name} variant='h5' />
@@ -66,7 +103,7 @@ function getTechnicalDialogContent(skill: Skill): ReactNode {
 export const getButtonContent: Record<SkillType, (skill: Skill) => ReactNode> = {
   [SkillType.LANGUAGE]: (skill) => getLanguageButtonContent(skill.name, skill.level!),
   [SkillType.TECHNICAL]: (skill) => getTechnicalButtonContent(skill.name, skill.icon!),
-  [SkillType.INTEREST]: () => <></>,
+  [SkillType.INTEREST]: (skill) => getInterestsButtonContent(skill.name, skill.icon!),
 };
 
 type ButtonContentContainerProps = { children: ReactNode };
@@ -106,7 +143,7 @@ function getLanguageButtonContent(language: string, level: string): ReactNode {
   );
 }
 
-const nameIconMap: Record<string, FunctionComponent<{ size?: number | string }>> = {
+const technicalNameIconMap: Record<string, FunctionComponent<{ size?: number | string }>> = {
   react: ReactOriginal,
   router: ReactrouterOriginal,
   redux: ReduxOriginal,
@@ -117,12 +154,47 @@ const nameIconMap: Record<string, FunctionComponent<{ size?: number | string }>>
   materialUI: MaterialuiOriginal,
   jest: JestPlain,
   nodejs: NodejsOriginal,
+  java: JavaOriginal,
+  hibernate: HibernateOriginal,
+  spring: SpringOriginal,
+  junit: JunitOriginal,
+  mysql: MysqlOriginal,
+  cpp: CplusplusOriginal,
+  qt: QtOriginal,
+  csharp: CsharpOriginal,
+  unity: UnityOriginal,
+  git: GitOriginal,
+  github: GithubOriginal,
+  gitlab: GitlabOriginal,
+  kube: KubernetesOriginal,
+  debug: BugReportIconOriginal,
+  docs: DescriptionIconOriginal,
+  cicd: CallMergeIconOriginal,
+  claude: ClaudeOriginal,
 };
 function getTechnicalButtonContent(name: string, icon: string): ReactNode {
-  const ButtonIcon = nameIconMap[icon];
+  const ButtonIcon = technicalNameIconMap[icon];
   return (
     <ButtonContentContainer>
       <ButtonIcon size={isMobileOnly ? '50%' : '65%'} />
+      <ButtonContentLabel>{name}</ButtonContentLabel>
+    </ButtonContentContainer>
+  );
+}
+
+const interestsNameIconMap: Record<string, SvgIconComponent> = {
+  handyman: HandymanIcon,
+  esports: SportsEsportsIcon,
+  code: CodeIcon,
+  keyboard: KeyboardIcon,
+  devices: DevicesIcon,
+  fitness: FitnessCenterIcon,
+};
+function getInterestsButtonContent(name: string, icon: string): ReactNode {
+  const ButtonIcon = interestsNameIconMap[icon];
+  return (
+    <ButtonContentContainer>
+      {getFormattedIcon(ButtonIcon, isMobileOnly ? '40%' : '55%')}
       <ButtonContentLabel>{name}</ButtonContentLabel>
     </ButtonContentContainer>
   );

@@ -1,14 +1,14 @@
 import Section from '@/common/components/sections/section';
-import { PAGE } from '@/pages/resume/resume';
 import SectionAccordion from '@/common/components/sections/section-accordion';
-import { ReactNode, useState } from 'react';
-import { Skill, SkillType } from '@/pages/resume/utils/skill-button-utils';
-import { useTranslation } from 'react-i18next';
-import SkillButton from '@/pages/resume/components/skill-button';
 import SectionDividerHor from '@/common/components/sections/section-divider-hor';
 import SectionParagraph from '@/common/components/sections/section-paragraph';
-import Box from '@mui/material/Box';
 import SectionTitle from '@/common/components/sections/section-title';
+import SkillButton from '@/pages/resume/components/skill-button';
+import { PAGE } from '@/pages/resume/resume';
+import { Skill, SkillType } from '@/pages/resume/utils/skill-button-utils';
+import Box from '@mui/material/Box';
+import { ReactNode, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type SkillsSectionProps = { setSkillDialogContent: (content: ReactNode | undefined) => void };
 const SkillsSection = ({ setSkillDialogContent }: SkillsSectionProps) => {
@@ -17,6 +17,9 @@ const SkillsSection = ({ setSkillDialogContent }: SkillsSectionProps) => {
   const languageSkills = t('skills.languages.list', { returnObjects: true }) as Skill[];
   const technicalSkillsFE = t('skills.technical.frontend', { returnObjects: true }) as Skill[];
   const technicalSkillsBE = t('skills.technical.backend', { returnObjects: true }) as Skill[];
+  const technicalSkillsMisc = t('skills.technical.misc', { returnObjects: true }) as Skill[];
+  const interests = t('skills.interests.list', { returnObjects: true }) as Skill[];
+
   const [expandedAccordion, setExpandedAccordion] = useState<number | undefined>(undefined);
 
   return (
@@ -44,6 +47,8 @@ const SkillsSection = ({ setSkillDialogContent }: SkillsSectionProps) => {
         accordionNumber={1}
         expandedAccordion={expandedAccordion}
         setExpandedAccordion={setExpandedAccordion}
+        centered
+        column
       >
         <Section page={PAGE} centered>
           <SectionTitle page={PAGE} message={t('skills.technical.frontendTitle')} variant='h6' />
@@ -61,14 +66,38 @@ const SkillsSection = ({ setSkillDialogContent }: SkillsSectionProps) => {
             ))}
           </Box>
         </Section>
-        {technicalSkillsBE.map((backend) => (
-          <SkillButton
-            setSkillDialogContent={setSkillDialogContent}
-            skill={backend}
-            skillType={SkillType.TECHNICAL}
-            key={backend.name}
-          />
-        ))}
+        <Section page={PAGE} centered>
+          <SectionTitle page={PAGE} message={t('skills.technical.backendTitle')} variant='h6' />
+          <SectionParagraph style={{ color: 'text.secondary' }}>
+            {t('skills.technical.click')}
+          </SectionParagraph>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            {technicalSkillsBE.map((backend) => (
+              <SkillButton
+                setSkillDialogContent={setSkillDialogContent}
+                skill={backend}
+                skillType={SkillType.TECHNICAL}
+                key={backend.name}
+              />
+            ))}
+          </Box>
+        </Section>
+        <Section page={PAGE} centered>
+          <SectionTitle page={PAGE} message={t('skills.technical.miscTitle')} variant='h6' />
+          <SectionParagraph style={{ color: 'text.secondary' }}>
+            {t('skills.technical.click')}
+          </SectionParagraph>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            {technicalSkillsMisc.map((misc) => (
+              <SkillButton
+                setSkillDialogContent={setSkillDialogContent}
+                skill={misc}
+                skillType={SkillType.TECHNICAL}
+                key={misc.name}
+              />
+            ))}
+          </Box>
+        </Section>
       </SectionAccordion>
       <SectionDividerHor slim />
       <SectionAccordion
@@ -78,7 +107,14 @@ const SkillsSection = ({ setSkillDialogContent }: SkillsSectionProps) => {
         expandedAccordion={expandedAccordion}
         setExpandedAccordion={setExpandedAccordion}
       >
-        {'Under Construction'}
+        {interests.map((interest) => (
+          <SkillButton
+            setSkillDialogContent={setSkillDialogContent}
+            skill={interest}
+            skillType={SkillType.INTEREST}
+            key={interest.name}
+          />
+        ))}
       </SectionAccordion>
       <SectionDividerHor slim />
     </Section>

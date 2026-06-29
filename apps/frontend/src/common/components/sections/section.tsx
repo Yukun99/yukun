@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
 import { getColor, GRAY, OPACITY } from '@/app/palette';
-import Box from '@mui/material/Box';
 import SectionTitle from '@/common/components/sections/section-title';
 import { GLOBAL_MARGIN, GLOBAL_PADDING } from '@/pages/page';
+import Box from '@mui/material/Box';
+import { ReactNode } from 'react';
 
 const FROSTED_BG = `
   linear-gradient(
