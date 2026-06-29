@@ -10,6 +10,10 @@ import RoundIconButton from '@/common/components/buttons/round-icon-button';
 import { getColor, GRAY, OPACITY } from '@/app/palette';
 import { useColorScheme } from '@mui/material/styles';
 
+export function getPageElementBgColor(mode?: 'light' | 'dark' | 'system') {
+  return mode === 'light' ? getColor(GRAY[20], OPACITY[100]) : getColor(GRAY[80], OPACITY[100]);
+}
+
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { mode } = useColorScheme();
@@ -24,8 +28,7 @@ const Navigation = () => {
         position: 'sticky',
         top: 0,
         zIndex: 1000,
-        backgroundColor:
-          mode === 'light' ? getColor(GRAY[20], OPACITY[100]) : getColor(GRAY[80], OPACITY[100]),
+        backgroundColor: getPageElementBgColor(mode),
       }}
     >
       <Portal>

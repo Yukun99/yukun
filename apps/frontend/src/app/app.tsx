@@ -11,6 +11,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import 'overlayscrollbars/overlayscrollbars.css';
 import { useColorScheme } from '@mui/material/styles';
+import Footer from '@/features/footer/footer';
 
 const AppRoutes = () => useRoutes(routes);
 
@@ -58,6 +59,7 @@ const App = () => {
         <Suspense fallback={null}>
           <AppRoutes />
         </Suspense>
+        <Footer />
       </OverlayScrollbarsComponent>
     </Box>
   );
