@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import { isMobileOnly } from 'react-device-detect';
 import me from '@/assets/home/me.jpg';
 import SectionParagraphByKey, {
@@ -79,11 +78,9 @@ const Home = () => {
         </Section>
       </Box>
       <Section title='project' page={PAGE}>
-        <Typography variant='body1' sx={{ textAlign: 'justify' }}>
-          <SectionParagraphByKey page={PAGE} i18nKey='project.1' />
-          <SectionParagraphByKey page={PAGE} i18nKey='project.2' />
-          <SectionParagraphByKey page={PAGE} i18nKey='project.3' />
-        </Typography>
+        <SectionParagraphByKey page={PAGE} i18nKey='project.1' textAlign='justify' />
+        <SectionParagraphByKey page={PAGE} i18nKey='project.2' textAlign='justify' />
+        <SectionParagraphByKey page={PAGE} i18nKey='project.3' textAlign='justify' />
       </Section>
     </Page>
   );

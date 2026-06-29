@@ -12,18 +12,20 @@ export enum PLACEHOLDER_TYPE {
 type PlaceholderProps = { name: string; i18nKey: string; placeholderType: PLACEHOLDER_TYPE };
 
 type SectionParagraphByKeyProps = {
-  page: string;
+  page?: string;
   i18nKey: string;
   placeholders?: PlaceholderProps[];
   textAlign?: string;
+  noGap?: boolean;
   style?: any;
 };
 
 const SectionParagraphByKey = ({
-  page,
+  page = '',
   i18nKey,
   placeholders,
   textAlign = 'justify',
+  noGap,
   style,
 }: SectionParagraphByKeyProps) => {
   const { t } = useTranslation(page);
@@ -56,7 +58,7 @@ const SectionParagraphByKey = ({
   }
 
   return (
-    <SectionParagraph textAlign={textAlign} style={style}>
+    <SectionParagraph noGap={noGap} textAlign={textAlign} style={style}>
       {getFormattedContent()}
     </SectionParagraph>
   );

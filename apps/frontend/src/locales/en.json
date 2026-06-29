@@ -8,5 +8,10 @@
     "github": "https://github.com/yukun99",
     "website": "https://yukunxu.com"
   },
-  "routeNames": { "/": "Home", "/resume": "Resume", "/catalog": "Catalog" }
+  "routeNames": { "/": "Home", "/resume": "Resume", "/catalog": "Catalog" },
+  "footer": {
+    "linkAbacus": "https://abacus.jasoncameron.dev/",
+    "viewAbacus": "Site visitor count data powered by",
+    "views": "Congratulations, you are visitor number {{views}}!"
+  }
 }
