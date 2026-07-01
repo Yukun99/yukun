@@ -2,6 +2,7 @@ import { getColor, GRAY, OPACITY } from '@/app/palette';
 import { BUTTON_SIZE } from '@/common/components/buttons/round-icon-button';
 import useIsMobile from '@/common/hooks/use-is-mobile';
 import { useSpacing } from '@/pages/page';
+import { PAGE } from '@/pages/resume/resume';
 import {
   DialogContentRenderer,
   getButtonContent,
@@ -10,6 +11,7 @@ import {
   SkillType,
 } from '@/pages/resume/utils/skill-button-utils';
 import Button from '@mui/material/Button';
+import { useTranslation } from 'react-i18next';
 
 type SkillButtonProps<K extends SkillType> = {
   onSelect: (renderer: DialogContentRenderer) => void;
@@ -25,12 +27,13 @@ const SkillButton = <K extends SkillType>({
   size,
 }: SkillButtonProps<K>) => {
   const isMobile = useIsMobile();
+  const { t } = useTranslation(PAGE);
   const { margin, padding } = useSpacing();
   const buttonSize = size ?? (isMobile ? BUTTON_SIZE * 1.45 : BUTTON_SIZE * 2.5);
 
   return (
     <Button
-      onClick={() => onSelect((mobile) => getDialogContent[skillType](skill, mobile))}
+      onClick={() => onSelect((mobile) => getDialogContent[skillType](skill, mobile, t))}
       sx={{
         width: buttonSize,
         height: buttonSize,

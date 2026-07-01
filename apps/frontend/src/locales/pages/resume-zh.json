@@ -9,7 +9,7 @@
     "linkedin": "领英：<br/><linkedin>{{linkedin}}</linkedin>"
   },
   "education": {
-    "title": "学历",
+    "title": "学历 / 培训",
     "hcltech": {
       "name": "HCLTech",
       "programme": "IMDA 全栈开发毕业生培训",
@@ -83,5 +83,78 @@
         ]
       }
     ]
+  },
+  "skills": {
+    "title": "技能 / 兴趣",
+    "languages": {
+      "title": "语言",
+      "list": [
+        { "name": "英语", "level": "母语", "code": "EN" },
+        { "name": "中文", "level": "母语", "code": "CN" }
+      ]
+    },
+    "technical": {
+      "title": "技术技能",
+      "durationLabel": "经验",
+      "proficiencyLabel": "熟练度",
+      "frontendTitle": "前端",
+      "frontend": [
+        { "name": "React", "duration": "2年", "proficiency": "★★★★★", "icon": "react" },
+        { "name": "React Router", "duration": "2年", "proficiency": "★★★★★", "icon": "router" },
+        { "name": "React Redux", "duration": "2年", "proficiency": "★★★★★", "icon": "redux" },
+        { "name": "Nx", "duration": "0.5年", "proficiency": "★★★", "icon": "nx" },
+        { "name": "Nx Rspack", "duration": "0.5年", "proficiency": "★★★", "icon": "rspack" },
+        { "name": "Webpack", "duration": "1.5年", "proficiency": "★★★", "icon": "webpack" },
+        {
+          "name": "模块联邦",
+          "duration": "0.5年",
+          "proficiency": "★★★★",
+          "icon": "moduleFederation"
+        },
+        { "name": "Material UI", "duration": "2年", "proficiency": "★★★★★", "icon": "materialUI" },
+        { "name": "React Jest", "duration": "2年", "proficiency": "★★★★★", "icon": "jest" },
+        { "name": "Node.js", "duration": "2年", "proficiency": "★★★★", "icon": "nodejs" }
+      ],
+      "backendTitle": "后端",
+      "backend": [
+        { "name": "Java", "duration": "4年", "proficiency": "★★★★★", "icon": "java" },
+        {
+          "name": "Java Hibernate",
+          "duration": "0.5年",
+          "proficiency": "★★★",
+          "icon": "hibernate"
+        },
+        { "name": "Java Spring", "duration": "0.5年", "proficiency": "★★★", "icon": "spring" },
+        { "name": "JUnit", "duration": "1.5年", "proficiency": "★★★★", "icon": "junit" },
+        { "name": "MySQL", "duration": "0.5年", "proficiency": "★★★", "icon": "mysql" },
+        { "name": "C++", "duration": "1年", "proficiency": "★★★", "icon": "cpp" },
+        { "name": "Qt", "duration": "1年", "proficiency": "★★★★", "icon": "qt" },
+        { "name": "C#", "duration": "1年", "proficiency": "★★★★", "icon": "csharp" },
+        { "name": "Unity", "duration": "1年", "proficiency": "★★★★", "icon": "unity" }
+      ],
+      "miscTitle": "其他",
+      "misc": [
+        { "name": "Git", "duration": "8年", "proficiency": "★★★★★", "icon": "git" },
+        { "name": "Github", "duration": "6年", "proficiency": "★★★★★", "icon": "github" },
+        { "name": "Gitlab", "duration": "2年", "proficiency": "★★★★★", "icon": "gitlab" },
+        { "name": "Kubernetes", "duration": "1年", "proficiency": "★★★", "icon": "kube" },
+        { "name": "调试", "duration": "5年", "proficiency": "★★★★★", "icon": "debug" },
+        { "name": "文档编写", "duration": "4年", "proficiency": "★★★★★", "icon": "docs" },
+        { "name": "CI/CD", "duration": "2年", "proficiency": "★★★★★", "icon": "cicd" },
+        { "name": "Claude Code", "duration": "1年", "proficiency": "★★★★★", "icon": "claude" }
+      ],
+      "click": "请点击技能按钮查看详情"
+    },
+    "interests": {
+      "title": "兴趣爱好",
+      "list": [
+        { "name": "CAD 建模与 3D 打印", "icon": "handyman" },
+        { "name": "玩电脑游戏", "icon": "esports" },
+        { "name": "编写个人项目", "icon": "code" },
+        { "name": "组装机械键盘", "icon": "keyboard" },
+        { "name": "组装定制电脑", "icon": "devices" },
+        { "name": "跑步 / 游泳 / 高强度间歇训练", "icon": "fitness" }
+      ]
+    }
   }
 }

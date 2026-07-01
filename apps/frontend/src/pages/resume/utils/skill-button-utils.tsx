@@ -38,6 +38,7 @@ import ReduxOriginal from 'devicons-react/icons/ReduxOriginal';
 import SpringOriginal from 'devicons-react/icons/SpringOriginal';
 import UnityOriginal from 'devicons-react/icons/UnityOriginal';
 import WebpackOriginal from 'devicons-react/icons/WebpackOriginal';
+import { TFunction } from 'i18next';
 import { FunctionComponent, ReactNode } from 'react';
 import ReactCountryFlag from 'react-country-flag';
 
@@ -69,8 +70,13 @@ export enum SkillType {
   INTEREST,
 }
 
-export type LanguageSkill = { name: string; level: string };
-export type TechnicalSkill = { name: string; icon: string; duration?: string; confidence?: string };
+export type LanguageSkill = { name: string; level: string; code: string };
+export type TechnicalSkill = {
+  name: string;
+  icon: string;
+  duration?: string;
+  proficiency?: string;
+};
 export type InterestSkill = { name: string; icon: string };
 
 export type SkillOf = {
@@ -82,14 +88,18 @@ export type SkillOf = {
 export type DialogContentRenderer = (isMobile: boolean) => ReactNode | undefined;
 
 export const getDialogContent: {
-  [K in SkillType]: (skill: SkillOf[K], isMobile: boolean) => ReactNode | undefined;
+  [K in SkillType]: (skill: SkillOf[K], isMobile: boolean, t: TFunction) => ReactNode | undefined;
 } = {
   [SkillType.LANGUAGE]: () => undefined,
   [SkillType.TECHNICAL]: getTechnicalDialogContent,
   [SkillType.INTEREST]: () => undefined,
 };
 
-function getTechnicalDialogContent(skill: TechnicalSkill, isMobile: boolean): ReactNode {
+function getTechnicalDialogContent(
+  skill: TechnicalSkill,
+  isMobile: boolean,
+  t: TFunction,
+): ReactNode {
   const ButtonIcon = technicalNameIconMap[skill.icon];
   return (
     <Section centered blurless snug>
@@ -98,12 +108,12 @@ function getTechnicalDialogContent(skill: TechnicalSkill, isMobile: boolean): Re
       <ButtonIcon size={isMobile ? '40%' : '20%'} />
       <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row' }}>
         <Section centered blurless>
-          <SectionTitle message={'Experience'} variant='h5' />
+          <SectionTitle message={t('skills.technical.durationLabel')} variant='h5' />
           {skill.duration}
         </Section>
         <Section centered blurless>
-          <SectionTitle message={'Proficiency'} variant='h5' />
-          {skill.confidence}
+          <SectionTitle message={t('skills.technical.proficiencyLabel')} variant='h5' />
+          {skill.proficiency}
         </Section>
       </Box>
     </Section>
@@ -113,7 +123,7 @@ function getTechnicalDialogContent(skill: TechnicalSkill, isMobile: boolean): Re
 export const getButtonContent: {
   [K in SkillType]: (skill: SkillOf[K], isMobile: boolean) => ReactNode;
 } = {
-  [SkillType.LANGUAGE]: (skill) => getLanguageButtonContent(skill.name, skill.level),
+  [SkillType.LANGUAGE]: getLanguageButtonContent,
   [SkillType.TECHNICAL]: (skill, isMobile) =>
     getTechnicalButtonContent(skill.name, skill.icon, isMobile),
   [SkillType.INTEREST]: (skill, isMobile) =>
@@ -139,19 +149,57 @@ const ButtonContentLabel = ({ children }: ButtonContentLabelProps) => {
   );
 };
 
-function getLanguageButtonContent(language: string, level: string): ReactNode {
-  const countryCodeMap: Record<string, string> = { English: 'GB', Chinese: 'CN' };
+const EnglishFlag: FunctionComponent<{ size?: number | string }> = ({ size }) => (
+  <Box sx={{ position: 'relative', display: 'inline-block', width: size }}>
+    <ReactCountryFlag
+      countryCode='US'
+      svg
+      style={{ display: 'block', width: '100%', height: 'auto', visibility: 'hidden' }}
+    />
+    <Box sx={{ position: 'absolute', inset: 0, clipPath: 'polygon(0 0, 58% 0, 38% 100%, 0 100%)' }}>
+      <ReactCountryFlag
+        countryCode='US'
+        svg
+        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+      />
+    </Box>
+    <Box
+      sx={{
+        position: 'absolute',
+        inset: 0,
+        clipPath: 'polygon(62% 0, 100% 0, 100% 100%, 42% 100%)',
+      }}
+    >
+      <ReactCountryFlag
+        countryCode='GB'
+        svg
+        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+      />
+    </Box>
+  </Box>
+);
+const ChineseFlag: FunctionComponent<{ size?: number | string }> = ({ size }) => (
+  <ReactCountryFlag
+    countryCode='CN'
+    svg
+    style={{ width: size, height: 'auto', objectFit: 'contain' }}
+  />
+);
+
+const languageNameIconMap: Record<string, FunctionComponent<{ size?: number | string }>> = {
+  EN: EnglishFlag,
+  CN: ChineseFlag,
+};
+
+function getLanguageButtonContent(skill: SkillOf[SkillType.LANGUAGE]): ReactNode {
+  const LanguageIcon = languageNameIconMap[skill.code];
   return (
     <ButtonContentContainer>
-      <ReactCountryFlag
-        countryCode={countryCodeMap[language]}
-        svg
-        style={{ width: '75%', height: 'auto', objectFit: 'contain' }}
-      />
+      <LanguageIcon size={'75%'} />
       <ButtonContentLabel>
-        {language}
+        {skill.name}
         {<br />}
-        {level}
+        {skill.level}
       </ButtonContentLabel>
     </ButtonContentContainer>
   );
