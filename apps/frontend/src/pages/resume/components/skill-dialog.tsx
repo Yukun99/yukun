@@ -4,18 +4,15 @@ import Dialog from '@mui/material/Dialog';
 import Fade from '@mui/material/Fade';
 import { ReactNode } from 'react';
 
-type SkillDialogProps = {
-  content?: ReactNode;
-  setSkillDialogContent: (content?: ReactNode) => void;
-};
+type SkillDialogProps = { content?: ReactNode; onClose: () => void };
 
-const SkillDialog = ({ content, setSkillDialogContent }: SkillDialogProps) => {
+const SkillDialog = ({ content, onClose }: SkillDialogProps) => {
   const { padding } = useSpacing();
 
   return (
     <Dialog
       open={Boolean(content)}
-      onClose={() => setSkillDialogContent(undefined)}
+      onClose={onClose}
       transitionDuration={0}
       slotProps={{
         paper: {

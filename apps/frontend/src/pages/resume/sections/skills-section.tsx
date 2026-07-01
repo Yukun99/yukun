@@ -6,17 +6,19 @@ import SectionTitle from '@/common/components/sections/section-title';
 import SkillButton from '@/pages/resume/components/skill-button';
 import { PAGE } from '@/pages/resume/resume';
 import {
+  DialogContentRenderer,
   InterestSkill,
   LanguageSkill,
   SkillType,
   TechnicalSkill,
 } from '@/pages/resume/utils/skill-button-utils';
 import Box from '@mui/material/Box';
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-type SkillsSectionProps = { setSkillDialogContent: (content: ReactNode | undefined) => void };
-const SkillsSection = ({ setSkillDialogContent }: SkillsSectionProps) => {
+type SkillsSectionProps = { onSelectSkill: (renderer: DialogContentRenderer) => void };
+
+const SkillsSection = ({ onSelectSkill }: SkillsSectionProps) => {
   const { t } = useTranslation(PAGE);
 
   const languageSkills = t('skills.languages.list', { returnObjects: true }) as LanguageSkill[];
@@ -44,7 +46,7 @@ const SkillsSection = ({ setSkillDialogContent }: SkillsSectionProps) => {
       >
         {languageSkills.map((language) => (
           <SkillButton
-            setSkillDialogContent={setSkillDialogContent}
+            onSelect={onSelectSkill}
             skill={language}
             skillType={SkillType.LANGUAGE}
             key={language.name}
@@ -69,7 +71,7 @@ const SkillsSection = ({ setSkillDialogContent }: SkillsSectionProps) => {
           <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
             {technicalSkillsFE.map((frontend) => (
               <SkillButton
-                setSkillDialogContent={setSkillDialogContent}
+                onSelect={onSelectSkill}
                 skill={frontend}
                 skillType={SkillType.TECHNICAL}
                 key={frontend.name}
@@ -85,7 +87,7 @@ const SkillsSection = ({ setSkillDialogContent }: SkillsSectionProps) => {
           <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
             {technicalSkillsBE.map((backend) => (
               <SkillButton
-                setSkillDialogContent={setSkillDialogContent}
+                onSelect={onSelectSkill}
                 skill={backend}
                 skillType={SkillType.TECHNICAL}
                 key={backend.name}
@@ -101,7 +103,7 @@ const SkillsSection = ({ setSkillDialogContent }: SkillsSectionProps) => {
           <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
             {technicalSkillsMisc.map((misc) => (
               <SkillButton
-                setSkillDialogContent={setSkillDialogContent}
+                onSelect={onSelectSkill}
                 skill={misc}
                 skillType={SkillType.TECHNICAL}
                 key={misc.name}
@@ -120,7 +122,7 @@ const SkillsSection = ({ setSkillDialogContent }: SkillsSectionProps) => {
       >
         {interests.map((interest) => (
           <SkillButton
-            setSkillDialogContent={setSkillDialogContent}
+            onSelect={onSelectSkill}
             skill={interest}
             skillType={SkillType.INTEREST}
             key={interest.name}

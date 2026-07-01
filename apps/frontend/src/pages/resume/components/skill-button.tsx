@@ -3,23 +3,23 @@ import { BUTTON_SIZE } from '@/common/components/buttons/round-icon-button';
 import useIsMobile from '@/common/hooks/use-is-mobile';
 import { useSpacing } from '@/pages/page';
 import {
+  DialogContentRenderer,
   getButtonContent,
   getDialogContent,
   SkillOf,
   SkillType,
 } from '@/pages/resume/utils/skill-button-utils';
 import Button from '@mui/material/Button';
-import { ReactNode } from 'react';
 
 type SkillButtonProps<K extends SkillType> = {
-  setSkillDialogContent: (children?: ReactNode) => void;
+  onSelect: (renderer: DialogContentRenderer) => void;
   skill: SkillOf[K];
   skillType: K;
   size?: number;
 };
 
 const SkillButton = <K extends SkillType>({
-  setSkillDialogContent,
+  onSelect,
   skill,
   skillType,
   size,
@@ -30,7 +30,7 @@ const SkillButton = <K extends SkillType>({
 
   return (
     <Button
-      onClick={() => setSkillDialogContent(getDialogContent[skillType](skill, isMobile))}
+      onClick={() => onSelect((mobile) => getDialogContent[skillType](skill, mobile))}
       sx={{
         width: buttonSize,
         height: buttonSize,

@@ -79,6 +79,8 @@ export type SkillOf = {
   [SkillType.INTEREST]: InterestSkill;
 };
 
+export type DialogContentRenderer = (isMobile: boolean) => ReactNode | undefined;
+
 export const getDialogContent: {
   [K in SkillType]: (skill: SkillOf[K], isMobile: boolean) => ReactNode | undefined;
 } = {
