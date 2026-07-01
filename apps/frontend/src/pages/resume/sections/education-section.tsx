@@ -1,18 +1,19 @@
 import Section from '@/common/components/sections/section';
 import SectionDividerHor from '@/common/components/sections/section-divider-hor';
 import SectionParagraphByKey from '@/common/components/sections/section-paragraph-by-key';
+import useIsMobile from '@/common/hooks/use-is-mobile';
 import { PAGE } from '@/pages/resume/resume';
 import Box from '@mui/material/Box';
-import { isMobileOnly } from 'react-device-detect';
-
-const REVERSE_FLEX_DIRECTION = isMobileOnly ? 'column-reverse' : 'row';
-const EDUCATION_WIDE_WIDTH = isMobileOnly ? undefined : '65%';
-const EDUCATION_NARROW_WIDTH = isMobileOnly ? undefined : '25%';
-const EDUCATION_NARROW_MARGIN = isMobileOnly ? undefined : 'auto';
 
 const EducationSection = () => {
+  const isMobile = useIsMobile();
+  const REVERSE_FLEX_DIRECTION = isMobile ? 'column-reverse' : 'row';
+  const EDUCATION_WIDE_WIDTH = isMobile ? undefined : '65%';
+  const EDUCATION_NARROW_WIDTH = isMobile ? undefined : '25%';
+  const EDUCATION_NARROW_MARGIN = isMobile ? undefined : 'auto';
+
   return (
-    <Section page={PAGE} title={'education'} width={isMobileOnly ? undefined : '50%'}>
+    <Section page={PAGE} title={'education'} width={isMobile ? undefined : '50%'}>
       <SectionParagraphByKey
         page={PAGE}
         i18nKey={'education.hcltech.name'}

@@ -5,7 +5,12 @@ import SectionParagraph from '@/common/components/sections/section-paragraph';
 import SectionTitle from '@/common/components/sections/section-title';
 import SkillButton from '@/pages/resume/components/skill-button';
 import { PAGE } from '@/pages/resume/resume';
-import { Skill, SkillType } from '@/pages/resume/utils/skill-button-utils';
+import {
+  InterestSkill,
+  LanguageSkill,
+  SkillType,
+  TechnicalSkill,
+} from '@/pages/resume/utils/skill-button-utils';
 import Box from '@mui/material/Box';
 import { ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,11 +19,17 @@ type SkillsSectionProps = { setSkillDialogContent: (content: ReactNode | undefin
 const SkillsSection = ({ setSkillDialogContent }: SkillsSectionProps) => {
   const { t } = useTranslation(PAGE);
 
-  const languageSkills = t('skills.languages.list', { returnObjects: true }) as Skill[];
-  const technicalSkillsFE = t('skills.technical.frontend', { returnObjects: true }) as Skill[];
-  const technicalSkillsBE = t('skills.technical.backend', { returnObjects: true }) as Skill[];
-  const technicalSkillsMisc = t('skills.technical.misc', { returnObjects: true }) as Skill[];
-  const interests = t('skills.interests.list', { returnObjects: true }) as Skill[];
+  const languageSkills = t('skills.languages.list', { returnObjects: true }) as LanguageSkill[];
+  const technicalSkillsFE = t('skills.technical.frontend', {
+    returnObjects: true,
+  }) as TechnicalSkill[];
+  const technicalSkillsBE = t('skills.technical.backend', {
+    returnObjects: true,
+  }) as TechnicalSkill[];
+  const technicalSkillsMisc = t('skills.technical.misc', {
+    returnObjects: true,
+  }) as TechnicalSkill[];
+  const interests = t('skills.interests.list', { returnObjects: true }) as InterestSkill[];
 
   const [expandedAccordion, setExpandedAccordion] = useState<number | undefined>(undefined);
 

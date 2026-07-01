@@ -2,12 +2,14 @@ import Section from '@/common/components/sections/section';
 import SectionParagraphByKey, {
   PLACEHOLDER_TYPE,
 } from '@/common/components/sections/section-paragraph-by-key';
+import useIsMobile from '@/common/hooks/use-is-mobile';
 import { PAGE } from '@/pages/resume/resume';
-import { isMobileOnly } from 'react-device-detect';
 
 const ContactSection = () => {
+  const isMobile = useIsMobile();
+
   return (
-    <Section page={PAGE} title='contact' width={isMobileOnly ? undefined : '50%'}>
+    <Section page={PAGE} title='contact' width={isMobile ? undefined : '50%'}>
       <SectionParagraphByKey
         page={PAGE}
         i18nKey={'contact.name'}

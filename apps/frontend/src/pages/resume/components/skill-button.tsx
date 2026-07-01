@@ -1,39 +1,43 @@
 import { getColor, GRAY, OPACITY } from '@/app/palette';
 import { BUTTON_SIZE } from '@/common/components/buttons/round-icon-button';
-import { GLOBAL_MARGIN, GLOBAL_PADDING } from '@/pages/page';
+import useIsMobile from '@/common/hooks/use-is-mobile';
+import { useSpacing } from '@/pages/page';
 import {
   getButtonContent,
   getDialogContent,
-  Skill,
+  SkillOf,
   SkillType,
 } from '@/pages/resume/utils/skill-button-utils';
 import Button from '@mui/material/Button';
 import { ReactNode } from 'react';
-import { isMobileOnly } from 'react-device-detect';
 
-type SkillButtonProps = {
+type SkillButtonProps<K extends SkillType> = {
   setSkillDialogContent: (children?: ReactNode) => void;
-  skill: Skill;
-  skillType: SkillType;
+  skill: SkillOf[K];
+  skillType: K;
   size?: number;
 };
 
-const SkillButton = ({
+const SkillButton = <K extends SkillType>({
   setSkillDialogContent,
   skill,
   skillType,
-  size = isMobileOnly ? BUTTON_SIZE * 1.45 : BUTTON_SIZE * 2.5,
-}: SkillButtonProps) => {
+  size,
+}: SkillButtonProps<K>) => {
+  const isMobile = useIsMobile();
+  const { margin, padding } = useSpacing();
+  const buttonSize = size ?? (isMobile ? BUTTON_SIZE * 1.45 : BUTTON_SIZE * 2.5);
+
   return (
     <Button
-      onClick={() => setSkillDialogContent(getDialogContent[skillType](skill))}
+      onClick={() => setSkillDialogContent(getDialogContent[skillType](skill, isMobile))}
       sx={{
-        width: size,
-        height: size,
+        width: buttonSize,
+        height: buttonSize,
         border: '1px solid',
         borderColor: 'divider',
-        borderRadius: `${GLOBAL_PADDING}px`,
-        margin: `${GLOBAL_MARGIN}px`,
+        borderRadius: `${padding}px`,
+        margin: `${margin}px`,
         boxShadow: (theme) => theme.shadows[16],
         background: `
           linear-gradient(
@@ -49,7 +53,7 @@ const SkillButton = ({
         `,
       }}
     >
-      {getButtonContent[skillType](skill)}
+      {getButtonContent[skillType](skill, isMobile)}
     </Button>
   );
 };

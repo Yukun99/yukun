@@ -1,12 +1,12 @@
 import SectionTitle from '@/common/components/sections/section-title';
-import { GLOBAL_MARGIN } from '@/pages/page';
+import useIsMobile from '@/common/hooks/use-is-mobile';
+import { useSpacing } from '@/pages/page';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
 import { ReactNode } from 'react';
-import { isMobileOnly } from 'react-device-detect';
 
 type SectionAccordionProps = {
   title: string;
@@ -29,6 +29,9 @@ const SectionAccordion = ({
   column,
   children,
 }: SectionAccordionProps) => {
+  const isMobile = useIsMobile();
+  const { margin } = useSpacing();
+
   return (
     <Accordion
       sx={{ bgcolor: 'transparent', backgroundImage: 'none', border: 'none', boxShadow: 'none' }}
@@ -48,10 +51,10 @@ const SectionAccordion = ({
       <AccordionDetails sx={{ padding: 0 }}>
         <Box
           sx={{
-            paddingY: `${GLOBAL_MARGIN}px`,
+            paddingY: `${margin}px`,
             display: 'flex',
             flexWrap: 'wrap',
-            justifyContent: isMobileOnly || centered ? 'center' : undefined,
+            justifyContent: isMobile || centered ? 'center' : undefined,
             flexDirection: column ? 'column' : undefined,
           }}
         >

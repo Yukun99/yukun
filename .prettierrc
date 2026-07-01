@@ -2,20 +2,12 @@
   "arrowParens": "always",
   "bracketSameLine": false,
   "bracketSpacing": true,
+  "endOfLine": "lf",
   "experimentalOperatorPosition": "start",
   "jsxSingleQuote": true,
   "objectWrap": "collapse",
-  "overrides": [
-    {
-      "files": ".prettierrc",
-      "options": {
-        "parser": "json"
-      }
-    }
-  ],
-  "plugins": [
-    "prettier-plugin-organize-imports"
-  ],
+  "overrides": [{ "files": ".prettierrc", "options": { "parser": "json" } }],
+  "plugins": ["prettier-plugin-organize-imports"],
   "printWidth": 100,
   "semi": true,
   "singleQuote": true,

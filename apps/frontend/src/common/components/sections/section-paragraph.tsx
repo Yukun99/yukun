@@ -1,16 +1,20 @@
-import { GLOBAL_MARGIN } from '@/pages/page';
+import { useSpacing } from '@/pages/page';
+import type { Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { ReactNode } from 'react';
+import type { SystemStyleObject } from '@mui/system';
+import { CSSProperties, ReactNode } from 'react';
 
 export type SectionParagraphProps = {
   children: ReactNode;
-  textAlign?: string;
+  textAlign?: CSSProperties['textAlign'];
   noGap?: boolean;
   link?: string;
-  style?: any;
+  style?: SystemStyleObject<Theme>;
 };
 
 const SectionParagraph = ({ children, textAlign, noGap, link, style }: SectionParagraphProps) => {
+  const { margin } = useSpacing();
+
   return (
     <Typography
       variant={'body1'}
@@ -18,11 +22,7 @@ const SectionParagraph = ({ children, textAlign, noGap, link, style }: SectionPa
       href={link || undefined}
       target={link ? '_blank' : undefined}
       rel={link ? 'noopener noreferrer' : undefined}
-      sx={{
-        textAlign: textAlign,
-        marginBottom: noGap ? undefined : `${GLOBAL_MARGIN}px`,
-        ...style,
-      }}
+      sx={{ textAlign: textAlign, marginBottom: noGap ? undefined : `${margin}px`, ...style }}
     >
       {children}
     </Typography>

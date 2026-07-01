@@ -1,7 +1,9 @@
 import { getColor, GRAY, OPACITY } from '@/app/palette';
 import SectionTitle from '@/common/components/sections/section-title';
-import { GLOBAL_MARGIN, GLOBAL_PADDING } from '@/pages/page';
+import { useSpacing } from '@/pages/page';
 import Box from '@mui/material/Box';
+import type { Theme } from '@mui/material/styles';
+import type { SystemStyleObject } from '@mui/system';
 import { ReactNode } from 'react';
 
 const FROSTED_BG = `
@@ -21,7 +23,7 @@ export type SectionProps = {
   title?: string;
   page?: string;
   width?: number | string;
-  style?: any;
+  style?: SystemStyleObject<Theme>;
   centered?: boolean;
   blurless?: boolean;
   snug?: boolean;
@@ -38,6 +40,8 @@ const Section = ({
   snug,
   children,
 }: SectionProps) => {
+  const { margin, padding } = useSpacing();
+
   return (
     <Box
       sx={{
@@ -46,11 +50,11 @@ const Section = ({
         flexDirection: width ? undefined : 'column',
         alignItems: centered ? 'center' : undefined,
         justifyContent: centered ? 'center' : undefined,
-        margin: snug ? undefined : `${GLOBAL_MARGIN}px`,
-        padding: `${GLOBAL_PADDING}px`,
+        margin: snug ? undefined : `${margin}px`,
+        padding: `${padding}px`,
         border: '1px solid',
         borderColor: 'divider',
-        borderRadius: `${GLOBAL_PADDING}px`,
+        borderRadius: `${padding}px`,
         boxShadow: (theme) => theme.shadows[16],
         backdropFilter: blurless ? undefined : 'blur(20px) saturate(250%)',
         WebkitBackdropFilter: blurless ? undefined : 'blur(20px) saturate(250%)',

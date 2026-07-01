@@ -3,23 +3,25 @@ import Section from '@/common/components/sections/section';
 import SectionParagraphByKey, {
   PLACEHOLDER_TYPE,
 } from '@/common/components/sections/section-paragraph-by-key';
+import useIsMobile from '@/common/hooks/use-is-mobile';
 import Page from '@/pages/page';
 import Box from '@mui/material/Box';
-import { isMobileOnly } from 'react-device-detect';
 
 const PAGE = 'home';
 
 const Home = () => {
+  const isMobile = useIsMobile();
+
   return (
     <Page>
-      <Box sx={{ display: 'flex', flexDirection: isMobileOnly ? 'column-reverse' : 'row' }}>
-        <Section title='intro' page={PAGE} width={isMobileOnly ? undefined : '80%'}>
+      <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column-reverse' : 'row' }}>
+        <Section title='intro' page={PAGE} width={isMobile ? undefined : '80%'}>
           <SectionParagraphByKey page={PAGE} i18nKey='intro.1' />
           <SectionParagraphByKey page={PAGE} i18nKey='intro.2' />
           <SectionParagraphByKey page={PAGE} i18nKey='intro.3' />
           <SectionParagraphByKey page={PAGE} i18nKey='intro.4' />
         </Section>
-        <Section title='details' page={PAGE} width={isMobileOnly ? undefined : '40%'}>
+        <Section title='details' page={PAGE} width={isMobile ? undefined : '40%'}>
           <SectionParagraphByKey
             page={PAGE}
             i18nKey='details.name'

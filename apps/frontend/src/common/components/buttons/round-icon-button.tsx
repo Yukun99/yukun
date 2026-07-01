@@ -1,11 +1,13 @@
 import { PURPLE } from '@/app/palette';
 import StarBurst, { type StarBurstHandle } from '@/common/components/effects/star-burst';
+import useIsMobile from '@/common/hooks/use-is-mobile';
 import { SvgIconComponent } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import type { Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import type { SystemStyleObject } from '@mui/system';
 import { type MouseEvent, useRef } from 'react';
-import { isMobileOnly } from 'react-device-detect';
 
 const ICON_GRADIENT_ID = 'round-icon-button-purple-gradient';
 
@@ -27,8 +29,13 @@ export function getFormattedIcon(Icon: SvgIconComponent | string, size: number |
   );
 }
 
-export const BUTTON_SIZE: number = 75;
-export type ButtonProps = { onClick?: () => void; style?: any; size?: number; label?: string };
+export const BUTTON_SIZE = 75;
+export type ButtonProps = {
+  onClick?: () => void;
+  style?: SystemStyleObject<Theme>;
+  size?: number;
+  label?: string;
+};
 type RoundIconButtonProps = ButtonProps & { icon: SvgIconComponent | string; isSpecial?: boolean };
 
 const RoundIconButton = ({
@@ -39,6 +46,7 @@ const RoundIconButton = ({
   label,
   isSpecial,
 }: RoundIconButtonProps) => {
+  const isMobile = useIsMobile();
   const starBurst = useRef<StarBurstHandle>(null);
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     if (isSpecial) starBurst.current?.burst(e);
@@ -51,7 +59,7 @@ const RoundIconButton = ({
         width: size,
         height: size,
         borderRadius: '50%',
-        margin: isMobileOnly ? '6px' : '8px',
+        margin: isMobile ? '6px' : '8px',
         padding: 0,
         flexDirection: 'column',
         position: 'relative',

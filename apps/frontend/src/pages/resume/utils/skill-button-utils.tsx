@@ -40,7 +40,6 @@ import UnityOriginal from 'devicons-react/icons/UnityOriginal';
 import WebpackOriginal from 'devicons-react/icons/WebpackOriginal';
 import { FunctionComponent, ReactNode } from 'react';
 import ReactCountryFlag from 'react-country-flag';
-import { isMobileOnly } from 'react-device-detect';
 
 const RspackOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
   <img src={Rspack} style={{ width: size, height: size }} alt='Rspack' />
@@ -64,29 +63,38 @@ const CallMergeIconOriginal: FunctionComponent<{ size?: number | string }> = ({ 
   <CallMergeIcon style={{ width: size, height: size, transform: 'rotate(90deg)' }} />
 );
 
-export type Skill = { name: string } & Language & Technical;
 export enum SkillType {
   LANGUAGE,
   TECHNICAL,
   INTEREST,
 }
-type Language = { level?: string };
-type Technical = { duration?: string; confidence?: string; icon?: string };
 
-export const getDialogContent: Record<SkillType, (skill: Skill) => ReactNode | undefined> = {
+export type LanguageSkill = { name: string; level: string };
+export type TechnicalSkill = { name: string; icon: string; duration?: string; confidence?: string };
+export type InterestSkill = { name: string; icon: string };
+
+export type SkillOf = {
+  [SkillType.LANGUAGE]: LanguageSkill;
+  [SkillType.TECHNICAL]: TechnicalSkill;
+  [SkillType.INTEREST]: InterestSkill;
+};
+
+export const getDialogContent: {
+  [K in SkillType]: (skill: SkillOf[K], isMobile: boolean) => ReactNode | undefined;
+} = {
   [SkillType.LANGUAGE]: () => undefined,
   [SkillType.TECHNICAL]: getTechnicalDialogContent,
   [SkillType.INTEREST]: () => undefined,
 };
 
-function getTechnicalDialogContent(skill: Skill): ReactNode {
-  const ButtonIcon = technicalNameIconMap[skill.icon!];
+function getTechnicalDialogContent(skill: TechnicalSkill, isMobile: boolean): ReactNode {
+  const ButtonIcon = technicalNameIconMap[skill.icon];
   return (
     <Section centered blurless snug>
       <SectionTitle message={skill.name} variant='h5' />
       <SectionDividerHor />
-      <ButtonIcon size={isMobileOnly ? '40%' : '20%'} />
-      <Box sx={{ display: 'flex', flexDirection: isMobileOnly ? 'column' : 'row' }}>
+      <ButtonIcon size={isMobile ? '40%' : '20%'} />
+      <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row' }}>
         <Section centered blurless>
           <SectionTitle message={'Experience'} variant='h5' />
           {skill.duration}
@@ -100,10 +108,14 @@ function getTechnicalDialogContent(skill: Skill): ReactNode {
   );
 }
 
-export const getButtonContent: Record<SkillType, (skill: Skill) => ReactNode> = {
-  [SkillType.LANGUAGE]: (skill) => getLanguageButtonContent(skill.name, skill.level!),
-  [SkillType.TECHNICAL]: (skill) => getTechnicalButtonContent(skill.name, skill.icon!),
-  [SkillType.INTEREST]: (skill) => getInterestsButtonContent(skill.name, skill.icon!),
+export const getButtonContent: {
+  [K in SkillType]: (skill: SkillOf[K], isMobile: boolean) => ReactNode;
+} = {
+  [SkillType.LANGUAGE]: (skill) => getLanguageButtonContent(skill.name, skill.level),
+  [SkillType.TECHNICAL]: (skill, isMobile) =>
+    getTechnicalButtonContent(skill.name, skill.icon, isMobile),
+  [SkillType.INTEREST]: (skill, isMobile) =>
+    getInterestsButtonContent(skill.name, skill.icon, isMobile),
 };
 
 type ButtonContentContainerProps = { children: ReactNode };
@@ -172,11 +184,11 @@ const technicalNameIconMap: Record<string, FunctionComponent<{ size?: number | s
   cicd: CallMergeIconOriginal,
   claude: ClaudeOriginal,
 };
-function getTechnicalButtonContent(name: string, icon: string): ReactNode {
+function getTechnicalButtonContent(name: string, icon: string, isMobile: boolean): ReactNode {
   const ButtonIcon = technicalNameIconMap[icon];
   return (
     <ButtonContentContainer>
-      <ButtonIcon size={isMobileOnly ? '50%' : '65%'} />
+      <ButtonIcon size={isMobile ? '50%' : '65%'} />
       <ButtonContentLabel>{name}</ButtonContentLabel>
     </ButtonContentContainer>
   );
@@ -190,11 +202,11 @@ const interestsNameIconMap: Record<string, SvgIconComponent> = {
   devices: DevicesIcon,
   fitness: FitnessCenterIcon,
 };
-function getInterestsButtonContent(name: string, icon: string): ReactNode {
+function getInterestsButtonContent(name: string, icon: string, isMobile: boolean): ReactNode {
   const ButtonIcon = interestsNameIconMap[icon];
   return (
     <ButtonContentContainer>
-      {getFormattedIcon(ButtonIcon, isMobileOnly ? '40%' : '55%')}
+      {getFormattedIcon(ButtonIcon, isMobile ? '40%' : '55%')}
       <ButtonContentLabel>{name}</ButtonContentLabel>
     </ButtonContentContainer>
   );

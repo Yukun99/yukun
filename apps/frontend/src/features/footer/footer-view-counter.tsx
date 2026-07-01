@@ -19,11 +19,11 @@ const FooterViewCounter = () => {
     const endpoint = isLocalhost() ? 'get' : 'hit';
     fetch(`https://abacus.jasoncameron.dev/${endpoint}/${ABACUS_NAMESPACE}/${ABACUS_KEY}`)
       .then((res) => res.json())
-      .then((data) => setViews(data.value))
+      .then((data) => setViews(typeof data?.value === 'number' ? data.value : null))
       .catch(() => setViews(null));
   }, []);
 
-  if (!views) return null;
+  if (views === null) return null;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

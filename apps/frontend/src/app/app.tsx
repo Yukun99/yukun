@@ -7,21 +7,16 @@ import Footer from '@/features/footer/footer';
 import Navigation from '@/features/navigation/navigation';
 import Box from '@mui/material/Box';
 import { useColorScheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import useTheme from '@mui/system/useTheme';
 import type { OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import 'overlayscrollbars/overlayscrollbars.css';
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Suspense, useRef } from 'react';
 import { useRoutes } from 'react-router-dom';
 
 const AppRoutes = () => useRoutes(routes);
 
 const App = () => {
   useDocumentTitle();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [wasMobile, setWasMobile] = useState<boolean>(isMobile);
   const { mode } = useColorScheme();
   const scrollRef = useRef<OverlayScrollbarsComponentRef>(null);
 
@@ -29,13 +24,6 @@ const App = () => {
     const viewport = scrollRef.current?.osInstance()?.elements().viewport;
     viewport?.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
-  useEffect(() => {
-    if (isMobile !== wasMobile) {
-      setWasMobile(isMobile);
-      window.location.reload();
-    }
-  }, [isMobile]);
 
   return (
     <Box

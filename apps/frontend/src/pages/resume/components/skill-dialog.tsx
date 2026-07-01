@@ -1,4 +1,4 @@
-import { GLOBAL_PADDING } from '@/pages/page';
+import { useSpacing } from '@/pages/page';
 import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import Fade from '@mui/material/Fade';
@@ -10,6 +10,8 @@ type SkillDialogProps = {
 };
 
 const SkillDialog = ({ content, setSkillDialogContent }: SkillDialogProps) => {
+  const { padding } = useSpacing();
+
   return (
     <Dialog
       open={Boolean(content)}
@@ -18,7 +20,7 @@ const SkillDialog = ({ content, setSkillDialogContent }: SkillDialogProps) => {
       slotProps={{
         paper: {
           sx: {
-            borderRadius: `${GLOBAL_PADDING}px`,
+            borderRadius: `${padding}px`,
             bgcolor: 'transparent',
             boxShadow: 'none',
             backgroundImage: 'none',

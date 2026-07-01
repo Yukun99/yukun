@@ -1,6 +1,8 @@
 import SectionParagraph from '@/common/components/sections/section-paragraph';
 import Link from '@mui/material/Link';
-import { ReactElement } from 'react';
+import type { Theme } from '@mui/material/styles';
+import type { SystemStyleObject } from '@mui/system';
+import { CSSProperties, ReactElement } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 export enum PLACEHOLDER_TYPE {
@@ -15,9 +17,9 @@ type SectionParagraphByKeyProps = {
   page?: string;
   i18nKey: string;
   placeholders?: PlaceholderProps[];
-  textAlign?: string;
+  textAlign?: CSSProperties['textAlign'];
   noGap?: boolean;
-  style?: any;
+  style?: SystemStyleObject<Theme>;
 };
 
 const SectionParagraphByKey = ({
