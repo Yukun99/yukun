@@ -26,6 +26,7 @@ export type SectionProps = {
   style?: SystemStyleObject<Theme>;
   centered?: boolean;
   blurless?: boolean;
+  clear?: boolean;
   snug?: boolean;
   tight?: boolean;
   children?: ReactNode;
@@ -38,6 +39,7 @@ const Section = ({
   style,
   centered,
   blurless,
+  clear,
   snug,
   tight,
   children,
@@ -58,9 +60,9 @@ const Section = ({
         borderColor: 'divider',
         borderRadius: `${padding}px`,
         boxShadow: (theme) => theme.shadows[16],
-        backdropFilter: blurless ? undefined : 'blur(20px) saturate(250%)',
-        WebkitBackdropFilter: blurless ? undefined : 'blur(20px) saturate(250%)',
-        background: FROSTED_BG,
+        backdropFilter: blurless || clear ? undefined : 'blur(20px) saturate(250%)',
+        WebkitBackdropFilter: blurless || clear ? undefined : 'blur(20px) saturate(250%)',
+        background: clear ? undefined : FROSTED_BG,
         ...style,
       }}
     >

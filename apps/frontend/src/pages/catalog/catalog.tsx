@@ -5,20 +5,21 @@ import Page from '@/pages/page';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import Box from '@mui/material/Box';
+import { useColorScheme } from '@mui/material/styles';
 import { ComponentType, lazy, ReactNode, Suspense, useEffect, useMemo, useState } from 'react';
 import Markdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const PAGE = 'catalog';
 
-// entry file loaders
+// lazy entry file loaders
 const entryFiles = import.meta.glob('../../assets/catalog/week*.md', {
   query: '?raw',
   import: 'default',
 }) as Record<string, () => Promise<string>>;
 
-// component file loaders
+// lazy component file loaders
 const componentFiles = import.meta.glob('../../**/*.tsx') as Record<
   string,
   () => Promise<{ default: ComponentType }>
@@ -78,6 +79,7 @@ const markdownComponentMap = {
 };
 
 const Catalog = () => {
+  const { mode } = useColorScheme();
   const [week, setWeek] = useState<number>(1);
   const [entry, setEntry] = useState<ParsedEntry | null>(null);
   const [code, setCode] = useState<string>('');
@@ -122,17 +124,18 @@ const Catalog = () => {
     [entry?.componentPath],
   );
 
+  // get section containing content for the week
   function getWeekContent() {
     if (!entry) {
       return (
-        <Section page={PAGE}>
-          <SectionTitle message='Stay tuned for more components!' />
+        <Section page={PAGE} centered>
+          <SectionTitle variant='h5' message='Stay tuned for more components!' />
         </Section>
       );
     }
     return (
       <Section page={PAGE}>
-        <Section style={{ width: '50%', minHeight: '200px', alignSelf: 'center' }}>
+        <Section blurless style={{ width: '60%', minHeight: '200px', alignSelf: 'center' }}>
           {Component && (
             <Suspense fallback={null}>
               <Component />
@@ -141,7 +144,7 @@ const Catalog = () => {
         </Section>
         <Markdown components={markdownComponentMap}>{entry.body}</Markdown>
         {code && (
-          <SyntaxHighlighter language='tsx' style={oneDark}>
+          <SyntaxHighlighter language='tsx' style={mode === 'dark' ? oneDark : oneLight}>
             {code}
           </SyntaxHighlighter>
         )}

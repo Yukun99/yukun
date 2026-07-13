@@ -1,3 +1,5 @@
+### Section
+#### Entry date: 13th July 2026
 Week 1. Exciting! For this week, I wanted to do some basic setup of the repository, get everything such as 
 localisation and routing working, and just get a simple reusable component as a container for displaying future entries.
 
@@ -15,7 +17,7 @@ I added a box shadow. Finally, I added a blur and saturate filter, which complet
 helping the text remain far more readable with busy backgrounds.
 
 To further showcase the blur and saturate effect, I then added a background image with many different colourful and 
-interesting shapes, which would now look like they are showing through frosted glass panes!
+interesting shapes, which would now look like they are showing through frosted glass panes! Not having the panel be fully transparent has the added benefit of adding depth when many of these components are stacked together, making them feel thick and solid, like real pieces of glass.
 
 ### Challenges
 
