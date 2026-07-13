@@ -27,6 +27,7 @@ export type SectionProps = {
   centered?: boolean;
   blurless?: boolean;
   snug?: boolean;
+  tight?: boolean;
   children?: ReactNode;
 };
 
@@ -38,6 +39,7 @@ const Section = ({
   centered,
   blurless,
   snug,
+  tight,
   children,
 }: SectionProps) => {
   const { margin, padding } = useSpacing();
@@ -51,7 +53,7 @@ const Section = ({
         alignItems: centered ? 'center' : undefined,
         justifyContent: centered ? 'center' : undefined,
         margin: snug ? undefined : `${margin}px`,
-        padding: `${padding}px`,
+        padding: tight ? undefined : `${padding}px`,
         border: '1px solid',
         borderColor: 'divider',
         borderRadius: `${padding}px`,
