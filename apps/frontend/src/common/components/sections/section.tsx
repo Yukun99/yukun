@@ -6,7 +6,7 @@ import type { Theme } from '@mui/material/styles';
 import type { SystemStyleObject } from '@mui/system';
 import { ReactNode } from 'react';
 
-const FROSTED_BG = `
+export const FROSTED_BG = `
   linear-gradient(
     135deg,
     ${getColor(GRAY[30], OPACITY[20])},

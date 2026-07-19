@@ -1,4 +1,6 @@
-## Week X: Example
+## Example Component
+
+#### Entry date: 1st January 0000
 
 This is an example week.
 
@@ -16,4 +18,4 @@ https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/sr
 
 ### Component
 
-this/is/an/example/path
+../this/is/an/example/relative/path/to/catalog/page

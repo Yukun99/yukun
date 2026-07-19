@@ -25,13 +25,13 @@ const componentFiles = import.meta.glob('../../**/*.tsx') as Record<
   () => Promise<{ default: ComponentType }>
 >;
 
-type ParsedEntry = { body: string; componentPath: string; sourceUrl: string };
+type ParsedEntry = { body: string; componentPath: string; sourceUrls: string[] };
 
 // parse entry for selected week into object
 function parseEntry(raw: string): ParsedEntry {
   const bodyLines: string[] = [];
   let componentPath = '';
-  let sourceUrl = '';
+  let sourceUrls: string[] = [];
   let mode: 'body' | 'component' | 'source' = 'body';
 
   for (const line of raw.split('\n')) {
@@ -56,18 +56,20 @@ function parseEntry(raw: string): ParsedEntry {
       continue;
     }
     if (mode === 'source') {
-      if (line.trim()) sourceUrl = line.trim();
+      if (line.trim()) sourceUrls.push(line.trim());
       continue;
     }
     bodyLines.push(line);
   }
 
-  return { body: bodyLines.join('\n').trim(), componentPath, sourceUrl };
+  return { body: bodyLines.join('\n').trim(), componentPath, sourceUrls };
 }
 
 // loads component for selected week
 function loadComponent(path: string): ComponentType | null {
-  const loader = componentFiles[`../../${path}`];
+  const loader = componentFiles[`${path}`];
+  // uncomment below code to be sure of component path.
+  // console.warn('Keys:', Object.keys(componentFiles));
   return loader ? lazy(loader) : null;
 }
 
@@ -82,11 +84,13 @@ const Catalog = () => {
   const { mode } = useColorScheme();
   const [week, setWeek] = useState<number>(1);
   const [entry, setEntry] = useState<ParsedEntry | null>(null);
-  const [code, setCode] = useState<string>('');
+  const [code, setCode] = useState<string[]>([]);
 
   // load entry for selected week
   useEffect(() => {
     const loader = entryFiles[`../../assets/catalog/week${week}.md`];
+    // reset code display to empty for next week
+    setCode([]);
     if (!loader) {
       setEntry(null);
       return;
@@ -96,7 +100,7 @@ const Catalog = () => {
     loader().then((raw) => {
       if (active) setEntry(parseEntry(raw));
     });
-    // prevent race conditions from data from multiple weeks returning at once
+    // prevent race conditions from multiple weeks returning data at once
     return () => {
       active = false;
     };
@@ -104,20 +108,21 @@ const Catalog = () => {
 
   // load code snippet for selected week
   useEffect(() => {
-    if (!entry?.sourceUrl) {
-      setCode('');
-      return;
-    }
+    if (!entry?.sourceUrls) return;
     let active = true;
-    fetch(entry.sourceUrl)
-      .then((res) => res.text())
-      .then((text) => {
-        if (active) setCode(text);
-      });
+    for (const sourceUrl of entry.sourceUrls) {
+      fetch(sourceUrl)
+        .then((res) => res.text())
+        .then((text) => {
+          if (active) {
+            setCode((prev) => [...prev, text]);
+          }
+        });
+    }
     return () => {
       active = false;
     };
-  }, [entry?.sourceUrl]);
+  }, [entry?.sourceUrls]);
 
   const Component = useMemo(
     () => (entry?.componentPath ? loadComponent(entry.componentPath) : null),
@@ -135,7 +140,11 @@ const Catalog = () => {
     }
     return (
       <Section page={PAGE}>
-        <Section blurless style={{ width: '60%', minHeight: '200px', alignSelf: 'center' }}>
+        <Section
+          blurless
+          centered
+          style={{ width: '60%', minHeight: '200px', alignSelf: 'center' }}
+        >
           {Component && (
             <Suspense fallback={null}>
               <Component />
@@ -143,11 +152,12 @@ const Catalog = () => {
           )}
         </Section>
         <Markdown components={markdownComponentMap}>{entry.body}</Markdown>
-        {code && (
-          <SyntaxHighlighter language='tsx' style={mode === 'dark' ? oneDark : oneLight}>
-            {code}
-          </SyntaxHighlighter>
-        )}
+        {code
+          && code.map((source, i) => (
+            <SyntaxHighlighter language='tsx' style={mode === 'dark' ? oneDark : oneLight} key={i}>
+              {source}
+            </SyntaxHighlighter>
+          ))}
       </Section>
     );
   }
