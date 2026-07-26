@@ -1,5 +1,5 @@
 import RoundIconButton from '@/common/components/buttons/round-icon-button';
-import { Public } from '@mui/icons-material';
+import Public from '@mui/icons-material/Public';
 import type { i18n } from 'i18next';
 import { useTranslation } from 'react-i18next';
 

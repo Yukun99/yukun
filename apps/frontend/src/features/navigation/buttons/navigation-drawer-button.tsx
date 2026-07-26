@@ -1,5 +1,5 @@
 import { getPathLabel } from '@/app/routes';
-import { ChevronRight } from '@mui/icons-material';
+import ChevronRight from '@mui/icons-material/ChevronRight';
 import Box from '@mui/material/Box';
 import ToggleButton from '@mui/material/ToggleButton';
 import Typography from '@mui/material/Typography';

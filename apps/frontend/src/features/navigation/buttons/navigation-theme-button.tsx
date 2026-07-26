@@ -1,5 +1,6 @@
 import RoundIconButton from '@/common/components/buttons/round-icon-button';
-import { DarkMode, LightMode } from '@mui/icons-material';
+import DarkMode from '@mui/icons-material/DarkMode';
+import LightMode from '@mui/icons-material/LightMode';
 import { useColorScheme } from '@mui/material/styles';
 
 type Mode = 'light' | 'dark' | 'system';
