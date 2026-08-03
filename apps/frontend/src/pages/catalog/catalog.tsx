@@ -1,6 +1,8 @@
 import RoundIconButton from '@/common/components/buttons/round-icon-button';
+import Reveal from '@/common/components/effects/reveal';
 import Section from '@/common/components/sections/section';
 import SectionTitle from '@/common/components/sections/section-title';
+import SkeletonSection from '@/common/skeletons/sk-section';
 import Page from '@/pages/page';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import ArrowForward from '@mui/icons-material/ArrowForward';
@@ -85,20 +87,23 @@ const Catalog = () => {
   const [week, setWeek] = useState<number>(1);
   const [entry, setEntry] = useState<ParsedEntry | null>(null);
   const [code, setCode] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   // load entry for selected week
   useEffect(() => {
     const loader = entryFiles[`../../assets/catalog/week${week}.md`];
     // reset code display to empty for next week
     setCode([]);
-    if (!loader) {
-      setEntry(null);
-      return;
-    }
+    setEntry(null);
+    setLoading(Boolean(loader));
+    if (!loader) return;
     // tracker for if user is still on this week, since loading entry is async
     let active = true;
     loader().then((raw) => {
-      if (active) setEntry(parseEntry(raw));
+      if (active) {
+        setEntry(parseEntry(raw));
+        setLoading(false);
+      }
     });
     // prevent race conditions from multiple weeks returning data at once
     return () => {
@@ -131,32 +136,37 @@ const Catalog = () => {
 
   // get section containing content for the week
   function getWeekContent() {
-    if (!entry) {
+    if (!entry && !loading) {
       return (
         <Section page={PAGE} centered>
           <SectionTitle variant='h5' message='Stay tuned for more components!' />
         </Section>
       );
     }
+
     return (
       <Section page={PAGE}>
-        <Section
-          blurless
-          centered
-          style={{ width: '60%', minHeight: '200px', alignSelf: 'center' }}
-        >
+        <SkeletonSection minHeight={200} style={{ width: '60%', alignSelf: 'center' }}>
           {Component && (
-            <Suspense fallback={null}>
-              <Component />
+            <Suspense key={week} fallback={null}>
+              <Section blurless centered reveal='mount' style={{ minHeight: '200px' }}>
+                <Component />
+              </Section>
             </Suspense>
           )}
-        </Section>
-        <Markdown components={markdownComponentMap}>{entry.body}</Markdown>
+        </SkeletonSection>
+        {entry && (
+          <Reveal trigger='mount' delay={250}>
+            <Markdown components={markdownComponentMap}>{entry.body}</Markdown>
+          </Reveal>
+        )}
         {code
           && code.map((source, i) => (
-            <SyntaxHighlighter language='tsx' style={mode === 'dark' ? oneDark : oneLight} key={i}>
-              {source}
-            </SyntaxHighlighter>
+            <Reveal trigger='mount' delay={(i + 1) * 250} key={i}>
+              <SyntaxHighlighter language='tsx' style={mode === 'dark' ? oneDark : oneLight}>
+                {source}
+              </SyntaxHighlighter>
+            </Reveal>
           ))}
       </Section>
     );
@@ -166,7 +176,13 @@ const Catalog = () => {
     <Page>
       <Section page={PAGE} tight>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <RoundIconButton icon={ArrowBack} onClick={() => setWeek(week - 1)} />
+          <RoundIconButton
+            icon={ArrowBack}
+            onClick={() => {
+              if (week > 1) setWeek(week - 1);
+            }}
+            disabled={week === 1}
+          />
           <SectionTitle message={`Week ${week}`} />
           <RoundIconButton icon={ArrowForward} onClick={() => setWeek(week + 1)} />
         </Box>

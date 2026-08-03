@@ -1,6 +1,6 @@
 ## Button / Star Burst
 
-#### Entry date: 26th Jan 2026
+#### Entry date: 26th July 2026
 
 This week I wanted to have some fun. After completing the settings/toggle bar at the top of the page, there was 2
 buttons on the right, and one on the left. In the pursuit of symmetry, this week we'll add something fun to the left :)

@@ -1,5 +1,6 @@
 import { getColor, GRAY, OPACITY } from '@/app/palette';
 import SectionTitle from '@/common/components/sections/section-title';
+import useReveal, { RevealTrigger } from '@/common/hooks/use-reveal';
 import { useSpacing } from '@/pages/page';
 import Box from '@mui/material/Box';
 import type { Theme } from '@mui/material/styles';
@@ -19,9 +20,7 @@ export const FROSTED_BG = `
   ) border-box
 `;
 
-export type SectionProps = {
-  title?: string;
-  page?: string;
+export type SectionStyleProps = {
   width?: number | string;
   style?: SystemStyleObject<Theme>;
   centered?: boolean;
@@ -29,8 +28,16 @@ export type SectionProps = {
   clear?: boolean;
   snug?: boolean;
   tight?: boolean;
-  children?: ReactNode;
+  reveal?: RevealTrigger;
+  revealDelay?: number;
+  revealDuration?: number;
 };
+
+export type SectionProps = {
+  title?: string;
+  page?: string;
+  children?: ReactNode;
+} & SectionStyleProps;
 
 const Section = ({
   title,
@@ -42,12 +49,21 @@ const Section = ({
   clear,
   snug,
   tight,
+  reveal = false,
+  revealDelay,
+  revealDuration,
   children,
 }: SectionProps) => {
   const { margin, padding } = useSpacing();
+  const { ref, sx: revealSx } = useReveal({
+    trigger: reveal,
+    delay: revealDelay,
+    duration: revealDuration,
+  });
 
   return (
     <Box
+      ref={ref}
       sx={{
         width,
         display: width ? undefined : 'flex',
@@ -63,6 +79,7 @@ const Section = ({
         backdropFilter: blurless || clear ? undefined : 'blur(20px) saturate(250%)',
         WebkitBackdropFilter: blurless || clear ? undefined : 'blur(20px) saturate(250%)',
         background: clear ? undefined : FROSTED_BG,
+        ...revealSx,
         ...style,
       }}
     >

@@ -1,4 +1,4 @@
-import { PURPLE } from '@/app/palette';
+import { GRAY, PURPLE } from '@/app/palette';
 import StarBurst, { type StarBurstHandle } from '@/common/components/effects/star-burst';
 import useIsMobile from '@/common/hooks/use-is-mobile';
 import { SvgIconComponent } from '@mui/icons-material';
@@ -11,7 +11,11 @@ import { type MouseEvent, useRef } from 'react';
 
 const ICON_GRADIENT_ID = 'round-icon-button-purple-gradient';
 
-export function getFormattedIcon(Icon: SvgIconComponent | string, size: number | string) {
+export function getFormattedIcon(
+  Icon: SvgIconComponent | string,
+  size: number | string,
+  disabled: boolean,
+) {
   const parsedSize = typeof size === 'number' ? size * 0.5 : size;
   if (typeof Icon === 'string') {
     return <Box component='img' src={Icon} sx={{ width: parsedSize, height: parsedSize }} />;
@@ -24,7 +28,13 @@ export function getFormattedIcon(Icon: SvgIconComponent | string, size: number |
           <stop offset={1} stopColor={PURPLE[4]} />
         </linearGradient>
       </svg>
-      <Icon sx={{ width: parsedSize, height: parsedSize, fill: `url(#${ICON_GRADIENT_ID})` }} />
+      <Icon
+        sx={{
+          width: parsedSize,
+          height: parsedSize,
+          fill: disabled ? GRAY[50] : `url(#${ICON_GRADIENT_ID})`,
+        }}
+      />
     </>
   );
 }
@@ -36,7 +46,11 @@ export type ButtonProps = {
   size?: number;
   label?: string;
 };
-type RoundIconButtonProps = ButtonProps & { icon: SvgIconComponent | string; isSpecial?: boolean };
+type RoundIconButtonProps = ButtonProps & {
+  icon: SvgIconComponent | string;
+  isSpecial?: boolean;
+  disabled?: boolean;
+};
 
 const RoundIconButton = ({
   icon: Icon,
@@ -45,6 +59,7 @@ const RoundIconButton = ({
   size = BUTTON_SIZE,
   label,
   isSpecial,
+  disabled = false,
 }: RoundIconButtonProps) => {
   const isMobile = useIsMobile();
   const starBurst = useRef<StarBurstHandle>(null);
@@ -68,11 +83,15 @@ const RoundIconButton = ({
       }}
       onClick={handleClick}
       variant='text'
+      disabled={disabled}
     >
       <StarBurst ref={starBurst} size={size} />
-      {getFormattedIcon(Icon, size)}
+      {getFormattedIcon(Icon, size, disabled)}
       {label && (
-        <Typography sx={{ fontSize: size * 0.16, color: PURPLE[0] }} variant='button'>
+        <Typography
+          sx={{ fontSize: size * 0.16, color: disabled ? GRAY[50] : PURPLE[0] }}
+          variant='button'
+        >
           {label}
         </Typography>
       )}
