@@ -1,7 +1,6 @@
-import { OPACITY } from '@/app/palette';
 import routes from '@/app/routes';
 import { ScrollToTopContext } from '@/app/scroll-context';
-import bg from '@/assets/bg.jpg';
+import FloatingCircles from '@/common/components/effects/floating-circles';
 import useDocumentTitle from '@/common/hooks/use-document-title';
 import Footer from '@/features/footer/footer';
 import Navigation from '@/features/navigation/navigation';
@@ -26,24 +25,8 @@ const App = () => {
   }
 
   return (
-    <Box
-      sx={{
-        height: '100vh',
-        width: '100vw',
-        display: 'flex',
-        flexDirection: 'column',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          inset: 0,
-          zIndex: -1,
-          backgroundImage: `url(${bg})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          opacity: OPACITY[10],
-        },
-      }}
-    >
+    <Box sx={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column' }}>
+      <FloatingCircles />
       <Navigation />
       <OverlayScrollbarsComponent
         ref={scrollRef}
