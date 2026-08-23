@@ -1,6 +1,6 @@
-import type { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-const useIsMobile = () => useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+// phones and tablets, as opposed to a touchscreen laptop, which still reports hover
+const useIsMobile = () => useMediaQuery('(hover: none) and (pointer: coarse)');
 
 export default useIsMobile;

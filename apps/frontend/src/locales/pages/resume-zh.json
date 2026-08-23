@@ -19,12 +19,14 @@
       "name": "新加坡国立大学",
       "degree": "计算机科学计算机学士（二等下荣誉学位）",
       "period": "2020年8月 - 2024年5月",
-      "focusAreas": "专业方向：计算机图形与游戏 / 网络与分布式系统",
+      "focusAreasLabel": "专业方向：",
+      "focusAreas": ["计算机图形与游戏", "网络与分布式系统"],
       "CAP": "平均绩点：3.82"
     },
     "jc": {
       "name": "莱佛士书院",
-      "aLevels": "A-Level：H2 物理 / H2 化学 / H2 数学 / H2 经济学 / 综合论文 / 专题研究",
+      "aLevelsLabel": "A-Level：",
+      "aLevels": ["H2 物理", "H2 化学", "H2 数学", "H2 经济学", "综合论文", "专题研究"],
       "period": "2012年 - 2017年",
       "oLevels": "O-Level：高级华文"
     }
@@ -32,11 +34,13 @@
   "experience": {
     "title": "工作经历",
     "point": "•",
+    "skillsUsed": "使用技能",
     "jobs": [
       {
         "company": "Julius Bär Group Ltd.",
         "period": "2024年9月 - 现在",
         "position": "软件工程师",
+        "skills": ["React", "React Router", "React Redux", "Nx", "Nx Rspack", "Webpack", "模块联邦", "Material UI", "React Jest", "Node.js", "Java", "Java Hibernate", "Java Spring", "JUnit", "MySQL", "Git", "Gitlab", "Kubernetes", "调试", "文档编写", "CI/CD", "Claude Code"],
         "work": [
           "将应用缓冲速度提升2–5倍，并将部署/构建时间缩短2倍",
           "重构关键页面与组件，消除跨1000+文件的技术债务",
@@ -53,6 +57,7 @@
         "company": "Central Provident Fund Board",
         "period": "2023年1月 - 2023年6月",
         "position": "软件工程师实习生",
+        "skills": ["Java", "Java Spring", "JUnit", "CoBoL", "Git", "IBM RTC", "调试", "文档编写", "CI/CD"],
         "work": [
           "与团队成员协作，在 Java 代码库中实现多个新的 Spring Batch 程序",
           "协助将遗留代码从 CoBoL 弃用并迁移至 Java Spring",
@@ -64,6 +69,7 @@
         "company": "Thermo Fisher Scientific",
         "period": "2022年5月 - 2022年8月",
         "position": "助理软件工程师",
+        "skills": ["C++", "Qt", "Git", "Github", "调试", "文档编写", "CI/CD"],
         "work": [
           "在 GitHub 仓库 wiki 上发起项目文档工作，供未来新员工参考",
           "修复 Qt/C++ 代码库中跨3个即将发布版本的多个 UI 与后端缺陷",
@@ -75,6 +81,7 @@
         "company": "AsTrio Pte. Ltd.",
         "period": "2018年1月 - 2018年2月",
         "position": "软件工程师实习生",
+        "skills": ["Java", "C#", "Android SDK", "Git", "Github", "调试"],
         "work": [
           "在资深员工指导下，独立使用 Android SDK 开发工作报告应用",
           "在2周内从零构建应用的同时掌握 Android SDK 编程",
@@ -113,7 +120,9 @@
         },
         { "name": "Material UI", "duration": "2年", "proficiency": "★★★★★", "icon": "materialUI" },
         { "name": "React Jest", "duration": "2年", "proficiency": "★★★★★", "icon": "jest" },
-        { "name": "Node.js", "duration": "2年", "proficiency": "★★★★", "icon": "nodejs" }
+        { "name": "Node.js", "duration": "2年", "proficiency": "★★★★", "icon": "nodejs" },
+        { "name": "Qt", "duration": "1年", "proficiency": "★★★★", "icon": "qt" },
+        { "name": "Android SDK", "duration": "半年", "proficiency": "★★", "icon": "android" }
       ],
       "backendTitle": "后端",
       "backend": [
@@ -128,9 +137,9 @@
         { "name": "JUnit", "duration": "1.5年", "proficiency": "★★★★", "icon": "junit" },
         { "name": "MySQL", "duration": "0.5年", "proficiency": "★★★", "icon": "mysql" },
         { "name": "C++", "duration": "1年", "proficiency": "★★★", "icon": "cpp" },
-        { "name": "Qt", "duration": "1年", "proficiency": "★★★★", "icon": "qt" },
         { "name": "C#", "duration": "1年", "proficiency": "★★★★", "icon": "csharp" },
-        { "name": "Unity", "duration": "1年", "proficiency": "★★★★", "icon": "unity" }
+        { "name": "Unity", "duration": "1年", "proficiency": "★★★★", "icon": "unity" },
+        { "name": "CoBoL", "duration": "半年", "proficiency": "★★", "icon": "cobol" }
       ],
       "miscTitle": "其他",
       "misc": [
@@ -141,7 +150,8 @@
         { "name": "调试", "duration": "5年", "proficiency": "★★★★★", "icon": "debug" },
         { "name": "文档编写", "duration": "4年", "proficiency": "★★★★★", "icon": "docs" },
         { "name": "CI/CD", "duration": "2年", "proficiency": "★★★★★", "icon": "cicd" },
-        { "name": "Claude Code", "duration": "1年", "proficiency": "★★★★★", "icon": "claude" }
+        { "name": "Claude Code", "duration": "1年", "proficiency": "★★★★★", "icon": "claude" },
+        { "name": "IBM RTC", "duration": "半年", "proficiency": "★★★", "icon": "rtc" }
       ],
       "click": "请点击技能按钮查看详情"
     },

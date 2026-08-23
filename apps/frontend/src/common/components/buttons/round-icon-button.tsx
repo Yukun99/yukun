@@ -15,8 +15,9 @@ export function getFormattedIcon(
   Icon: SvgIconComponent | string,
   size: number | string,
   disabled: boolean,
+  scale = 0.5,
 ) {
-  const parsedSize = typeof size === 'number' ? size * 0.5 : size;
+  const parsedSize = typeof size === 'number' ? size * scale : size;
   if (typeof Icon === 'string') {
     return <Box component='img' src={Icon} sx={{ width: parsedSize, height: parsedSize }} />;
   }
@@ -50,6 +51,7 @@ type RoundIconButtonProps = ButtonProps & {
   icon: SvgIconComponent | string;
   isSpecial?: boolean;
   disabled?: boolean;
+  iconScale?: number;
 };
 
 const RoundIconButton = ({
@@ -60,6 +62,7 @@ const RoundIconButton = ({
   label,
   isSpecial,
   disabled = false,
+  iconScale,
 }: RoundIconButtonProps) => {
   const isMobile = useIsMobile();
   const starBurst = useRef<StarBurstHandle>(null);
@@ -73,6 +76,9 @@ const RoundIconButton = ({
       sx={{
         width: size,
         height: size,
+        // mui buttons carry a 64px min width, which shifts small round icons off centre
+        minWidth: 0,
+        flexShrink: 0,
         borderRadius: '50%',
         margin: isMobile ? '6px' : '8px',
         padding: 0,
@@ -86,10 +92,14 @@ const RoundIconButton = ({
       disabled={disabled}
     >
       <StarBurst ref={starBurst} size={size} />
-      {getFormattedIcon(Icon, size, disabled)}
+      {getFormattedIcon(Icon, size, disabled, iconScale)}
       {label && (
         <Typography
-          sx={{ fontSize: size * 0.16, color: disabled ? GRAY[50] : PURPLE[0] }}
+          sx={{
+            fontSize: size * 0.16,
+            color: disabled ? GRAY[50] : PURPLE[0],
+            whiteSpace: 'nowrap',
+          }}
           variant='button'
         >
           {label}

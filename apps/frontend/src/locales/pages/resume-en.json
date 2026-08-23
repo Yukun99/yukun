@@ -19,12 +19,21 @@
       "name": "National University of Singapore",
       "degree": "Bachelor of Computing (2nd Lower Honours) in Computer Science",
       "period": "Aug 2020 - May 2024",
-      "focusAreas": "Focus Areas: Computer Graphics and Games / Networking and Distributed Systems",
+      "focusAreasLabel": "Focus Areas:",
+      "focusAreas": ["Computer Graphics and Games", "Networking and Distributed Systems"],
       "CAP": "CAP: 3.82"
     },
     "jc": {
       "name": "Raffles Institution",
-      "aLevels": "A-Level: H2 Physics / H2 Chemistry / H2 Mathematics / H2 Economics / General Paper / Project Work",
+      "aLevelsLabel": "A-Level:",
+      "aLevels": [
+        "H2 Physics",
+        "H2 Chemistry",
+        "H2 Mathematics",
+        "H2 Economics",
+        "General Paper",
+        "Project Work"
+      ],
       "period": "2012 - 2017",
       "oLevels": "O-Level: Higher Chinese Language"
     }
@@ -32,11 +41,13 @@
   "experience": {
     "title": "Work Experience",
     "point": "•",
+    "skillsUsed": "Skills Used",
     "jobs": [
       {
         "company": "Julius Bär Group Ltd.",
         "period": "Sep 2024 - present",
         "position": "Software Engineer",
+        "skills": ["React", "React Router", "React Redux", "Nx", "Nx Rspack", "Webpack", "Module Federation", "Material UI", "React Jest", "Node.js", "Java", "Java Hibernate", "Java Spring", "JUnit", "MySQL", "Git", "Gitlab", "Kubernetes", "Debugging", "Documentation", "CI/CD", "Claude Code"],
         "work": [
           "Improved application performance by 2–5x and cut deployment/build times by 2x",
           "Refactored critical pages and components, eliminating technical debt across 1000+ files",
@@ -53,6 +64,7 @@
         "company": "Central Provident Fund Board",
         "period": "Jan 2023 - Jun 2023",
         "position": "Software Engineer Intern",
+        "skills": ["Java", "Java Spring", "JUnit", "CoBoL", "Git", "IBM RTC", "Debugging", "Documentation", "CI/CD"],
         "work": [
           "Implemented multiple new Spring Batch jobs in Java codebase while collaborating with team members",
           "Assisted in deprecation and migration of legacy code from CoBoL to Java Spring",
@@ -64,6 +76,7 @@
         "company": "Thermo Fisher Scientific",
         "period": "May 2022 - Aug 2022",
         "position": "Assistant Software Engineer",
+        "skills": ["C++", "Qt", "Git", "Github", "Debugging", "Documentation", "CI/CD"],
         "work": [
           "Initiated project documentation efforts on GitHub repository wiki for future hires",
           "Fixed multiple UI and backend bugs in Qt/C++ codebase across 3 different upcoming releases",
@@ -75,6 +88,7 @@
         "company": "AsTrio Pte. Ltd.",
         "period": "Jan 2018 - Feb 2018",
         "position": "Software Engineer Intern",
+        "skills": ["Java", "C#", "Android SDK", "Git", "Github", "Debugging"],
         "work": [
           "Created work reporting application solo in Android SDK with guidance from senior employee",
           "Picked up programming with Android SDK while building application from scratch in 2 weeks",
@@ -118,7 +132,9 @@
           "icon": "materialUI"
         },
         { "name": "React Jest", "duration": "2 years", "proficiency": "★★★★★", "icon": "jest" },
-        { "name": "Node.js", "duration": "2 years", "proficiency": "★★★★", "icon": "nodejs" }
+        { "name": "Node.js", "duration": "2 years", "proficiency": "★★★★", "icon": "nodejs" },
+        { "name": "Qt", "duration": "1 year", "proficiency": "★★★★", "icon": "qt" },
+        { "name": "Android SDK", "duration": "0.5 years", "proficiency": "★★", "icon": "android" }
       ],
       "backendTitle": "Backend",
       "backend": [
@@ -133,9 +149,9 @@
         { "name": "JUnit", "duration": "1.5 years", "proficiency": "★★★★", "icon": "junit" },
         { "name": "MySQL", "duration": "0.5 years", "proficiency": "★★★", "icon": "mysql" },
         { "name": "C++", "duration": "1 year", "proficiency": "★★★", "icon": "cpp" },
-        { "name": "Qt", "duration": "1 year", "proficiency": "★★★★", "icon": "qt" },
         { "name": "C#", "duration": "1 year", "proficiency": "★★★★", "icon": "csharp" },
-        { "name": "Unity", "duration": "1 year", "proficiency": "★★★★", "icon": "unity" }
+        { "name": "Unity", "duration": "1 year", "proficiency": "★★★★", "icon": "unity" },
+        { "name": "CoBoL", "duration": "0.5 years", "proficiency": "★★", "icon": "cobol" }
       ],
       "miscTitle": "Miscellaneous",
       "misc": [
@@ -146,7 +162,8 @@
         { "name": "Debugging", "duration": "5 years", "proficiency": "★★★★★", "icon": "debug" },
         { "name": "Documentation", "duration": "4 years", "proficiency": "★★★★★", "icon": "docs" },
         { "name": "CI/CD", "duration": "2 years", "proficiency": "★★★★★", "icon": "cicd" },
-        { "name": "Claude Code", "duration": "1 year", "proficiency": "★★★★★", "icon": "claude" }
+        { "name": "Claude Code", "duration": "1 year", "proficiency": "★★★★★", "icon": "claude" },
+        { "name": "IBM RTC", "duration": "0.5 years", "proficiency": "★★★", "icon": "rtc" }
       ],
       "click": "Click on a skill button for details"
     },

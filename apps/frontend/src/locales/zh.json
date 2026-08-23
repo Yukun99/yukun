@@ -1,11 +1,14 @@
 {
   "common": {
     "name": "许宇崑",
+    "givenName": "宇崑",
     "gender": "男",
     "email": "yukunxu123@gmail.com",
     "mobile": "+65 98757192",
     "linkedin": "https://www.linkedin.com/in/xu-yukun/",
     "github": "https://github.com/yukun99"
   },
-  "routeNames": { "/": "首页", "/resume": "简历", "/catalog": "目录" }
+  "routeNames": { "/": "首页", "/resume": "简历", "/catalog": "目录" },
+  "rotate": "请把设备转90°",
+  "theme": { "dark": "深色模式", "light": "浅色模式" }
 }

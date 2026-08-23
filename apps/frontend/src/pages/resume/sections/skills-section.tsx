@@ -13,12 +13,17 @@ import {
   TechnicalSkill,
 } from '@/pages/resume/utils/skill-button-utils';
 import Box from '@mui/material/Box';
+import type { Theme } from '@mui/material/styles';
+import type { SystemStyleObject } from '@mui/system';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-type SkillsSectionProps = { onSelectSkill: (renderer: DialogContentRenderer) => void };
+type SkillsSectionProps = {
+  onSelectSkill: (renderer: DialogContentRenderer) => void;
+  style?: SystemStyleObject<Theme>;
+};
 
-const SkillsSection = ({ onSelectSkill }: SkillsSectionProps) => {
+const SkillsSection = ({ onSelectSkill, style }: SkillsSectionProps) => {
   const { t } = useTranslation(PAGE);
 
   const languageSkills = t('skills.languages.list', { returnObjects: true }) as LanguageSkill[];
@@ -36,7 +41,7 @@ const SkillsSection = ({ onSelectSkill }: SkillsSectionProps) => {
   const [expandedAccordion, setExpandedAccordion] = useState<number | undefined>(undefined);
 
   return (
-    <Section page={PAGE} title='skills' style={{ overflow: 'hidden' }}>
+    <Section page={PAGE} title='skills' style={{ overflow: 'hidden', ...style }}>
       <SectionAccordion
         title={'skills.languages'}
         page={PAGE}

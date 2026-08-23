@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 
 export const useSpacing = () => {
   const isMobile = useIsMobile();
-  return { margin: isMobile ? 8 : 16, padding: isMobile ? 18 : 24 };
+  return { margin: isMobile ? 8 : 16, padding: isMobile ? 18 : 24, smallRadius: 8 };
 };
 
 type PageProps = { children: ReactNode };

@@ -1,6 +1,7 @@
 {
   "common": {
     "name": "Xu Yukun",
+    "givenName": "Yukun",
     "gender": "Male",
     "email": "yukunxu123@gmail.com",
     "mobile": "+65 98757192",
@@ -9,6 +10,8 @@
     "website": "https://yukunxu.com"
   },
   "routeNames": { "/": "Home", "/resume": "Resume", "/catalog": "Catalog" },
+  "rotate": "Please turn your device sideways",
+  "theme": { "dark": "Dark Mode", "light": "Light Mode" },
   "footer": {
     "linkAbacus": "https://abacus.jasoncameron.dev/",
     "viewAbacus": "Site visitor count data powered by",

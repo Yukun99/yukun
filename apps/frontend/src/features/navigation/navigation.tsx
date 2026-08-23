@@ -1,10 +1,12 @@
 import { getColor, GRAY, OPACITY } from '@/app/palette';
 import logo from '@/assets/logo.svg';
 import RoundIconButton from '@/common/components/buttons/round-icon-button';
+import useIsMobile from '@/common/hooks/use-is-mobile';
 import NavigationLanguageButton from '@/features/navigation/buttons/navigation-lang-button';
 import NavigationMenuButton from '@/features/navigation/buttons/navigation-menu-button';
 import NavigationThemeButton from '@/features/navigation/buttons/navigation-theme-button';
 import NavigationDrawer from '@/features/navigation/navigation-drawer';
+import NavigationMobile from '@/features/navigation/navigation-mobile';
 import Box from '@mui/material/Box';
 import Portal from '@mui/material/Portal';
 import { useColorScheme } from '@mui/material/styles';
@@ -17,6 +19,9 @@ export function getPageElementBgColor(mode?: 'light' | 'dark' | 'system') {
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { mode } = useColorScheme();
+  const isMobile = useIsMobile();
+
+  if (isMobile) return <NavigationMobile />;
 
   return (
     <Box

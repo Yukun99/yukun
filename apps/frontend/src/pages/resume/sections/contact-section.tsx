@@ -2,14 +2,15 @@ import Section from '@/common/components/sections/section';
 import SectionParagraphByKey, {
   PLACEHOLDER_TYPE,
 } from '@/common/components/sections/section-paragraph-by-key';
-import useIsMobile from '@/common/hooks/use-is-mobile';
 import { PAGE } from '@/pages/resume/resume';
+import type { Theme } from '@mui/material/styles';
+import type { SystemStyleObject } from '@mui/system';
 
-const ContactSection = () => {
-  const isMobile = useIsMobile();
+type ContactSectionProps = { style?: SystemStyleObject<Theme> };
 
+const ContactSection = ({ style }: ContactSectionProps) => {
   return (
-    <Section page={PAGE} title='contact' width={isMobile ? undefined : '50%'}>
+    <Section page={PAGE} title='contact' width='50%' style={style}>
       <SectionParagraphByKey
         page={PAGE}
         i18nKey={'contact.name'}

@@ -1,4 +1,5 @@
 import Claude from '@/assets/resume/Claude.svg';
+import IbmRtc from '@/assets/resume/IBM RTC.png';
 import ModuleFederation from '@/assets/resume/ModuleFederation.png';
 import Nx from '@/assets/resume/Nx.svg';
 import Rspack from '@/assets/resume/Rspack.svg';
@@ -18,6 +19,8 @@ import KeyboardIcon from '@mui/icons-material/Keyboard';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import AndroidOriginal from 'devicons-react/icons/AndroidOriginal';
+import CobolOriginal from 'devicons-react/icons/CobolOriginal';
 import CplusplusOriginal from 'devicons-react/icons/CplusplusOriginal';
 import CsharpOriginal from 'devicons-react/icons/CsharpOriginal';
 import GitOriginal from 'devicons-react/icons/GitOriginal';
@@ -43,25 +46,32 @@ import { FunctionComponent, ReactNode } from 'react';
 import ReactCountryFlag from 'react-country-flag';
 
 const RspackOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
-  <img src={Rspack} style={{ width: size, height: size }} alt='Rspack' />
+  <img src={Rspack} style={{ width: size, height: size, objectFit: 'contain' }} alt='Rspack' />
 );
 const NxOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
-  <img src={Nx} style={{ width: size, height: size }} alt='Nx' />
+  <img src={Nx} style={{ width: size, height: size, objectFit: 'contain' }} alt='Nx' />
 );
 const ModuleFederationOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
-  <img src={ModuleFederation} style={{ width: size, height: size }} alt='MF' />
+  <img
+    src={ModuleFederation}
+    style={{ width: size, height: size, objectFit: 'contain' }}
+    alt='MF'
+  />
 );
 const ClaudeOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
-  <img src={Claude} style={{ width: size, height: size }} alt='Claude' />
+  <img src={Claude} style={{ width: size, height: size, objectFit: 'contain' }} alt='Claude' />
 );
 const BugReportIconOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
-  <BugReportIcon style={{ width: size, height: size }} />
+  <BugReportIcon style={{ width: size, height: size, objectFit: 'contain' }} />
 );
 const DescriptionIconOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
-  <DescriptionIcon style={{ width: size, height: size }} />
+  <DescriptionIcon style={{ width: size, height: size, objectFit: 'contain' }} />
 );
 const CallMergeIconOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
   <CallMergeIcon style={{ width: size, height: size, transform: 'rotate(90deg)' }} />
+);
+const IbmRtcOriginal: FunctionComponent<{ size?: number | string }> = ({ size }) => (
+  <img src={IbmRtc} style={{ width: size, height: size, objectFit: 'contain' }} alt='IBM RTC' />
 );
 
 export enum SkillType {
@@ -101,19 +111,33 @@ function getTechnicalDialogContent(
   t: TFunction,
 ): ReactNode {
   const ButtonIcon = technicalNameIconMap[skill.icon];
+  const labelVariant = isMobile ? 'subtitle1' : 'h5';
+  const panelStyle = isMobile ? { padding: '8px' } : undefined;
+
   return (
-    <Section centered blurless snug>
-      <SectionTitle message={skill.name} variant='h5' />
+    <Section centered blurless snug style={isMobile ? { height: '78dvh' } : undefined}>
+      <SectionTitle message={skill.name} variant={labelVariant} />
       <SectionDividerHor />
-      <ButtonIcon size={isMobile ? '40%' : '20%'} />
-      <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row' }}>
-        <Section centered blurless>
-          <SectionTitle message={t('skills.technical.durationLabel')} variant='h5' />
-          {skill.duration}
+      {/* the icon takes whatever height the labels leave behind */}
+      <Box
+        sx={{
+          display: 'flex',
+          flex: isMobile ? 1 : undefined,
+          minHeight: 0,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <ButtonIcon size={isMobile ? '100%' : '20%'} />
+      </Box>
+      <Box sx={{ display: 'flex' }}>
+        <Section centered blurless style={panelStyle}>
+          <SectionTitle message={t('skills.technical.durationLabel')} variant={labelVariant} />
+          <Typography variant={isMobile ? 'body2' : 'body1'}>{skill.duration}</Typography>
         </Section>
-        <Section centered blurless>
-          <SectionTitle message={t('skills.technical.proficiencyLabel')} variant='h5' />
-          {skill.proficiency}
+        <Section centered blurless style={panelStyle}>
+          <SectionTitle message={t('skills.technical.proficiencyLabel')} variant={labelVariant} />
+          <Typography variant={isMobile ? 'body2' : 'body1'}>{skill.proficiency}</Typography>
         </Section>
       </Box>
     </Section>
@@ -205,7 +229,7 @@ function getLanguageButtonContent(skill: SkillOf[SkillType.LANGUAGE]): ReactNode
   );
 }
 
-const technicalNameIconMap: Record<string, FunctionComponent<{ size?: number | string }>> = {
+export const technicalNameIconMap: Record<string, FunctionComponent<{ size?: number | string }>> = {
   react: ReactOriginal,
   router: ReactrouterOriginal,
   redux: ReduxOriginal,
@@ -223,8 +247,10 @@ const technicalNameIconMap: Record<string, FunctionComponent<{ size?: number | s
   mysql: MysqlOriginal,
   cpp: CplusplusOriginal,
   qt: QtOriginal,
+  android: AndroidOriginal,
   csharp: CsharpOriginal,
   unity: UnityOriginal,
+  cobol: CobolOriginal,
   git: GitOriginal,
   github: GithubOriginal,
   gitlab: GitlabOriginal,
@@ -233,6 +259,7 @@ const technicalNameIconMap: Record<string, FunctionComponent<{ size?: number | s
   docs: DescriptionIconOriginal,
   cicd: CallMergeIconOriginal,
   claude: ClaudeOriginal,
+  rtc: IbmRtcOriginal,
 };
 function getTechnicalButtonContent(name: string, icon: string, isMobile: boolean): ReactNode {
   const ButtonIcon = technicalNameIconMap[icon];
@@ -256,7 +283,7 @@ function getInterestsButtonContent(name: string, icon: string, isMobile: boolean
   const ButtonIcon = interestsNameIconMap[icon];
   return (
     <ButtonContentContainer>
-      {getFormattedIcon(ButtonIcon, isMobile ? '40%' : '55%')}
+      {getFormattedIcon(ButtonIcon, isMobile ? '40%' : '55%', false)}
       <ButtonContentLabel>{name}</ButtonContentLabel>
     </ButtonContentContainer>
   );

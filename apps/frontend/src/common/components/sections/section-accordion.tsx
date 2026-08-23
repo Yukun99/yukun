@@ -1,5 +1,4 @@
 import SectionTitle from '@/common/components/sections/section-title';
-import useIsMobile from '@/common/hooks/use-is-mobile';
 import { useSpacing } from '@/pages/page';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
@@ -29,7 +28,6 @@ const SectionAccordion = ({
   column,
   children,
 }: SectionAccordionProps) => {
-  const isMobile = useIsMobile();
   const { margin } = useSpacing();
 
   return (
@@ -54,7 +52,7 @@ const SectionAccordion = ({
             paddingY: `${margin}px`,
             display: 'flex',
             flexWrap: 'wrap',
-            justifyContent: isMobile || centered ? 'center' : undefined,
+            justifyContent: centered ? 'center' : undefined,
             flexDirection: column ? 'column' : undefined,
           }}
         >
