@@ -5,14 +5,16 @@ import { useColorScheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 
-const RotateGate = () => {
+type RotateGateProps = { contained?: boolean };
+
+const RotateGate = ({ contained }: RotateGateProps) => {
   const { t } = useTranslation();
   const { mode } = useColorScheme();
 
   return (
     <Box
       sx={{
-        position: 'fixed',
+        position: contained ? 'absolute' : 'fixed',
         inset: 0,
         zIndex: (theme) => theme.zIndex.modal + 1,
         display: 'flex',
