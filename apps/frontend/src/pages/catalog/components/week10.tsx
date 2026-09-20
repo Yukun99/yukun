@@ -36,7 +36,7 @@ const Week10Example = () => {
           variant='body2'
           sx={{ paddingTop: '5%', color: 'text.primary', textTransform: 'capitalize' }}
         >
-          Weather
+          Spark
         </Typography>
       </Box>
     </Button>
