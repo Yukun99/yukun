@@ -4,17 +4,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Personal portfolio site (yukunxu.com). Nx 23 monorepo on pnpm 11.8 / Node 24. Only `apps/frontend` ships; `apps/backend` is an Express stub and `packages/` is empty.
+Personal portfolio site (yukunxu.com). Nx 23 monorepo on pnpm 11.8 / Node 24. `apps/frontend` is the site and `apps/backend` is a small PHP API (visitor counter) deployed beside it under `/api/`; `packages/` is empty.
 
-Frontend stack: React 19, MUI 9 (Emotion), react-router 7, i18next, Vite 8.
+Frontend stack: React 19, MUI 9 (Emotion), react-router 7, i18next, Vite 8. Backend stack: plain PHP 8.3 + PDO (MySQL), no Composer.
 
 ## Commands
 
-Run from the repo root. Targets are inferred by Nx plugins (`nx.json`), not declared per project.
+Run from the repo root. Frontend targets are inferred by Nx plugins (`nx.json`); backend targets are declared in `apps/backend/project.json`.
 
 ```sh
 pnpm install
-pnpm dev                      # frontend (localhost:4205) + backend (localhost:3333); vite proxies /api -> backend
+pnpm dev                      # frontend (localhost:4205) + PHP backend (localhost:3333)
 pnpm build                    # nx build frontend -> apps/frontend/dist
 pnpm nx serve frontend        # frontend only
 
@@ -23,11 +23,11 @@ pnpm nx typecheck frontend
 pnpm nx test frontend         # vitest (jsdom, globals on)
 pnpm nx test frontend -- src/app/app.spec.tsx   # single file
 pnpm nx test frontend -- -t "should render"     # single test by name
-pnpm nx test backend          # jest
-pnpm nx e2e backend-e2e       # jest, builds + serves backend first
+pnpm nx lint backend          # php -l over every PHP file
+pnpm nx test backend          # php tests/run.php
 ```
 
-Frontend tests are vitest; backend and backend-e2e are jest. Don't mix the APIs.
+Frontend tests are vitest. Backend tests are plain PHP files run by `apps/backend/tests/run.php`; see `backend.md`.
 
 ## Working Here
 
@@ -74,5 +74,6 @@ Area-specific instructions live in `.claude/rules/` and load automatically when 
 - `frontend-layout.md` — scroll container, mobile/landscape model, `Section` system, theme
 - `i18n-and-routes.md` — namespaces, text helpers, adding a route
 - `catalog.md` — weekly entry format and how to add a week
-- `deploy.md` — GitHub Actions FTPS deploy and `.htaccess`
+- `backend.md` — PHP API layout, database config, local setup, tests
+- `deploy.md` — GitHub Actions FTPS deploy, secrets and `.htaccess`
 - `security-audit.md` — procedure when asked for a security audit (always loaded)

@@ -10,5 +10,8 @@
   },
   "routeNames": { "/": "首页", "/resume": "简历", "/catalog": "目录" },
   "rotate": "请把设备转90°",
-  "theme": { "dark": "深色模式", "light": "浅色模式" }
+  "theme": { "dark": "深色模式", "light": "浅色模式" },
+  "footer": {
+    "views": "恭喜，您是 {{total}} 位访客中的第 {{number}} 位！"
+  }
 }

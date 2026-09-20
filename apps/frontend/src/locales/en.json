@@ -13,8 +13,6 @@
   "rotate": "Please turn your device sideways",
   "theme": { "dark": "Dark Mode", "light": "Light Mode" },
   "footer": {
-    "linkAbacus": "https://abacus.jasoncameron.dev/",
-    "viewAbacus": "Site visitor count data powered by",
-    "views": "Congratulations, you are visitor number {{views}}!"
+    "views": "Congratulations, you are visitor number {{number}} of {{total}}!"
   }
 }

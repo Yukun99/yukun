@@ -1,15 +1,23 @@
 /// <reference types='vitest' />
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-export default defineConfig(() => ({
+const LIVE_API = 'https://yukunxu.com';
+
+// php -S serves the routes at its root, so a local API needs the /api prefix stripped.
+const apiProxy = (localApi: string | undefined) =>
+  localApi
+    ? { target: localApi, changeOrigin: true, rewrite: (path: string) => path.replace(/^\/api/, '') }
+    : { target: LIVE_API, changeOrigin: true };
+
+export default defineConfig(({ mode }) => ({
   root: import.meta.dirname,
   cacheDir: '../../node_modules/.vite/apps/frontend',
   server: {
     port: 4205,
     host: 'localhost',
-    proxy: { '/api': { target: 'http://localhost:3333', changeOrigin: true } },
+    proxy: { '/api': apiProxy(loadEnv(mode, import.meta.dirname, 'VITE_').VITE_API_URL) },
   },
   preview: { port: 4205, host: 'localhost' },
   plugins: [react(), tsconfigPaths()],

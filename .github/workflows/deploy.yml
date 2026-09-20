@@ -24,11 +24,30 @@ jobs:
           node-version: 24.17.0
           cache: pnpm
 
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Lint and Test
+        run: pnpm nx run-many -t lint typecheck test
+
       - name: Build Project with Nx
         run: pnpm build
+
+      - name: Bundle API into Build
+        env:
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          VISITOR_SALT: ${{ secrets.VISITOR_SALT }}
+        run: |
+          mkdir -p apps/frontend/dist/api
+          cp -r apps/backend/index.php apps/backend/.htaccess apps/backend/src apps/frontend/dist/api/
+          php -r 'file_put_contents("apps/frontend/dist/api/config.php", "<?php\n\ndeclare(strict_types=1);\n\nreturn " . var_export(["host" => "localhost", "name" => getenv("DB_NAME"), "user" => getenv("DB_USER"), "password" => getenv("DB_PASSWORD"), "salt" => getenv("VISITOR_SALT")], true) . ";\n");'
 
       - name: Clear Previous Build on Server
         env:
@@ -43,6 +62,7 @@ jobs:
           set ftp:ssl-force true
           set ftp:ssl-protect-data true
           rm -rf assets
+          rm -rf api
           rm -f index.html favicon.ico
           rm -f .ftp-deploy-sync-state.json
           bye

@@ -33,7 +33,7 @@ type ParsedEntry = { body: string; componentPath: string; sourceUrls: string[] }
 function parseEntry(raw: string): ParsedEntry {
   const bodyLines: string[] = [];
   let componentPath = '';
-  let sourceUrls: string[] = [];
+  const sourceUrls: string[] = [];
   let mode: 'body' | 'component' | 'source' = 'body';
 
   for (const line of raw.split('\n')) {
