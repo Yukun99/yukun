@@ -6,17 +6,13 @@ import ContactSection from '@/pages/resume/sections/contact-section';
 import EducationSection from '@/pages/resume/sections/education-section';
 import ExperienceTimelineSection from '@/pages/resume/sections/experience-timeline-section';
 import SkillsSection from '@/pages/resume/sections/skills-section';
-import { DialogContentRenderer } from '@/pages/resume/utils/skill-button-utils';
+import { TechnicalSkill } from '@/pages/resume/utils/skill-types';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
 
 const Resume = () => {
   const isMobile = useIsMobile();
-  const [dialogContentRenderer, setDialogContentRenderer] = useState<DialogContentRenderer | null>(
-    null,
-  );
-
-  const showDialog = (renderer: DialogContentRenderer) => setDialogContentRenderer(() => renderer);
+  const [skill, setSkill] = useState<TechnicalSkill | null>(null);
 
   // panes on touch fill their slot and scroll inside their own panel
   const paneStyle = isMobile ? { flex: 1, minHeight: 0, overflowY: 'auto' as const } : undefined;
@@ -36,20 +32,17 @@ const Resume = () => {
       <EducationSection style={paneStyle} />
     </Box>
   );
-  const skills = <SkillsSection onSelectSkill={showDialog} style={paneStyle} />;
+  const skills = <SkillsSection onSelectSkill={setSkill} style={paneStyle} />;
 
   return (
     <Page>
       <ExperienceTimelineSection
-        onSelectSkill={showDialog}
+        onSelectSkill={setSkill}
         trailing={isMobile ? [details, skills] : undefined}
       />
       {!isMobile && details}
       {!isMobile && skills}
-      <SkillDialog
-        content={dialogContentRenderer?.(isMobile)}
-        onClose={() => setDialogContentRenderer(null)}
-      />
+      <SkillDialog skill={skill} onClose={() => setSkill(null)} />
     </Page>
   );
 };

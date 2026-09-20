@@ -14,8 +14,8 @@ This is an example challenge & solution.
 
 ### Source Code
 
-https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/src
+path/from/src/to/example-file.tsx
 
 ### Component
 
-../this/is/an/example/relative/path/to/catalog/page
+./components/weekN.tsx

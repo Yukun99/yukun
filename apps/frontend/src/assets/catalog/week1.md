@@ -31,7 +31,7 @@ had to embark on some rather esoteric fixes.
 
 ### Source Code
 
-https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/src/common/components/sections/section.tsx
+common/components/sections/section.tsx
 
 ### Component
 

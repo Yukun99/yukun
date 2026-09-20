@@ -22,6 +22,7 @@ paths:
 
 ## Adding a Route
 
-1. Lazy import and route object in `app/routes.tsx`.
-2. `routeNames.<path>` in both `en.json` and `zh.json` — navigation labels come from `getPathLabel` in `common/utils/path-label.ts`.
-3. `locales/pages/<page>-en.json` and `-zh.json`, wired into `i18n.tsx`.
+1. Path and icon in `PAGES` in `features/navigation/pages.ts`. Both navigation drawers and the route list are built from it.
+2. Lazy import and an `ELEMENTS` entry in `app/routes.tsx`. A path without an element is a type error.
+3. `routeNames.<path>` in both `en.json` and `zh.json` — navigation labels come from `getPathLabel` in `common/utils/path-label.ts`.
+4. `locales/pages/<page>-en.json` and `-zh.json`, wired into `i18n.tsx`, plus `PAGE` in `pages/<page>/utils/page.ts`.

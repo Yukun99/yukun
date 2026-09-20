@@ -10,6 +10,7 @@ import ArrowForward from '@mui/icons-material/ArrowForward';
 import Box from '@mui/material/Box';
 import useResolvedMode from '@/common/hooks/use-resolved-mode';
 import { ComponentType, lazy, ReactNode, Suspense, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Markdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -21,18 +22,27 @@ const entryFiles = import.meta.glob('../../assets/catalog/week*.md', {
 }) as Record<string, () => Promise<string>>;
 
 // lazy component file loaders
-const componentFiles = import.meta.glob('../../**/*.tsx') as Record<
+const componentFiles = import.meta.glob('./components/week*.tsx') as Record<
   string,
   () => Promise<{ default: ComponentType }>
 >;
 
-type ParsedEntry = { body: string; componentPath: string; sourceUrls: string[] };
+// lazy source text loaders, keyed from the project root so entries can name any file under src
+const sourceFiles = import.meta.glob('/src/**/*.{ts,tsx}', {
+  query: '?raw',
+  import: 'default',
+}) as Record<string, () => Promise<string>>;
+
+// one step past the last entry, so the coming soon card stays reachable
+const LAST_WEEK = Object.keys(entryFiles).length + 1;
+
+type ParsedEntry = { body: string; componentPath: string; sourcePaths: string[] };
 
 // parse entry for selected week into object
 function parseEntry(raw: string): ParsedEntry {
   const bodyLines: string[] = [];
   let componentPath = '';
-  const sourceUrls: string[] = [];
+  const sourcePaths: string[] = [];
   let mode: 'body' | 'component' | 'source' = 'body';
 
   for (const line of raw.split('\n')) {
@@ -57,13 +67,13 @@ function parseEntry(raw: string): ParsedEntry {
       continue;
     }
     if (mode === 'source') {
-      if (line.trim()) sourceUrls.push(line.trim());
+      if (line.trim()) sourcePaths.push(line.trim());
       continue;
     }
     bodyLines.push(line);
   }
 
-  return { body: bodyLines.join('\n').trim(), componentPath, sourceUrls };
+  return { body: bodyLines.join('\n').trim(), componentPath, sourcePaths };
 }
 
 // loads component for selected week
@@ -82,6 +92,7 @@ const markdownComponentMap = {
 };
 
 const Catalog = () => {
+  const { t } = useTranslation(PAGE);
   const mode = useResolvedMode();
   const [week, setWeek] = useState<number>(1);
   const [entry, setEntry] = useState<ParsedEntry | null>(null);
@@ -112,19 +123,17 @@ const Catalog = () => {
 
   // load code snippet for selected week
   useEffect(() => {
-    if (!entry?.sourceUrls) return;
+    if (!entry?.sourcePaths) return;
     let active = true;
-    const loadSource = (sourceUrl: string) =>
-      fetch(sourceUrl)
-        .then((res) => (res.ok ? res.text() : null))
-        .catch(() => null);
-    Promise.all(entry.sourceUrls.map(loadSource)).then((sources) => {
+    const loadSource = (sourcePath: string) =>
+      sourceFiles[`/src/${sourcePath}`]?.().catch(() => null) ?? Promise.resolve(null);
+    Promise.all(entry.sourcePaths.map(loadSource)).then((sources) => {
       if (active) setCode(sources.filter((source) => source !== null));
     });
     return () => {
       active = false;
     };
-  }, [entry?.sourceUrls]);
+  }, [entry?.sourcePaths]);
 
   const Component = useMemo(
     () => (entry?.componentPath ? loadComponent(entry.componentPath) : null),
@@ -136,7 +145,7 @@ const Catalog = () => {
     if (!entry && !loading) {
       return (
         <Section page={PAGE} centered>
-          <SectionTitle variant='h5' message='Stay tuned for more components!' />
+          <SectionTitle variant='h5' message={t('comingSoon')} />
         </Section>
       );
     }
@@ -180,8 +189,14 @@ const Catalog = () => {
             }}
             disabled={week === 1}
           />
-          <SectionTitle message={`Week ${week}`} />
-          <RoundIconButton icon={ArrowForward} onClick={() => setWeek(week + 1)} />
+          <SectionTitle message={t('week', { week })} />
+          <RoundIconButton
+            icon={ArrowForward}
+            onClick={() => {
+              if (week < LAST_WEEK) setWeek(week + 1);
+            }}
+            disabled={week === LAST_WEEK}
+          />
         </Box>
       </Section>
       {getWeekContent()}

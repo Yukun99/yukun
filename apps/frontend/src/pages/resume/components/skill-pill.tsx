@@ -1,29 +1,21 @@
-import { PAGE } from '@/pages/resume/utils/page';
-import {
-  DialogContentRenderer,
-  getDialogContent,
-  SkillType,
-  technicalNameIconMap,
-  TechnicalSkill,
-} from '@/pages/resume/utils/skill-button-utils';
+import { technicalIcons } from '@/pages/resume/utils/skill-icons';
+import { TechnicalSkill } from '@/pages/resume/utils/skill-types';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { useTranslation } from 'react-i18next';
 
 const ICON_SIZE = 18;
 
 type SkillPillProps = {
   skill: TechnicalSkill;
-  onSelect: (renderer: DialogContentRenderer) => void;
+  onSelect: (skill: TechnicalSkill) => void;
 };
 
 const SkillPill = ({ skill, onSelect }: SkillPillProps) => {
-  const { t } = useTranslation(PAGE);
-  const Icon = technicalNameIconMap[skill.icon];
+  const Icon = technicalIcons[skill.icon];
 
   return (
     <Button
-      onClick={() => onSelect((mobile) => getDialogContent[SkillType.TECHNICAL](skill, mobile, t))}
+      onClick={() => onSelect(skill)}
       sx={{
         minWidth: 0,
         padding: '0 8px',

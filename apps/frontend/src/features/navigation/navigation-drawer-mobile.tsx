@@ -3,33 +3,18 @@ import RoundIconButton from '@/common/components/buttons/round-icon-button';
 import useResolvedMode from '@/common/hooks/use-resolved-mode';
 import NavigationActionButton from '@/features/navigation/buttons/navigation-action-button';
 import NavigationPageButton from '@/features/navigation/buttons/navigation-page-button';
-import {
-  getThemeIcon,
-  getThemeLabelKey,
-} from '@/features/navigation/buttons/navigation-theme-button';
+import { PAGES } from '@/features/navigation/pages';
+import useLanguageToggle from '@/features/navigation/use-language-toggle';
+import useThemeToggle from '@/features/navigation/use-theme-toggle';
 import { getPageElementBgColor } from '@/common/utils/palette';
 import useSpacing from '@/common/hooks/use-spacing';
 import Close from '@mui/icons-material/Close';
-import Description from '@mui/icons-material/Description';
-import Home from '@mui/icons-material/Home';
 import Public from '@mui/icons-material/Public';
-import Widgets from '@mui/icons-material/Widgets';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import { useColorScheme } from '@mui/material/styles';
 import type { TransitionProps } from '@mui/material/transitions';
 import type { RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
-
-const PAGES = [
-  { path: '/', icon: Home },
-  { path: '/resume', icon: Description },
-  { path: '/catalog', icon: Widgets },
-];
-
-function getLanguageLabel(language: string) {
-  return language.startsWith('zh') ? '中文' : 'English';
-}
 
 // contained keeps the drawer inside its own section instead of the whole screen, for the catalog
 type MobileNavigationDrawerProps = {
@@ -45,9 +30,10 @@ const NavigationDrawerMobile = ({
   contained,
   containerRef,
 }: MobileNavigationDrawerProps) => {
-  const { t, i18n } = useTranslation();
-  const { setMode } = useColorScheme();
+  const { t } = useTranslation();
   const mode = useResolvedMode();
+  const language = useLanguageToggle();
+  const theme = useThemeToggle();
   const { margin, padding } = useSpacing();
 
   return (
@@ -86,13 +72,13 @@ const NavigationDrawerMobile = ({
           <NavigationActionButton icon={logo} label={t('common.givenName')} isSpecial />
           <NavigationActionButton
             icon={Public}
-            label={getLanguageLabel(i18n.language)}
-            onClick={() => i18n.changeLanguage(i18n.language.startsWith('zh') ? 'en' : 'zh')}
+            label={language.label}
+            onClick={language.toggle}
           />
           <NavigationActionButton
-            icon={getThemeIcon(mode)}
-            label={t(getThemeLabelKey(mode))}
-            onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}
+            icon={theme.icon}
+            label={theme.label}
+            onClick={theme.toggle}
           />
           <Box sx={{ marginLeft: 'auto' }}>
             <RoundIconButton icon={Close} onClick={onClose} size={40} iconScale={0.62} />

@@ -40,8 +40,8 @@ do not have the luxury of time this week, unfortunately.)
 
 ### Source Code
 
-https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/src/common/hooks/use-floating-circles.ts
-https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/src/common/components/effects/floating-circles.tsx
+common/hooks/use-floating-circles.ts
+common/components/effects/floating-circles.tsx
 
 ### Component
 

@@ -33,9 +33,9 @@ possible.
 
 ### Source Code
 
-https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/src/common/hooks/use-reveal.ts
-https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/src/common/skeletons/sk-section.tsx
-https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/src/common/components/effects/reveal.tsx
+common/hooks/use-reveal.ts
+common/skeletons/sk-section.tsx
+common/components/effects/reveal.tsx
 
 ### Component
 

@@ -31,8 +31,8 @@ Googling, I eventually got there.
 
 ### Source Code
 
-https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/src/common/components/buttons/round-icon-button.tsx
-https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/src/common/components/effects/star-burst.tsx
+common/components/buttons/round-icon-button.tsx
+common/components/effects/star-burst.tsx
 
 ### Component
 

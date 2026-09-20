@@ -46,8 +46,8 @@ technically made 2 new cool little components, but that was pretty trivial so it
 
 ### Source Code
 
-https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/src/pages/resume/components/skill-button.tsx
-https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/src/pages/resume/components/skill-dialog.tsx
+pages/resume/components/skill-button.tsx
+pages/resume/components/skill-dialog.tsx
 
 ### Component
 

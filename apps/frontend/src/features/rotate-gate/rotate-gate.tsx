@@ -1,4 +1,4 @@
-import rotate from '@/assets/resume/Rotate.gif';
+import rotate from '@/assets/rotate-gate/Rotate.gif';
 import { getPageElementBgColor } from '@/common/utils/palette';
 import Box from '@mui/material/Box';
 import useResolvedMode from '@/common/hooks/use-resolved-mode';

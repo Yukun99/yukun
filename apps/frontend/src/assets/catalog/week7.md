@@ -14,8 +14,8 @@ Honestly, the challenges were in the other components, and this navigation chang
 
 ### Source Code
 
-https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/src/features/navigation/navigation-mobile.tsx
-https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/src/features/navigation/navigation-drawer-mobile.tsx
+features/navigation/navigation-mobile.tsx
+features/navigation/navigation-drawer-mobile.tsx
 
 ### Component
 

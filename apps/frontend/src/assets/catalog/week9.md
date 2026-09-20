@@ -28,7 +28,7 @@ screen when the user stops scrolling will snap into place after a set delay.
 
 ### Source Code
 
-https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/src/common/components/timeline/timeline.tsx
+common/components/timeline/timeline.tsx
 
 ### Component
 

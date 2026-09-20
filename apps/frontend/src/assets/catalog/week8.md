@@ -18,7 +18,7 @@ Challenges incoming for the timeline component for next week...
 
 ### Source Code
 
-https://raw.githubusercontent.com/Yukun99/yukun/refs/heads/main/apps/frontend/src/features/rotate-gate/rotate-gate.tsx
+features/rotate-gate/rotate-gate.tsx
 
 ### Component
 

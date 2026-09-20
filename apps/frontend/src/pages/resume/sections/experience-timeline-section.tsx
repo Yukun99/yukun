@@ -12,7 +12,7 @@ import SkeletonSection from '@/common/skeletons/sk-section';
 import useSpacing from '@/common/hooks/use-spacing';
 import SkillPill from '@/pages/resume/components/skill-pill';
 import { PAGE } from '@/pages/resume/utils/page';
-import { DialogContentRenderer, TechnicalSkill } from '@/pages/resume/utils/skill-button-utils';
+import { TechnicalSkill } from '@/pages/resume/utils/skill-types';
 import Box from '@mui/material/Box';
 import { ReactNode, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,7 +44,7 @@ type JobPaneProps = {
   job: Job;
   minHeight: number | string;
   scrollable?: boolean;
-  onSelectSkill: (renderer: DialogContentRenderer) => void;
+  onSelectSkill: (skill: TechnicalSkill) => void;
 };
 
 // holds the empty frame until the pane is close enough to be worth mounting, then reveals it
@@ -98,7 +98,7 @@ const JobPane = ({ job, minHeight, scrollable, onSelectSkill }: JobPaneProps) =>
 
 // panes shown after the timeline when the page scrolls sideways, i.e. the rest of the page
 type ExperienceTimelineSectionProps = {
-  onSelectSkill: (renderer: DialogContentRenderer) => void;
+  onSelectSkill: (skill: TechnicalSkill) => void;
   trailing?: ReactNode[];
 };
 

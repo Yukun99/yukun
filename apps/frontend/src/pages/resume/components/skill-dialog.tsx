@@ -1,17 +1,18 @@
 import useSpacing from '@/common/hooks/use-spacing';
+import SkillDialogContent from '@/pages/resume/components/skill-dialog-content';
+import { TechnicalSkill } from '@/pages/resume/utils/skill-types';
 import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import Fade from '@mui/material/Fade';
-import { ReactNode } from 'react';
 
-type SkillDialogProps = { content?: ReactNode; onClose: () => void };
+type SkillDialogProps = { skill: TechnicalSkill | null; onClose: () => void };
 
-const SkillDialog = ({ content, onClose }: SkillDialogProps) => {
+const SkillDialog = ({ skill, onClose }: SkillDialogProps) => {
   const { padding } = useSpacing();
 
   return (
     <Dialog
-      open={Boolean(content)}
+      open={Boolean(skill)}
       onClose={onClose}
       transitionDuration={0}
       slotProps={{
@@ -27,8 +28,8 @@ const SkillDialog = ({ content, onClose }: SkillDialogProps) => {
         },
       }}
     >
-      <Fade appear in={Boolean(content)} timeout={400}>
-        <Box>{content}</Box>
+      <Fade appear in={Boolean(skill)} timeout={400}>
+        <Box>{skill && <SkillDialogContent skill={skill} />}</Box>
       </Fade>
     </Dialog>
   );

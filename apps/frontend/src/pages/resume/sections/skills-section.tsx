@@ -6,12 +6,11 @@ import SectionTitle from '@/common/components/sections/section-title';
 import SkillButton from '@/pages/resume/components/skill-button';
 import { PAGE } from '@/pages/resume/utils/page';
 import {
-  DialogContentRenderer,
   InterestSkill,
   LanguageSkill,
   SkillType,
   TechnicalSkill,
-} from '@/pages/resume/utils/skill-button-utils';
+} from '@/pages/resume/utils/skill-types';
 import Box from '@mui/material/Box';
 import type { Theme } from '@mui/material/styles';
 import type { SystemStyleObject } from '@mui/system';
@@ -19,7 +18,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type SkillsSectionProps = {
-  onSelectSkill: (renderer: DialogContentRenderer) => void;
+  onSelectSkill: (skill: TechnicalSkill) => void;
   style?: SystemStyleObject<Theme>;
 };
 
@@ -51,7 +50,6 @@ const SkillsSection = ({ onSelectSkill, style }: SkillsSectionProps) => {
       >
         {languageSkills.map((language) => (
           <SkillButton
-            onSelect={onSelectSkill}
             skill={language}
             skillType={SkillType.LANGUAGE}
             key={language.name}
@@ -127,7 +125,6 @@ const SkillsSection = ({ onSelectSkill, style }: SkillsSectionProps) => {
       >
         {interests.map((interest) => (
           <SkillButton
-            onSelect={onSelectSkill}
             skill={interest}
             skillType={SkillType.INTEREST}
             key={interest.name}

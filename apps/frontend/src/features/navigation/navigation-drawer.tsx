@@ -1,6 +1,7 @@
 import { BUTTON_SIZE } from '@/common/components/buttons/round-icon-button';
 import useIsMobile from '@/common/hooks/use-is-mobile';
 import NavigationDrawerButton from '@/features/navigation/buttons/navigation-drawer-button';
+import { PAGES } from '@/features/navigation/pages';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 
@@ -19,9 +20,9 @@ const NavigationDrawer = ({ isOpen, onClose }: NavigationDrawerProps) => {
           paddingTop: `${BUTTON_SIZE + (isMobile ? 12 : 16)}px`,
         }}
       >
-        <NavigationDrawerButton path={'/'} onNavigate={onClose} />
-        <NavigationDrawerButton path={'/resume'} onNavigate={onClose} />
-        <NavigationDrawerButton path={'/catalog'} onNavigate={onClose} />
+        {PAGES.map((page) => (
+          <NavigationDrawerButton key={page.path} path={page.path} onNavigate={onClose} />
+        ))}
       </Box>
     </Drawer>
   );
