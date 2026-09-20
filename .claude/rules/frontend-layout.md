@@ -23,4 +23,4 @@ Colours come from the tokens in `common/utils/palette.ts` (`GRAY`, `OPACITY`, `P
 
 ## Theme
 
-MUI `colorSchemes` light/dark with `colorSchemeSelector: 'class'`; read the mode with `useResolvedMode()` from `common/hooks/use-resolved-mode.ts`, which returns `'light'` or `'dark'`. `useColorScheme().mode` is `'system'` until the reader picks a mode, so only use it for `setMode`. `apps/frontend/test/app/app.spec.tsx` rebuilds the same theme, so keep it in step with `main.tsx`.
+MUI `colorSchemes` light/dark with `colorSchemeSelector: 'class'`; read the mode with `useResolvedMode()` from `common/hooks/use-resolved-mode.ts`, which returns `'light'` or `'dark'`. `useColorScheme().mode` is `'system'` until the reader picks a mode, so only use it for `setMode`. The theme is created once in `app/theme.ts` and shared by `main.tsx` and the app spec. Layering uses `theme.zIndex` (`appBar` for the desktop bar, `drawer + 1` for the menu buttons, `modal + 1` for the rotate gate) rather than literal numbers.

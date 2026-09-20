@@ -28,7 +28,7 @@ const Navigation = () => {
         boxShadow: (theme) => theme.shadows[16],
         position: 'sticky',
         top: 0,
-        zIndex: 1000,
+        zIndex: (theme) => theme.zIndex.appBar,
         backgroundColor: getPageElementBgColor(mode),
       }}
     >

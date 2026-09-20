@@ -49,16 +49,26 @@ jobs:
           cp -r apps/backend/index.php apps/backend/.htaccess apps/backend/src apps/frontend/dist/api/
           php -r 'file_put_contents("apps/frontend/dist/api/config.php", "<?php\n\ndeclare(strict_types=1);\n\nreturn " . var_export(["host" => "localhost", "name" => getenv("DB_NAME"), "user" => getenv("DB_USER"), "password" => getenv("DB_PASSWORD"), "salt" => getenv("VISITOR_SALT")], true) . ";\n");'
 
-      - name: Clear Previous Build on Server
+      - name: Resolve FTP Host for Certificate Checks
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_CERT_SUFFIX: .vodien.com
+        run: |
+          FTP_HOST=$(bash .github/scripts/resolve-ftp-host.sh)
+          echo "::add-mask::$FTP_HOST"
+          echo "FTP_HOST=$FTP_HOST" >> "$GITHUB_ENV"
+
+      - name: Clear Previous Build on Server
+        env:
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends lftp
-          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "ftps://$FTP_SERVER:21" <<'EOF'
-          set ssl:verify-certificate no
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "ftps://$FTP_HOST:21" <<'EOF'
+          set ssl:verify-certificate yes
+          set ssl:check-hostname yes
+          set ssl:ca-file /etc/ssl/certs/ca-certificates.crt
           set ftp:ssl-force true
           set ftp:ssl-protect-data true
           rm -rf assets
@@ -71,10 +81,11 @@ jobs:
       - name: Deploy Build via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server: ${{ env.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
           protocol: ftps
+          security: strict
           local-dir: ./apps/frontend/dist/
           server-dir: ./

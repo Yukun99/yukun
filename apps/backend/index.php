@@ -3,20 +3,18 @@
 declare(strict_types=1);
 
 use Yukun\Api\ApiError;
-use Yukun\Api\Db;
+use Yukun\Api\Config;
 use Yukun\Api\DbVisitorStore;
 use Yukun\Api\Http;
 use Yukun\Api\Router;
 use Yukun\Api\Visitors;
 
-foreach (['ApiError', 'Http', 'Db', 'Router', 'Visitor', 'VisitorStore', 'DbVisitorStore', 'Visitors'] as $class) {
-    require __DIR__ . "/src/$class.php";
-}
+require __DIR__ . '/src/autoload.php';
 
 header('Cache-Control: no-store');
 header('X-Content-Type-Options: nosniff');
 
-$visitors = fn (): Visitors => new Visitors(new DbVisitorStore(), (string) (Db::config()['salt'] ?? ''));
+$visitors = fn (): Visitors => new Visitors(new DbVisitorStore(), Config::get('salt'));
 $now = fn (): int => (int) floor(microtime(true) * 1000);
 
 $router = new Router();

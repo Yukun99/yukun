@@ -103,3 +103,8 @@ frontmatter); task-triggered rules have no `paths` and are always loaded. Add ne
 - `backend.md` — PHP API layout, database config, local setup, tests
 - `deploy.md` — GitHub Actions FTPS deploy, secrets and `.htaccess`
 - `security-audit.md` — procedure when asked for a security audit (always loaded)
+
+## Pending Work
+
+Known follow-ups that are agreed but not started live in `TODO.md` at the repo root. Check it before proposing
+structural work, and remove an item from it once it lands.

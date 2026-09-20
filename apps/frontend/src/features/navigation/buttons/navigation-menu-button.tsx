@@ -11,7 +11,7 @@ const NavigationMenuButton = ({ isOpen, onClick }: NavigationMenuButtonProps) =>
       style={{
         rotate: isOpen ? '90deg' : '0deg',
         transition: 'rotate 0.2s ease-in-out',
-        zIndex: 2000,
+        zIndex: 1,
       }}
     />
   );

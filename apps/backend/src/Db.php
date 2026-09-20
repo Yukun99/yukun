@@ -10,17 +10,11 @@ final class Db
 
     private static ?\PDO $pdo = null;
 
-    public static function config(): array
-    {
-        return require __DIR__ . '/../config.php';
-    }
-
     public static function pdo(): \PDO
     {
         if (self::$pdo === null) {
-            $config = self::config();
-            $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8mb4', $config['host'], $config['name']);
-            self::$pdo = new \PDO($dsn, $config['user'], $config['password'], [
+            $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8mb4', Config::get('host'), Config::get('name'));
+            self::$pdo = new \PDO($dsn, Config::get('user'), Config::get('password'), [
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
                 \PDO::ATTR_EMULATE_PREPARES => false,

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 // Plain-PHP test runner: each *Test.php file uses `$check(label, actual, expected)`.
 
-foreach (['ApiError', 'Router', 'Visitor', 'VisitorStore', 'Visitors'] as $class) {
-    require __DIR__ . "/../src/$class.php";
-}
+require __DIR__ . '/../src/autoload.php';
 require __DIR__ . '/MemoryVisitorStore.php';
 
 $failures = 0;

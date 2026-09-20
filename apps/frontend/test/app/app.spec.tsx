@@ -1,13 +1,9 @@
 import App from '@/app/app';
+import theme from '@/app/theme';
 import '@/locales/i18n';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-
-const theme = createTheme({
-  colorSchemes: { light: true, dark: true },
-  cssVariables: { colorSchemeSelector: 'class' },
-});
 
 const renderApp = () =>
   render(

@@ -10,9 +10,9 @@ paths:
 
 ## Layout
 
-- `index.php` is the single front controller: it requires every class in `src/` by hand, registers the routes and turns an `ApiError` into a `{ "error": ... }` JSON response. A new class must be added to that `require` list, and to the one in `test/run.php` if it is tested.
+- `index.php` is the single front controller: it loads `src/autoload.php`, registers the routes and turns an `ApiError` into a `{ "error": ... }` JSON response. The autoloader maps `Yukun\Api\<Name>` to `src/<Name>.php`, so a new class needs no registration, in `index.php` or in `test/run.php`.
 - `Http::routePath()` strips the directory of `index.php` from the request path, so the same routes work under Apache at `/api/` and under `php -S` at the root.
-- `Db` is a lazy PDO singleton that reads the gitignored `config.php` (`host`, `name`, `user`, `password`, `salt`). Every query goes through `Db::run` with bound parameters; never build SQL from request values.
+- `Config::get(key)` reads the gitignored `config.php` (`host`, `name`, `user`, `password`, `salt`) once per request. `Db` is a lazy PDO singleton built from it. Every query goes through `Db::run` with bound parameters; never build SQL from request values.
 - `schema.sql` is run by hand in phpMyAdmin because the API's database user only has `SELECT`, `INSERT` and `UPDATE`. A later schema change goes in a new dated file under `migrations/`, also run by hand.
 
 ## Visitor Counter
