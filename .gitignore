@@ -16,7 +16,7 @@ node_modules
 *.launch
 .settings/
 *.sublime-workspace
-/.claude
+/.claude/skills
 /.agents
 /.nx
 /.vscode

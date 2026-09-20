@@ -5,9 +5,9 @@ import ToggleButton from '@mui/material/ToggleButton';
 import Typography from '@mui/material/Typography';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-type NavigationDrawerButtonProps = { path: string };
+type NavigationDrawerButtonProps = { path: string; onNavigate?: () => void };
 
-const NavigationDrawerButton = ({ path }: NavigationDrawerButtonProps) => {
+const NavigationDrawerButton = ({ path, onNavigate }: NavigationDrawerButtonProps) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const label = getPathLabel(path);
@@ -16,7 +16,10 @@ const NavigationDrawerButton = ({ path }: NavigationDrawerButtonProps) => {
     <ToggleButton
       value={path}
       selected={pathname === path}
-      onClick={() => navigate(path)}
+      onClick={() => {
+        navigate(path);
+        if (pathname !== path) onNavigate?.();
+      }}
       sx={{
         borderRadius: 0,
         width: '100%',

@@ -21,7 +21,7 @@ const NavigationPageButton = ({ path, icon, onNavigate }: NavigationPageButtonPr
     <Button
       onClick={() => {
         navigate(path);
-        onNavigate?.();
+        if (pathname !== path) onNavigate?.();
       }}
       sx={{
         flex: `0 0 ${SIZE}px`,

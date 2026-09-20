@@ -19,9 +19,9 @@ const NavigationDrawer = ({ isOpen, onClose }: NavigationDrawerProps) => {
           paddingTop: `${BUTTON_SIZE + (isMobile ? 12 : 16)}px`,
         }}
       >
-        <NavigationDrawerButton path={'/'} />
-        <NavigationDrawerButton path={'/resume'} />
-        <NavigationDrawerButton path={'/catalog'} />
+        <NavigationDrawerButton path={'/'} onNavigate={onClose} />
+        <NavigationDrawerButton path={'/resume'} onNavigate={onClose} />
+        <NavigationDrawerButton path={'/catalog'} onNavigate={onClose} />
       </Box>
     </Drawer>
   );
