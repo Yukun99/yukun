@@ -30,18 +30,6 @@ needs its own round of testing on desktop and on a mobile device in landscape.
 - Replace the hand-written "Bundle API into Build" step in `deploy.yml` with an Nx `backend:bundle` target and a script
   file for writing `config.php`, so that the bundle can be built and checked locally.
 
-## FTP Certificate Verification
-
-Strict certificate checks are in place in `deploy.yml` (see `.claude/rules/deploy.md`), and
-`.github/scripts/resolve-ftp-host.sh` was tested against the live server from a local machine. The two FTP steps
-themselves have not run in GitHub Actions yet.
-
-- Watch the first deploy after this change. A certificate failure stops the workflow in the resolve or clear step,
-  before anything is deleted, so the live site stays up.
-- If lftp rejects the certificate although the resolve step passed, check the `ssl:ca-file` path in the clear step
-  against the runner image.
-- Delete this section once a deploy has gone through.
-
 ## Smaller Notes
 
 - `Section` takes many boolean layout flags (`centered`, `blurless`, `clear`, `snug`, `tight`), and its `style` prop is
