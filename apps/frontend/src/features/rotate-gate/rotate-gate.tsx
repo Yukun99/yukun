@@ -1,7 +1,7 @@
 import rotate from '@/assets/resume/Rotate.gif';
-import { getPageElementBgColor } from '@/features/navigation/navigation';
+import { getPageElementBgColor } from '@/common/utils/palette';
 import Box from '@mui/material/Box';
-import { useColorScheme } from '@mui/material/styles';
+import useResolvedMode from '@/common/hooks/use-resolved-mode';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 
@@ -9,7 +9,7 @@ type RotateGateProps = { contained?: boolean };
 
 const RotateGate = ({ contained }: RotateGateProps) => {
   const { t } = useTranslation();
-  const { mode } = useColorScheme();
+  const mode = useResolvedMode();
 
   return (
     <Box

@@ -16,7 +16,7 @@ const theme = createTheme({
 root.render(
   <StrictMode>
     <BrowserRouter>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme} noSsr>
         <CssBaseline />
         <App />
       </ThemeProvider>

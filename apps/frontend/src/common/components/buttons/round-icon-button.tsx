@@ -1,4 +1,4 @@
-import { GRAY, PURPLE } from '@/app/palette';
+import { GRAY, PURPLE } from '@/common/utils/palette';
 import StarBurst, { type StarBurstHandle } from '@/common/components/effects/star-burst';
 import useIsMobile from '@/common/hooks/use-is-mobile';
 import { SvgIconComponent } from '@mui/icons-material';

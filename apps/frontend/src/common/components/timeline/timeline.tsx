@@ -1,4 +1,4 @@
-import { getColor, GRAY, OPACITY, PURPLE } from '@/app/palette';
+import { getColor, GRAY, OPACITY, PURPLE } from '@/common/utils/palette';
 import { REVEAL_EASE } from '@/common/hooks/use-reveal';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';

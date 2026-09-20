@@ -1,6 +1,6 @@
 import { getFormattedIcon } from '@/common/components/buttons/round-icon-button';
 import StarBurst, { type StarBurstHandle } from '@/common/components/effects/star-burst';
-import { useSpacing } from '@/pages/page';
+import useSpacing from '@/common/hooks/use-spacing';
 import { SvgIconComponent } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';

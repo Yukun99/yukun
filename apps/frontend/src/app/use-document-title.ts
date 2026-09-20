@@ -1,4 +1,4 @@
-import { getPathLabel } from '@/app/routes';
+import { getPathLabel } from '@/common/utils/path-label';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';

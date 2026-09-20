@@ -3,8 +3,8 @@ import SectionDividerHor from '@/common/components/sections/section-divider-hor'
 import SectionDividerVert from '@/common/components/sections/section-divider-vert';
 import SectionParagraph from '@/common/components/sections/section-paragraph';
 import useIsMobile from '@/common/hooks/use-is-mobile';
-import { useSpacing } from '@/pages/page';
-import { PAGE } from '@/pages/resume/resume';
+import useSpacing from '@/common/hooks/use-spacing';
+import { PAGE } from '@/pages/resume/utils/page';
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { TFunction } from 'i18next';

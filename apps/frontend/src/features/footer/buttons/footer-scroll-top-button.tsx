@@ -1,4 +1,4 @@
-import { useScrollToTop } from '@/app/scroll-context';
+import { useScrollToTop } from '@/common/contexts/scroll-context';
 import RoundIconButton from '@/common/components/buttons/round-icon-button';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 

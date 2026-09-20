@@ -1,4 +1,4 @@
-import { useSpacing } from '@/pages/page';
+import useSpacing from '@/common/hooks/use-spacing';
 import type { Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import type { SystemStyleObject } from '@mui/system';

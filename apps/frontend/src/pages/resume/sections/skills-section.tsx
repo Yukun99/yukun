@@ -4,7 +4,7 @@ import SectionDividerHor from '@/common/components/sections/section-divider-hor'
 import SectionParagraph from '@/common/components/sections/section-paragraph';
 import SectionTitle from '@/common/components/sections/section-title';
 import SkillButton from '@/pages/resume/components/skill-button';
-import { PAGE } from '@/pages/resume/resume';
+import { PAGE } from '@/pages/resume/utils/page';
 import {
   DialogContentRenderer,
   InterestSkill,

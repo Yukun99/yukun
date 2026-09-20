@@ -1,4 +1,4 @@
-import { OPACITY } from '@/app/palette';
+import { OPACITY } from '@/common/utils/palette';
 import FloatingCircles from '@/common/components/effects/floating-circles';
 import useIsMobile from '@/common/hooks/use-is-mobile';
 

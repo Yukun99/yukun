@@ -1,4 +1,4 @@
-import { PAGE } from '@/pages/resume/resume';
+import { PAGE } from '@/pages/resume/utils/page';
 import {
   DialogContentRenderer,
   getDialogContent,

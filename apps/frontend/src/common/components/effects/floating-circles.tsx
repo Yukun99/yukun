@@ -1,4 +1,4 @@
-import { OPACITY, PURPLE } from '@/app/palette';
+import { OPACITY, PURPLE } from '@/common/utils/palette';
 import useFloatingCircles from '@/common/hooks/use-floating-circles';
 import useIsMobile from '@/common/hooks/use-is-mobile';
 import Box from '@mui/material/Box';

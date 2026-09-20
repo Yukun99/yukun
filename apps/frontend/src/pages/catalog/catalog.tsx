@@ -3,17 +3,16 @@ import Reveal from '@/common/components/effects/reveal';
 import Section from '@/common/components/sections/section';
 import SectionTitle from '@/common/components/sections/section-title';
 import SkeletonSection from '@/common/skeletons/sk-section';
+import { PAGE } from '@/pages/catalog/utils/page';
 import Page from '@/pages/page';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import Box from '@mui/material/Box';
-import { useColorScheme } from '@mui/material/styles';
+import useResolvedMode from '@/common/hooks/use-resolved-mode';
 import { ComponentType, lazy, ReactNode, Suspense, useEffect, useMemo, useState } from 'react';
 import Markdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
-
-const PAGE = 'catalog';
 
 // lazy entry file loaders
 const entryFiles = import.meta.glob('../../assets/catalog/week*.md', {
@@ -83,7 +82,7 @@ const markdownComponentMap = {
 };
 
 const Catalog = () => {
-  const { mode } = useColorScheme();
+  const mode = useResolvedMode();
   const [week, setWeek] = useState<number>(1);
   const [entry, setEntry] = useState<ParsedEntry | null>(null);
   const [code, setCode] = useState<string[]>([]);
@@ -115,15 +114,13 @@ const Catalog = () => {
   useEffect(() => {
     if (!entry?.sourceUrls) return;
     let active = true;
-    for (const sourceUrl of entry.sourceUrls) {
+    const loadSource = (sourceUrl: string) =>
       fetch(sourceUrl)
-        .then((res) => res.text())
-        .then((text) => {
-          if (active) {
-            setCode((prev) => [...prev, text]);
-          }
-        });
-    }
+        .then((res) => (res.ok ? res.text() : null))
+        .catch(() => null);
+    Promise.all(entry.sourceUrls.map(loadSource)).then((sources) => {
+      if (active) setCode(sources.filter((source) => source !== null));
+    });
     return () => {
       active = false;
     };

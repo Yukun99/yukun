@@ -1,4 +1,4 @@
-import { useScrollViewport } from '@/app/scroll-context';
+import { useScrollViewport } from '@/common/contexts/scroll-context';
 import { useEffect, useState } from 'react';
 
 // size of the app scroll container, i.e. how much page fits on screen without scrolling

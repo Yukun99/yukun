@@ -2,7 +2,7 @@ import Section from '@/common/components/sections/section';
 import SectionDividerHor from '@/common/components/sections/section-divider-hor';
 import SectionParagraphByKey from '@/common/components/sections/section-paragraph-by-key';
 import SectionParagraphList from '@/common/components/sections/section-paragraph-list';
-import { PAGE } from '@/pages/resume/resume';
+import { PAGE } from '@/pages/resume/utils/page';
 import Box from '@mui/material/Box';
 import type { Theme } from '@mui/material/styles';
 import type { SystemStyleObject } from '@mui/system';

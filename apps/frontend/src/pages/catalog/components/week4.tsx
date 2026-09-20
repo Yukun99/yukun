@@ -2,7 +2,7 @@ import Reveal from '@/common/components/effects/reveal';
 import Section from '@/common/components/sections/section';
 import useIsMobile from '@/common/hooks/use-is-mobile';
 import SkeletonSection from '@/common/skeletons/sk-section';
-import { useSpacing } from '@/pages/page';
+import useSpacing from '@/common/hooks/use-spacing';
 import Box from '@mui/material/Box';
 import { useEffect, useState } from 'react';
 

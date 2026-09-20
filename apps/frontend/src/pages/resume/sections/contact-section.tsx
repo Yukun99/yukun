@@ -2,7 +2,7 @@ import Section from '@/common/components/sections/section';
 import SectionParagraphByKey, {
   PLACEHOLDER_TYPE,
 } from '@/common/components/sections/section-paragraph-by-key';
-import { PAGE } from '@/pages/resume/resume';
+import { PAGE } from '@/pages/resume/utils/page';
 import type { Theme } from '@mui/material/styles';
 import type { SystemStyleObject } from '@mui/system';
 

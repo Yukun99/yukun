@@ -58,14 +58,18 @@ repo root (as the IDE does) resolves the `@/` alias too. Backend tests are plain
 
 `apps/frontend/src/`, imported through the `@/*` alias:
 
-- `app/` — shell: app, routes, palette tokens, scroll context
+- `app/` — shell: app, routes, document title
 - `pages/<page>/` — one lazy-loaded route each, with page-local `components/`, `sections/`, `utils/`
 - `features/` — cross-page chrome (navigation, footer, rotate gate)
-- `common/` — reusable components, hooks, skeletons, utils
+- `common/` — reusable components, hooks, contexts (scroll), skeletons, utils (palette tokens)
 - `locales/` — en/zh translations
 - `assets/catalog/` — Markdown entries for the catalog page
 
 Put code at the narrowest level that fits: page-local first, `common/` only once it is shared.
+
+Imports only point downwards through the layers `app/` → `pages/` → `features/` → `common/`. ESLint enforces this
+with `no-restricted-imports`, and `import/no-cycle` rejects import cycles; both are set up in
+`apps/frontend/eslint.config.mjs`. Each page keeps its i18n namespace name as `PAGE` in `pages/<page>/utils/page.ts`.
 
 ## Conventions
 

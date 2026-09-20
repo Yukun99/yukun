@@ -1,35 +1,26 @@
 import RoundIconButton from '@/common/components/buttons/round-icon-button';
+import useResolvedMode, { ResolvedMode } from '@/common/hooks/use-resolved-mode';
 import DarkMode from '@mui/icons-material/DarkMode';
 import LightMode from '@mui/icons-material/LightMode';
 import { useColorScheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 
-type Mode = 'light' | 'dark' | 'system';
-
-function toggleMode(mode: Mode | undefined, setMode: (mode: Mode | null) => void) {
-  if (!mode) return setMode('light');
-  setMode(mode === 'light' ? 'dark' : 'light');
-}
-
-export function getThemeLabelKey(mode: Mode | undefined) {
+export function getThemeLabelKey(mode: ResolvedMode) {
   return mode === 'light' ? 'theme.light' : 'theme.dark';
 }
 
-export function getThemeIcon(mode: Mode | undefined) {
+export function getThemeIcon(mode: ResolvedMode) {
   return mode === 'light' ? LightMode : DarkMode;
-}
-
-export function toggleThemeMode(mode: Mode | undefined, setMode: (mode: Mode | null) => void) {
-  toggleMode(mode, setMode);
 }
 
 const NavigationThemeButton = () => {
   const { t } = useTranslation();
-  const { mode, setMode } = useColorScheme();
+  const { setMode } = useColorScheme();
+  const mode = useResolvedMode();
 
   return (
     <RoundIconButton
-      onClick={() => toggleMode(mode, setMode)}
+      onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}
       icon={getThemeIcon(mode)}
       label={t(getThemeLabelKey(mode))}
     />

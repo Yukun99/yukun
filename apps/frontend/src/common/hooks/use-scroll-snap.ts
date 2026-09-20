@@ -1,4 +1,4 @@
-import { useScrollViewport } from '@/app/scroll-context';
+import { useScrollViewport } from '@/common/contexts/scroll-context';
 import { watchPointerHold } from '@/common/utils/pointer-hold';
 import { useEffect } from 'react';
 

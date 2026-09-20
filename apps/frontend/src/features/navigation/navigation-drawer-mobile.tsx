@@ -1,13 +1,14 @@
 import logo from '@/assets/logo.svg';
 import RoundIconButton from '@/common/components/buttons/round-icon-button';
+import useResolvedMode from '@/common/hooks/use-resolved-mode';
 import NavigationActionButton from '@/features/navigation/buttons/navigation-action-button';
 import NavigationPageButton from '@/features/navigation/buttons/navigation-page-button';
 import {
   getThemeIcon,
   getThemeLabelKey,
 } from '@/features/navigation/buttons/navigation-theme-button';
-import { getPageElementBgColor } from '@/features/navigation/navigation';
-import { useSpacing } from '@/pages/page';
+import { getPageElementBgColor } from '@/common/utils/palette';
+import useSpacing from '@/common/hooks/use-spacing';
 import Close from '@mui/icons-material/Close';
 import Description from '@mui/icons-material/Description';
 import Home from '@mui/icons-material/Home';
@@ -45,7 +46,8 @@ const NavigationDrawerMobile = ({
   containerRef,
 }: MobileNavigationDrawerProps) => {
   const { t, i18n } = useTranslation();
-  const { mode, setMode } = useColorScheme();
+  const { setMode } = useColorScheme();
+  const mode = useResolvedMode();
   const { margin, padding } = useSpacing();
 
   return (

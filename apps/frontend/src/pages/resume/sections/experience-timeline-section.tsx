@@ -9,9 +9,9 @@ import useSnapToLargest, { PANE_ATTRIBUTE } from '@/common/hooks/use-snap-to-lar
 import useTimelineProgress from '@/common/hooks/use-timeline-progress';
 import useViewportSize from '@/common/hooks/use-viewport-size';
 import SkeletonSection from '@/common/skeletons/sk-section';
-import { useSpacing } from '@/pages/page';
+import useSpacing from '@/common/hooks/use-spacing';
 import SkillPill from '@/pages/resume/components/skill-pill';
-import { PAGE } from '@/pages/resume/resume';
+import { PAGE } from '@/pages/resume/utils/page';
 import { DialogContentRenderer, TechnicalSkill } from '@/pages/resume/utils/skill-button-utils';
 import Box from '@mui/material/Box';
 import { ReactNode, useMemo, useRef } from 'react';

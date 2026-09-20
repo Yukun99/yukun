@@ -1,13 +1,13 @@
 import routes from '@/app/routes';
-import { ScrollToTopContext, ScrollViewportContext } from '@/app/scroll-context';
+import { ScrollToTopContext, ScrollViewportContext } from '@/common/contexts/scroll-context';
 import FloatingCircles from '@/common/components/effects/floating-circles';
-import useDocumentTitle from '@/common/hooks/use-document-title';
+import useDocumentTitle from '@/app/use-document-title';
 import useNeedsRotate from '@/common/hooks/use-needs-rotate';
 import Footer from '@/features/footer/footer';
 import Navigation from '@/features/navigation/navigation';
 import RotateGate from '@/features/rotate-gate/rotate-gate';
 import Box from '@mui/material/Box';
-import { useColorScheme } from '@mui/material/styles';
+import useResolvedMode from '@/common/hooks/use-resolved-mode';
 import type { OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import 'overlayscrollbars/overlayscrollbars.css';
@@ -18,7 +18,7 @@ const AppRoutes = () => useRoutes(routes);
 
 const App = () => {
   useDocumentTitle();
-  const { mode } = useColorScheme();
+  const mode = useResolvedMode();
   const scrollRef = useRef<OverlayScrollbarsComponentRef>(null);
   const needsRotate = useNeedsRotate();
 

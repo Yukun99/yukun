@@ -4,10 +4,9 @@ import SectionParagraphByKey, {
   PLACEHOLDER_TYPE,
 } from '@/common/components/sections/section-paragraph-by-key';
 import useIsMobile from '@/common/hooks/use-is-mobile';
+import { PAGE } from '@/pages/home/utils/page';
 import Page from '@/pages/page';
 import Box from '@mui/material/Box';
-
-const PAGE = 'home';
 
 const Home = () => {
   const isMobile = useIsMobile();

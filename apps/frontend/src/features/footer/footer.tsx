@@ -1,12 +1,12 @@
 import useIsMobile from '@/common/hooks/use-is-mobile';
 import FooterScrollTopButton from '@/features/footer/buttons/footer-scroll-top-button';
 import FooterViewCounter from '@/features/footer/footer-view-counter';
-import { getPageElementBgColor } from '@/features/navigation/navigation';
+import { getPageElementBgColor } from '@/common/utils/palette';
 import Box from '@mui/material/Box';
-import { useColorScheme } from '@mui/material/styles';
+import useResolvedMode from '@/common/hooks/use-resolved-mode';
 
 const Footer = () => {
-  const { mode } = useColorScheme();
+  const mode = useResolvedMode();
   const isMobile = useIsMobile();
 
   return (

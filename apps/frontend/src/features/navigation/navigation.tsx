@@ -1,4 +1,4 @@
-import { getColor, GRAY, OPACITY } from '@/app/palette';
+import { getPageElementBgColor } from '@/common/utils/palette';
 import logo from '@/assets/logo.svg';
 import RoundIconButton from '@/common/components/buttons/round-icon-button';
 import useIsMobile from '@/common/hooks/use-is-mobile';
@@ -9,16 +9,12 @@ import NavigationDrawer from '@/features/navigation/navigation-drawer';
 import NavigationMobile from '@/features/navigation/navigation-mobile';
 import Box from '@mui/material/Box';
 import Portal from '@mui/material/Portal';
-import { useColorScheme } from '@mui/material/styles';
+import useResolvedMode from '@/common/hooks/use-resolved-mode';
 import { useState } from 'react';
-
-export function getPageElementBgColor(mode?: 'light' | 'dark' | 'system') {
-  return mode === 'light' ? getColor(GRAY[20], OPACITY[100]) : getColor(GRAY[80], OPACITY[100]);
-}
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { mode } = useColorScheme();
+  const mode = useResolvedMode();
   const isMobile = useIsMobile();
 
   if (isMobile) return <NavigationMobile />;

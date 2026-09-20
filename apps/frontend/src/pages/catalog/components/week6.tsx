@@ -1,7 +1,7 @@
 import { BUTTON_SIZE, getFormattedIcon } from '@/common/components/buttons/round-icon-button';
 import { FROSTED_BG } from '@/common/components/sections/section';
 import useIsMobile from '@/common/hooks/use-is-mobile';
-import { useSpacing } from '@/pages/page';
+import useSpacing from '@/common/hooks/use-spacing';
 import WbSunny from '@mui/icons-material/WbSunny';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';

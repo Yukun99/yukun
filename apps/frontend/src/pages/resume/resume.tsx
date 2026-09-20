@@ -10,8 +10,6 @@ import { DialogContentRenderer } from '@/pages/resume/utils/skill-button-utils';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
 
-export const PAGE = 'resume';
-
 const Resume = () => {
   const isMobile = useIsMobile();
   const [dialogContentRenderer, setDialogContentRenderer] = useState<DialogContentRenderer | null>(

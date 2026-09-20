@@ -45,3 +45,7 @@ export function getColor(hex: string, opacity: number): string {
     .padStart(2, '0');
   return `${hex}${a}`;
 }
+
+export function getPageElementBgColor(mode: 'light' | 'dark') {
+  return mode === 'light' ? getColor(GRAY[20], OPACITY[100]) : getColor(GRAY[80], OPACITY[100]);
+}

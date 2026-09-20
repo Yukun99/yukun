@@ -1,9 +1,9 @@
 import RoundIconButton, { BUTTON_SIZE } from '@/common/components/buttons/round-icon-button';
-import { getPageElementBgColor } from '@/features/navigation/navigation';
+import { getPageElementBgColor } from '@/common/utils/palette';
 import NavigationDrawerMobile from '@/features/navigation/navigation-drawer-mobile';
 import MenuIcon from '@mui/icons-material/Menu';
 import Box from '@mui/material/Box';
-import { useColorScheme } from '@mui/material/styles';
+import useResolvedMode from '@/common/hooks/use-resolved-mode';
 import { RefObject, useState } from 'react';
 
 const SIZE = BUTTON_SIZE * 0.8;
@@ -12,7 +12,7 @@ type NavigationMobileProps = { contained?: boolean; containerRef?: RefObject<HTM
 
 const NavigationMobile = ({ contained, containerRef }: NavigationMobileProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { mode } = useColorScheme();
+  const mode = useResolvedMode();
 
   return (
     <>

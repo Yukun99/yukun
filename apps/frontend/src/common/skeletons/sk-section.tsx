@@ -1,7 +1,7 @@
-import { getColor, GRAY, OPACITY } from '@/app/palette';
+import { getColor, GRAY, OPACITY } from '@/common/utils/palette';
 import { SectionStyleProps } from '@/common/components/sections/section';
 import { REVEAL_DURATION, REVEAL_EASE } from '@/common/hooks/use-reveal';
-import { useSpacing } from '@/pages/page';
+import useSpacing from '@/common/hooks/use-spacing';
 import Box from '@mui/material/Box';
 import { ReactNode } from 'react';
 

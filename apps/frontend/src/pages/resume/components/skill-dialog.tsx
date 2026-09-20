@@ -1,4 +1,4 @@
-import { useSpacing } from '@/pages/page';
+import useSpacing from '@/common/hooks/use-spacing';
 import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import Fade from '@mui/material/Fade';

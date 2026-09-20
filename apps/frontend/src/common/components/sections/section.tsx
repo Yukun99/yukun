@@ -1,7 +1,7 @@
-import { getColor, GRAY, OPACITY } from '@/app/palette';
+import { getColor, GRAY, OPACITY } from '@/common/utils/palette';
 import SectionTitle from '@/common/components/sections/section-title';
 import useReveal, { RevealTrigger } from '@/common/hooks/use-reveal';
-import { useSpacing } from '@/pages/page';
+import useSpacing from '@/common/hooks/use-spacing';
 import Box from '@mui/material/Box';
 import type { Theme } from '@mui/material/styles';
 import type { SystemStyleObject } from '@mui/system';

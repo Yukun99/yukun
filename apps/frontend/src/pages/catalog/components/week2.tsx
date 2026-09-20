@@ -1,7 +1,7 @@
 import useIsMobile from '@/common/hooks/use-is-mobile';
 import SkillButton from '@/pages/resume/components/skill-button';
 import SkillDialog from '@/pages/resume/components/skill-dialog';
-import { PAGE } from '@/pages/resume/resume';
+import { PAGE } from '@/pages/resume/utils/page';
 import {
   DialogContentRenderer,
   SkillType,

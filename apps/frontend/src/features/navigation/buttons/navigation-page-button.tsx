@@ -1,8 +1,8 @@
-import { PURPLE } from '@/app/palette';
-import { getPathLabel } from '@/app/routes';
+import { PURPLE } from '@/common/utils/palette';
+import { getPathLabel } from '@/common/utils/path-label';
 import { getFormattedIcon } from '@/common/components/buttons/round-icon-button';
 import { FROSTED_BG } from '@/common/components/sections/section';
-import { useSpacing } from '@/pages/page';
+import useSpacing from '@/common/hooks/use-spacing';
 import { SvgIconComponent } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';

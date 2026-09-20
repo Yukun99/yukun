@@ -1,8 +1,8 @@
 import { BUTTON_SIZE } from '@/common/components/buttons/round-icon-button';
 import { FROSTED_BG } from '@/common/components/sections/section';
 import useIsMobile from '@/common/hooks/use-is-mobile';
-import { useSpacing } from '@/pages/page';
-import { PAGE } from '@/pages/resume/resume';
+import useSpacing from '@/common/hooks/use-spacing';
+import { PAGE } from '@/pages/resume/utils/page';
 import {
   DialogContentRenderer,
   getButtonContent,
@@ -42,7 +42,7 @@ const SkillButton = <K extends SkillType>({
         borderRadius: `${padding}px`,
         margin: `${margin}px`,
         boxShadow: (theme) => theme.shadows[16],
-        background: { FROSTED_BG },
+        background: FROSTED_BG,
       }}
     >
       {getButtonContent[skillType](skill, isMobile)}

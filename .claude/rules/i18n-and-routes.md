@@ -23,5 +23,5 @@ paths:
 ## Adding a Route
 
 1. Lazy import and route object in `app/routes.tsx`.
-2. `routeNames.<path>` in both `en.json` and `zh.json` — navigation labels come from `getPathLabel`.
+2. `routeNames.<path>` in both `en.json` and `zh.json` — navigation labels come from `getPathLabel` in `common/utils/path-label.ts`.
 3. `locales/pages/<page>-en.json` and `-zh.json`, wired into `i18n.tsx`.

@@ -1,11 +1,6 @@
-import useIsMobile from '@/common/hooks/use-is-mobile';
+import useSpacing from '@/common/hooks/use-spacing';
 import Box from '@mui/material/Box';
 import { ReactNode } from 'react';
-
-export const useSpacing = () => {
-  const isMobile = useIsMobile();
-  return { margin: isMobile ? 8 : 16, padding: isMobile ? 18 : 24, smallRadius: 8 };
-};
 
 type PageProps = { children: ReactNode };
 
