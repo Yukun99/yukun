@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 
 const SITE_URL = 'https://spark.yukunxu.com/';
 
-const Week6Example = () => {
+const Week10Example = () => {
   const isMobile = useIsMobile();
   const { margin, padding } = useSpacing();
   const size = isMobile ? BUTTON_SIZE * 1.45 : BUTTON_SIZE * 2.5;
@@ -43,4 +43,4 @@ const Week6Example = () => {
   );
 };
 
-export default Week6Example;
+export default Week10Example;

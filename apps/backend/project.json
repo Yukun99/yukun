@@ -25,7 +25,7 @@
     "test": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "php tests/run.php",
+        "command": "php test/run.php",
         "cwd": "apps/backend"
       },
       "inputs": ["default"],

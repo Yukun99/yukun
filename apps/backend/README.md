@@ -47,5 +47,5 @@ Without `apps/frontend/.env.local` the dev server proxies `/api` to the live sit
 
 ```sh
 pnpm nx lint backend   # php -l over every PHP file
-pnpm nx test backend   # php tests/run.php
+pnpm nx test backend   # php test/run.php
 ```

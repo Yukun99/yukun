@@ -23,4 +23,4 @@ Colours come from the tokens in `app/palette.tsx` (`GRAY`, `OPACITY`, `PURPLE`, 
 
 ## Theme
 
-MUI `colorSchemes` light/dark with `colorSchemeSelector: 'class'`; read the mode with `useColorScheme()`. `app/app.spec.tsx` rebuilds the same theme, so keep it in step with `main.tsx`.
+MUI `colorSchemes` light/dark with `colorSchemeSelector: 'class'`; read the mode with `useColorScheme()`. `apps/frontend/test/app/app.spec.tsx` rebuilds the same theme, so keep it in step with `main.tsx`.

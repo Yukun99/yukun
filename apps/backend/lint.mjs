@@ -8,7 +8,7 @@ const root = dirname(fileURLToPath(import.meta.url));
 const files = [
   'index.php',
   'config.example.php',
-  ...['src', 'tests'].flatMap((dir) =>
+  ...['src', 'test'].flatMap((dir) =>
     readdirSync(join(root, dir))
       .filter((file) => file.endsWith('.php'))
       .map((file) => join(dir, file)),

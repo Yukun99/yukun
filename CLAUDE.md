@@ -21,13 +21,13 @@ pnpm nx serve frontend        # frontend only
 pnpm nx lint frontend
 pnpm nx typecheck frontend
 pnpm nx test frontend         # vitest (jsdom, globals on)
-pnpm nx test frontend -- src/app/app.spec.tsx   # single file
+pnpm nx test frontend -- test/app/app.spec.tsx   # single file
 pnpm nx test frontend -- -t "should render"     # single test by name
 pnpm nx lint backend          # php -l over every PHP file
-pnpm nx test backend          # php tests/run.php
+pnpm nx test backend          # php test/run.php
 ```
 
-Frontend tests are vitest. Backend tests are plain PHP files run by `apps/backend/tests/run.php`; see `backend.md`.
+Frontend tests are vitest. The root `vitest.config.mts` lists the app configs as projects, so running vitest from the repo root (as the IDE does) resolves the `@/` alias too. Backend tests are plain PHP files run by `apps/backend/test/run.php`; see `backend.md`.
 
 ## Working Here
 
@@ -61,6 +61,7 @@ Put code at the narrowest level that fits: page-local first, `common/` only once
 - Files are kebab-case. Components are arrow functions with `export default`; hooks are `use-*.ts` with a default export; props are a `type <Name>Props`.
 - Use `@/` imports rather than relative ones, and deep MUI imports (`@mui/material/Box`), not the barrel.
 - Prettier style: single quotes (JSX too), 100 columns, operators at line start. `prettier-plugin-organize-imports` reorders imports on format — don't hand-order them.
+- Tests live in a `test/` folder beside `src/` in each app, never next to the code. In the frontend a spec keeps the same path relative to `test/` as the file it tests has relative to `src/`, e.g. `src/features/footer/footer-view-counter.tsx` is tested by `test/features/footer/footer-view-counter.spec.tsx`.
 - TS is strict with `noUnusedLocals` and `noImplicitReturns`.
 - Avoid code comments. Only where a weird interaction or complicated logic really needs one, keep it to 1 line (2 at most).
 - Dependency versions are pinned exactly (no `^`).

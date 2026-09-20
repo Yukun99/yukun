@@ -10,7 +10,7 @@ paths:
 
 ## Layout
 
-- `index.php` is the single front controller: it requires every class in `src/` by hand, registers the routes and turns an `ApiError` into a `{ "error": ... }` JSON response. A new class must be added to that `require` list, and to the one in `tests/run.php` if it is tested.
+- `index.php` is the single front controller: it requires every class in `src/` by hand, registers the routes and turns an `ApiError` into a `{ "error": ... }` JSON response. A new class must be added to that `require` list, and to the one in `test/run.php` if it is tested.
 - `Http::routePath()` strips the directory of `index.php` from the request path, so the same routes work under Apache at `/api/` and under `php -S` at the root.
 - `Db` is a lazy PDO singleton that reads the gitignored `config.php` (`host`, `name`, `user`, `password`, `salt`). Every query goes through `Db::run` with bound parameters; never build SQL from request values.
 - `schema.sql` is run by hand in phpMyAdmin because the API's database user only has `SELECT`, `INSERT` and `UPDATE`. A later schema change goes in a new dated file under `migrations/`, also run by hand.
@@ -26,4 +26,4 @@ paths:
 
 ## Tests
 
-`pnpm nx test backend` runs `tests/run.php`, which loads every `tests/*Test.php` file. Each file calls `$check(label, actual, expected)`. Tests cover the logic that needs no database; `Visitors` is tested against `tests/MemoryVisitorStore.php`, so keep database access behind the `VisitorStore` interface.
+`pnpm nx test backend` runs `test/run.php`, which loads every `test/*Test.php` file. Each file calls `$check(label, actual, expected)`. Tests cover the logic that needs no database; `Visitors` is tested against `test/MemoryVisitorStore.php`, so keep database access behind the `VisitorStore` interface.
