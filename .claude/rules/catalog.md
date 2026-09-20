@@ -6,7 +6,7 @@ paths:
 
 # Catalog (Weekly Entries)
 
-`pages/catalog/catalog.tsx` is a small content system driven by Markdown. The recurring task in this repo is adding a week (commits are `feat: Add Week N Entry`).
+`pages/catalog/catalog.tsx` is a small content system driven by Markdown. The recurring task in this repo is adding a week.
 
 ## Adding a Week
 
