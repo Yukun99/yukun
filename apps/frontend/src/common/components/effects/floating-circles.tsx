@@ -8,9 +8,9 @@ const CIRCLE_COUNT_MOBILE = 9;
 
 const CIRCLE_COLORS = [PURPLE[0], PURPLE[1], PURPLE[2], PURPLE[3], PURPLE[4], '#5F8FEE', '#FF5FD1'];
 
-type FloatingCircleProps = { count?: number; opacity?: number };
+type FloatingCircleProps = { count?: number; opacity?: number; contained?: boolean };
 
-const FloatingCircles = ({ count, opacity = OPACITY[10] }: FloatingCircleProps) => {
+const FloatingCircles = ({ count, opacity = OPACITY[10], contained }: FloatingCircleProps) => {
   const isMobile = useIsMobile();
   count = count ? count : isMobile ? CIRCLE_COUNT_MOBILE : CIRCLE_COUNT;
   const { containerRef, nodesRef } = useFloatingCircles(count);
@@ -20,9 +20,9 @@ const FloatingCircles = ({ count, opacity = OPACITY[10] }: FloatingCircleProps) 
       ref={containerRef}
       aria-hidden
       sx={{
-        position: 'fixed',
+        position: contained ? 'absolute' : 'fixed',
         inset: 0,
-        zIndex: -1,
+        zIndex: contained ? undefined : -1,
         overflow: 'hidden',
         pointerEvents: 'none',
         opacity: opacity,

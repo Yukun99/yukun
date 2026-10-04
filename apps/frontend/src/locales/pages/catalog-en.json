@@ -1,4 +1,8 @@
 {
   "week": "Week {{week}}",
-  "comingSoon": "Stay tuned for more components!"
+  "comingSoon": "Stay tuned for more components!",
+  "week13": {
+    "few": { "title": "Few Circles" },
+    "many": { "title": "Many Circles" }
+  }
 }

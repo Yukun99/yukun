@@ -1,4 +1,8 @@
 {
   "week": "第 {{week}} 周",
-  "comingSoon": "敬请期待更多组件！"
+  "comingSoon": "敬请期待更多组件！",
+  "week13": {
+    "few": { "title": "少量圆圈" },
+    "many": { "title": "大量圆圈" }
+  }
 }
