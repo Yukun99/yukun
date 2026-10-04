@@ -16,6 +16,4 @@ this file once it lands.
 
 ## Smaller Notes
 
-- `SectionAccordion` needs three props (`accordionNumber`, `expandedAccordion`, `setExpandedAccordion`) on every use.
-  A small accordion group component could own that state.
 - `use-floating-circles.ts` has one `no-loop-func` lint warning in `spawnBodies`.

@@ -1,3 +1,4 @@
+import { useAccordionGroup } from '@/common/components/sections/section-accordion-group';
 import SectionTitle from '@/common/components/sections/section-title';
 import useSpacing from '@/common/hooks/use-spacing';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -10,39 +11,25 @@ import { ReactNode } from 'react';
 type SectionAccordionProps = {
   title: string;
   page: string;
-  accordionNumber: number;
-  expandedAccordion: number | undefined;
-  setExpandedAccordion: (accordionNumber: number | undefined) => void;
   centered?: boolean;
   column?: boolean;
   children: ReactNode;
 };
 
-const SectionAccordion = ({
-  title,
-  page,
-  accordionNumber,
-  expandedAccordion,
-  setExpandedAccordion,
-  centered,
-  column,
-  children,
-}: SectionAccordionProps) => {
+const SectionAccordion = ({ title, page, centered, column, children }: SectionAccordionProps) => {
   const { margin } = useSpacing();
+  const { expanded, toggle } = useAccordionGroup();
 
   return (
     <Accordion
       sx={{ bgcolor: 'transparent', backgroundImage: 'none', border: 'none', boxShadow: 'none' }}
       disableGutters
-      expanded={accordionNumber === expandedAccordion}
+      expanded={expanded === title}
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         sx={{ borderBottom: '1px solid', borderColor: 'divider' }}
-        onClick={() => {
-          if (accordionNumber === expandedAccordion) return setExpandedAccordion(undefined);
-          return setExpandedAccordion(accordionNumber);
-        }}
+        onClick={() => toggle(title)}
       >
         <SectionTitle page={page} title={title} variant='h5' />
       </AccordionSummary>
