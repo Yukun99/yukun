@@ -1,5 +1,5 @@
 import routes from '@/app/routes';
-import { ScrollToTopContext, ScrollViewportContext } from '@/common/contexts/scroll-context';
+import { ScrollViewportContext } from '@/common/contexts/scroll-context';
 import FloatingCircles from '@/common/components/effects/floating-circles';
 import useDocumentTitle from '@/app/use-document-title';
 import useNeedsRotate from '@/common/hooks/use-needs-rotate';
@@ -8,10 +8,10 @@ import Navigation from '@/features/navigation/navigation';
 import RotateGate from '@/features/rotate-gate/rotate-gate';
 import Box from '@mui/material/Box';
 import useResolvedMode from '@/common/hooks/use-resolved-mode';
-import type { OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
+import type { EventListeners } from 'overlayscrollbars';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import 'overlayscrollbars/overlayscrollbars.css';
-import { Suspense, useCallback, useRef } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { useRoutes } from 'react-router-dom';
 
 const AppRoutes = () => useRoutes(routes);
@@ -19,16 +19,11 @@ const AppRoutes = () => useRoutes(routes);
 const App = () => {
   useDocumentTitle();
   const mode = useResolvedMode();
-  const scrollRef = useRef<OverlayScrollbarsComponentRef>(null);
+  const [viewport, setViewport] = useState<HTMLElement | null>(null);
   const needsRotate = useNeedsRotate();
 
-  function scrollToTop() {
-    const viewport = scrollRef.current?.osInstance()?.elements().viewport;
-    viewport?.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  const getScrollViewport = useCallback(
-    () => scrollRef.current?.osInstance()?.elements().viewport ?? null,
+  const events = useMemo<EventListeners>(
+    () => ({ initialized: (instance) => setViewport(instance.elements().viewport) }),
     [],
   );
 
@@ -39,21 +34,19 @@ const App = () => {
       <FloatingCircles />
       <Navigation />
       <OverlayScrollbarsComponent
-        ref={scrollRef}
         defer
+        events={events}
         options={{
           scrollbars: { theme: `os-theme-${mode}`, autoHide: 'scroll', autoHideDelay: 800 },
         }}
         style={{ flexGrow: 1, minHeight: 0 }}
       >
-        <ScrollToTopContext.Provider value={scrollToTop}>
-          <ScrollViewportContext.Provider value={getScrollViewport}>
-            <Suspense fallback={null}>
-              <AppRoutes />
-            </Suspense>
-            <Footer />
-          </ScrollViewportContext.Provider>
-        </ScrollToTopContext.Provider>
+        <ScrollViewportContext.Provider value={viewport}>
+          <Suspense fallback={null}>
+            <AppRoutes />
+          </Suspense>
+          <Footer />
+        </ScrollViewportContext.Provider>
       </OverlayScrollbarsComponent>
     </Box>
   );

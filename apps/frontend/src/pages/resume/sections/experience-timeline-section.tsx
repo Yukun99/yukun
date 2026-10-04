@@ -14,7 +14,7 @@ import SkillPill from '@/pages/resume/components/skill-pill';
 import { PAGE } from '@/pages/resume/utils/page';
 import { TechnicalSkill } from '@/pages/resume/utils/skill-types';
 import Box from '@mui/material/Box';
-import { ReactNode, useMemo, useRef } from 'react';
+import { ReactNode, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type Job = { company: string; period: string; position: string; work: string[]; skills?: string[] };
@@ -113,7 +113,7 @@ const ExperienceTimelineSection = ({
 
   const jobs = t('experience.jobs', { returnObjects: true }) as Job[];
   const anchorRef = useRef<HTMLDivElement>(null);
-  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [scroller, setScroller] = useState<HTMLDivElement | null>(null);
   const { progress, setItemRef } = useTimelineProgress(
     jobs.length,
     anchorRef,
@@ -121,7 +121,7 @@ const ExperienceTimelineSection = ({
   );
 
   useScrollSnap();
-  useSnapToLargest(isMobile ? 'x' : 'y', isMobile ? scrollerRef : undefined);
+  useSnapToLargest(isMobile ? 'x' : 'y', isMobile ? scroller : undefined);
 
   // a pane fills the screen once the page's own margins are taken out
   const paneHeight = Math.max(viewportHeight - margin * 2, 0);
@@ -139,7 +139,7 @@ const ExperienceTimelineSection = ({
         sx={{ display: 'flex', flexDirection: 'column', width: '100%', height: `${paneHeight}px` }}
       >
         <Box
-          ref={scrollerRef}
+          ref={setScroller}
           sx={{ display: 'flex', flex: 1, minHeight: 0, overflowX: 'auto', overflowY: 'hidden' }}
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', flexShrink: 0, height: '100%' }}>

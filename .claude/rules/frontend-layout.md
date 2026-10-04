@@ -7,7 +7,9 @@ paths:
 
 ## Scrolling
 
-The window does not scroll. `App` is a fixed `100vh` flex column and all page content lives inside an `OverlayScrollbarsComponent`. Anything that needs scroll position or scroll control (scroll-to-top, scroll-snap, timeline progress, in-view reveals) must get the viewport element via `useScrollViewport()` / `useScrollToTop()` from `common/contexts/scroll-context.ts` rather than using `window`.
+The window does not scroll. `App` is a fixed `100vh` flex column and all page content lives inside an `OverlayScrollbarsComponent`. Anything that needs scroll position or scroll control (scroll-to-top, scroll-snap, timeline progress, in-view reveals) must get the viewport element via `useScrollViewport()` / `useScrollToTop()` from `common/contexts/scroll-context.ts` rather than using `window`. The context holds the viewport element itself, set by `App` from the OverlayScrollbars `initialized` event, so it is `null` on the first render and hooks should depend on it instead of polling for it.
+
+Hooks that act once scrolling has stopped (`useScrollSnap`, `useSnapToLargest`) are strategies on top of `useSettledScroll(container, onSettle, delay)` in `common/hooks/use-settled-scroll.ts`, which owns the scroll listener, the settle debounce, the pointer hold and the reduced motion check. Pass a stable `onSettle` (module-level function or `useCallback`), since a new identity resubscribes and clears a pending settle. A container of `null` means "not mounted yet" and does nothing.
 
 ## Mobile
 
