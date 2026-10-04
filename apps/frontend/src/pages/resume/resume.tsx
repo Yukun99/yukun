@@ -15,7 +15,7 @@ const Resume = () => {
   const [skill, setSkill] = useState<TechnicalSkill | null>(null);
 
   // panes on touch fill their slot and scroll inside their own panel
-  const paneStyle = isMobile ? { flex: 1, minHeight: 0, overflowY: 'auto' as const } : undefined;
+  const paneStyle = isMobile ? { flex: 1, minHeight: 0 } : undefined;
 
   const details = (
     <Box

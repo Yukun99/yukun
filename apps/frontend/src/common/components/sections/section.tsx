@@ -1,4 +1,5 @@
 import { getColor, GRAY, OPACITY } from '@/common/utils/palette';
+import Scroller from '@/common/components/scroller';
 import SectionTitle from '@/common/components/sections/section-title';
 import useReveal, { RevealTrigger } from '@/common/hooks/use-reveal';
 import useSpacing from '@/common/hooks/use-spacing';
@@ -66,12 +67,9 @@ const Section = ({
       ref={ref}
       sx={{
         width,
-        display: width ? undefined : 'flex',
-        flexDirection: width ? undefined : 'column',
-        alignItems: centered ? 'center' : undefined,
-        justifyContent: centered ? 'center' : undefined,
+        display: 'flex',
+        flexDirection: 'column',
         margin: snug ? undefined : `${margin}px`,
-        padding: tight ? undefined : `${padding}px`,
         border: '1px solid',
         borderColor: 'divider',
         borderRadius: `${padding}px`,
@@ -83,8 +81,21 @@ const Section = ({
         ...style,
       }}
     >
-      {page && title && <SectionTitle title={title} page={page} underline />}
-      {children}
+      {/* scrolls only when the box can't grow; the handle sits in the padding, clear of the corners */}
+      <Scroller
+        thickness={padding}
+        inset={padding}
+        viewportStyle={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: centered ? 'center' : undefined,
+          justifyContent: centered ? 'safe center' : undefined,
+        }}
+        style={{ flex: 1, minHeight: 0, padding: tight ? undefined : `${padding}px` }}
+      >
+        {page && title && <SectionTitle title={title} page={page} underline />}
+        {children}
+      </Scroller>
     </Box>
   );
 };

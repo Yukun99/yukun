@@ -1,7 +1,9 @@
+import Scroller from '@/common/components/scroller';
 import Section from '@/common/components/sections/section';
 import SectionParagraph from '@/common/components/sections/section-paragraph';
 import Timeline, { TimelineEntry } from '@/common/components/timeline/timeline';
 import useIsMobile from '@/common/hooks/use-is-mobile';
+import useSpacing from '@/common/hooks/use-spacing';
 import useTimelineProgress from '@/common/hooks/use-timeline-progress';
 import Box from '@mui/material/Box';
 import { useRef } from 'react';
@@ -19,6 +21,7 @@ const ENTRIES: (TimelineEntry & { blurb: string })[] = [
 
 const Week9Example = () => {
   const isMobile = useIsMobile();
+  const { margin } = useSpacing();
   const anchorRef = useRef<HTMLDivElement>(null);
   const { progress, setItemRef } = useTimelineProgress(ENTRIES.length, anchorRef, 'x');
 
@@ -34,15 +37,11 @@ const Week9Example = () => {
       }}
     >
       <Timeline entries={ENTRIES} progress={progress} orientation='horizontal' />
-      <Box
-        sx={{
-          display: 'flex',
-          flex: 1,
-          minHeight: 0,
-          overflowX: 'auto',
-          overflowY: 'hidden',
-          scrollSnapType: 'x mandatory',
-        }}
+      <Scroller
+        axis='x'
+        thickness={margin}
+        viewportStyle={{ display: 'flex', scrollSnapType: 'x mandatory' }}
+        style={{ flex: 1, minHeight: 0 }}
       >
         <Box sx={{ flex: `0 0 ${GUTTER}%` }} />
         {ENTRIES.map((entry, index) => (
@@ -67,7 +66,7 @@ const Week9Example = () => {
           </Box>
         ))}
         <Box sx={{ flex: `0 0 ${GUTTER}%` }} />
-      </Box>
+      </Scroller>
     </Box>
   );
 };

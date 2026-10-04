@@ -1,5 +1,6 @@
 import logo from '@/assets/logo.svg';
 import RoundIconButton from '@/common/components/buttons/round-icon-button';
+import Scroller from '@/common/components/scroller';
 import useResolvedMode from '@/common/hooks/use-resolved-mode';
 import NavigationActionButton from '@/features/navigation/buttons/navigation-action-button';
 import NavigationPageButton from '@/features/navigation/buttons/navigation-page-button';
@@ -84,14 +85,11 @@ const NavigationDrawerMobile = ({
             <RoundIconButton icon={Close} onClick={onClose} size={40} iconScale={0.62} />
           </Box>
         </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            gap: `${margin}px`,
-            overflowX: 'auto',
-            scrollSnapType: 'x proximity',
-            paddingBottom: '4px',
-          }}
+        <Scroller
+          axis='x'
+          thickness={margin}
+          viewportStyle={{ display: 'flex', gap: `${margin}px`, scrollSnapType: 'x proximity' }}
+          style={{ paddingBottom: `${margin}px` }}
         >
           {PAGES.map((page) => (
             <NavigationPageButton
@@ -101,7 +99,7 @@ const NavigationDrawerMobile = ({
               onNavigate={onClose}
             />
           ))}
-        </Box>
+        </Scroller>
       </Box>
     </Drawer>
   );

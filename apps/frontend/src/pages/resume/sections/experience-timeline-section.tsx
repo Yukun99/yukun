@@ -1,3 +1,4 @@
+import Scroller from '@/common/components/scroller';
 import Section from '@/common/components/sections/section';
 import SectionDividerHor from '@/common/components/sections/section-divider-hor';
 import SectionParagraph from '@/common/components/sections/section-paragraph';
@@ -43,12 +44,11 @@ const getYear = (period: string) => period.match(/\d{4}/)?.[0] ?? period;
 type JobPaneProps = {
   job: Job;
   minHeight: number | string;
-  scrollable?: boolean;
   onSelectSkill: (skill: TechnicalSkill) => void;
 };
 
 // holds the empty frame until the pane is close enough to be worth mounting, then reveals it
-const JobPane = ({ job, minHeight, scrollable, onSelectSkill }: JobPaneProps) => {
+const JobPane = ({ job, minHeight, onSelectSkill }: JobPaneProps) => {
   const { t } = useTranslation(PAGE);
   const { margin } = useSpacing();
   const { ref, inView } = useInView<HTMLDivElement>();
@@ -64,7 +64,7 @@ const JobPane = ({ job, minHeight, scrollable, onSelectSkill }: JobPaneProps) =>
         {inView && (
           <Section
             reveal='mount'
-            style={{ flex: 1, minHeight: 0, overflowY: scrollable ? 'auto' : undefined }}
+            style={{ flex: 1, minHeight: 0 }}
             revealDuration={3000}
           >
             <SectionParagraph
@@ -107,13 +107,13 @@ const ExperienceTimelineSection = ({
   trailing = [],
 }: ExperienceTimelineSectionProps) => {
   const { t } = useTranslation(PAGE);
-  const { margin } = useSpacing();
+  const { margin, padding } = useSpacing();
   const isMobile = useIsMobile();
   const { width: viewportWidth, height: viewportHeight } = useViewportSize();
 
   const jobs = t('experience.jobs', { returnObjects: true }) as Job[];
   const anchorRef = useRef<HTMLDivElement>(null);
-  const [scroller, setScroller] = useState<HTMLDivElement | null>(null);
+  const [scroller, setScroller] = useState<HTMLElement | null>(null);
   const { progress, setItemRef } = useTimelineProgress(
     jobs.length,
     anchorRef,
@@ -138,9 +138,13 @@ const ExperienceTimelineSection = ({
       <Box
         sx={{ display: 'flex', flexDirection: 'column', width: '100%', height: `${paneHeight}px` }}
       >
-        <Box
-          ref={setScroller}
-          sx={{ display: 'flex', flex: 1, minHeight: 0, overflowX: 'auto', overflowY: 'hidden' }}
+        <Scroller
+          axis='x'
+          thickness={margin}
+          inset={margin + padding}
+          onViewport={setScroller}
+          viewportStyle={{ display: 'flex' }}
+          style={{ flex: 1, minHeight: 0 }}
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', flexShrink: 0, height: '100%' }}>
             <Box
@@ -157,7 +161,7 @@ const ExperienceTimelineSection = ({
                   {...{ [PANE_ATTRIBUTE]: true }}
                   sx={{ display: 'flex', flex: `0 0 ${paneWidth}px`, height: '100%', minHeight: 0 }}
                 >
-                  <JobPane job={job} minHeight={0} scrollable onSelectSkill={onSelectSkill} />
+                  <JobPane job={job} minHeight={0} onSelectSkill={onSelectSkill} />
                 </Box>
               ))}
             </Box>
@@ -181,7 +185,7 @@ const ExperienceTimelineSection = ({
               </Box>
             </Box>
           ))}
-        </Box>
+        </Scroller>
       </Box>
     );
   }
