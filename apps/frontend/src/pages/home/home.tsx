@@ -8,6 +8,15 @@ import { PAGE } from '@/pages/home/utils/page';
 import Page from '@/pages/page';
 import Box from '@mui/material/Box';
 
+const DETAILS = [
+  { key: 'name', type: PLACEHOLDER_TYPE.TEXT },
+  { key: 'gender', type: PLACEHOLDER_TYPE.TEXT },
+  { key: 'email', type: PLACEHOLDER_TYPE.EMAIL },
+  { key: 'mobile', type: PLACEHOLDER_TYPE.TEXT },
+  { key: 'linkedin', type: PLACEHOLDER_TYPE.LINK },
+  { key: 'github', type: PLACEHOLDER_TYPE.LINK },
+];
+
 const Home = () => {
   const isMobile = useIsMobile();
 
@@ -22,54 +31,15 @@ const Home = () => {
 
   const details = (
     <Section title='details' page={PAGE} width={isMobile ? '50%' : '40%'}>
-      <SectionParagraphByKey
-        page={PAGE}
-        i18nKey='details.name'
-        textAlign='left'
-        placeholders={[
-          { name: 'name', i18nKey: 'common.name', placeholderType: PLACEHOLDER_TYPE.TEXT },
-        ]}
-      />
-      <SectionParagraphByKey
-        page={PAGE}
-        i18nKey='details.gender'
-        textAlign='left'
-        placeholders={[
-          { name: 'gender', i18nKey: 'common.gender', placeholderType: PLACEHOLDER_TYPE.TEXT },
-        ]}
-      />
-      <SectionParagraphByKey
-        page={PAGE}
-        i18nKey='details.email'
-        textAlign='left'
-        placeholders={[
-          { name: 'email', i18nKey: 'common.email', placeholderType: PLACEHOLDER_TYPE.EMAIL },
-        ]}
-      />
-      <SectionParagraphByKey
-        page={PAGE}
-        i18nKey='details.mobile'
-        textAlign='left'
-        placeholders={[
-          { name: 'mobile', i18nKey: 'common.mobile', placeholderType: PLACEHOLDER_TYPE.TEXT },
-        ]}
-      />
-      <SectionParagraphByKey
-        page={PAGE}
-        i18nKey='details.linkedin'
-        textAlign='left'
-        placeholders={[
-          { name: 'linkedin', i18nKey: 'common.linkedin', placeholderType: PLACEHOLDER_TYPE.LINK },
-        ]}
-      />
-      <SectionParagraphByKey
-        page={PAGE}
-        i18nKey='details.github'
-        textAlign='left'
-        placeholders={[
-          { name: 'github', i18nKey: 'common.github', placeholderType: PLACEHOLDER_TYPE.LINK },
-        ]}
-      />
+      {DETAILS.map(({ key, type }) => (
+        <SectionParagraphByKey
+          key={key}
+          page={PAGE}
+          i18nKey={`details.${key}`}
+          textAlign='left'
+          placeholders={[{ name: key, i18nKey: `common.${key}`, placeholderType: type }]}
+        />
+      ))}
     </Section>
   );
 

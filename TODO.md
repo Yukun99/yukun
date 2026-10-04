@@ -16,8 +16,6 @@ this file once it lands.
 
 ## Smaller Notes
 
-- `pages/home/home.tsx` and `pages/resume/sections/contact-section.tsx` repeat a `SectionParagraphByKey` block per
-  detail line. A small array of `{ key, type }` entries mapped to the component would remove the repetition.
 - `SectionAccordion` needs three props (`accordionNumber`, `expandedAccordion`, `setExpandedAccordion`) on every use.
   A small accordion group component could own that state.
 - `use-floating-circles.ts` has one `no-loop-func` lint warning in `spawnBodies`.
