@@ -13,7 +13,3 @@ this file once it lands.
   `deploy.yml`, on a push to `main`, right before deploying.
 - Replace the hand-written "Bundle API into Build" step in `deploy.yml` with an Nx `backend:bundle` target and a script
   file for writing `config.php`, so that the bundle can be built and checked locally.
-
-## Smaller Notes
-
-- `use-floating-circles.ts` has one `no-loop-func` lint warning in `spawnBodies`.

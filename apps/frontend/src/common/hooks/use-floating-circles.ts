@@ -13,6 +13,9 @@ type Body = { x: number; y: number; vx: number; vy: number; r: number; size: num
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
+const overlaps = (bodies: Body[], x: number, y: number, r: number) =>
+  bodies.some((b) => Math.hypot(b.x - x, b.y - y) < b.r + r);
+
 const setSpeed = (b: Body, speed: number) => {
   const current = Math.hypot(b.vx, b.vy);
   if (current === 0) return;
@@ -34,7 +37,7 @@ const spawnBodies = (count: number, width: number, height: number, pxPerVmin: nu
     for (let attempt = 0; attempt < PLACEMENT_ATTEMPTS; attempt++) {
       x = rand(r, width - r);
       y = rand(r, height - r);
-      if (bodies.every((b) => Math.hypot(b.x - x, b.y - y) >= b.r + r)) break;
+      if (!overlaps(bodies, x, y, r)) break;
     }
 
     bodies.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, r, size });
