@@ -16,8 +16,6 @@ this file once it lands.
 
 ## Smaller Notes
 
-- `Section` takes many boolean layout flags (`centered`, `blurless`, `clear`, `snug`, `tight`), and its `style` prop is
-  really an `sx` object. A `variant` prop and a rename would make call sites easier to read.
 - `pages/home/home.tsx` and `pages/resume/sections/contact-section.tsx` repeat a `SectionParagraphByKey` block per
   detail line. A small array of `{ key, type }` entries mapped to the component would remove the repetition.
 - `SectionAccordion` needs three props (`accordionNumber`, `expandedAccordion`, `setExpandedAccordion`) on every use.

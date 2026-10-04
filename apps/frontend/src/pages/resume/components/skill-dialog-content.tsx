@@ -19,27 +19,29 @@ const SkillDialogContent = ({ skill }: SkillDialogContentProps) => {
   const panelStyle = isMobile ? { padding: '8px' } : undefined;
 
   return (
-    <Section centered blurless snug style={isMobile ? { height: '78dvh' } : undefined}>
+    <Section variant='flat' centered noMargin sx={isMobile ? { height: '78dvh' } : undefined}>
       <SectionTitle message={skill.name} variant={labelVariant} />
       <SectionDividerHor />
-      {/* the icon takes whatever height the labels leave behind */}
+      {/* on mobile the icon takes whatever height the labels leave behind */}
       <Box
         sx={{
           display: 'flex',
           flex: isMobile ? 1 : undefined,
+          alignSelf: isMobile ? 'stretch' : undefined,
+          width: isMobile ? undefined : '20%',
           minHeight: 0,
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
-        <Icon size={isMobile ? '100%' : '20%'} />
+        <Icon size='100%' />
       </Box>
       <Box sx={{ display: 'flex' }}>
-        <Section centered blurless style={panelStyle}>
+        <Section variant='flat' centered sx={panelStyle}>
           <SectionTitle message={t('skills.technical.durationLabel')} variant={labelVariant} />
           <Typography variant={isMobile ? 'body2' : 'body1'}>{skill.duration}</Typography>
         </Section>
-        <Section centered blurless style={panelStyle}>
+        <Section variant='flat' centered sx={panelStyle}>
           <SectionTitle message={t('skills.technical.proficiencyLabel')} variant={labelVariant} />
           <Typography variant={isMobile ? 'body2' : 'body1'}>{skill.proficiency}</Typography>
         </Section>

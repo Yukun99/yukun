@@ -60,11 +60,11 @@ const JobPane = ({ job, minHeight, onSelectSkill }: JobPaneProps) => {
 
   return (
     <Box ref={ref} sx={{ display: 'flex', flex: 1, minWidth: 0, minHeight: 0 }}>
-      <SkeletonSection minHeight={minHeight} style={{ flex: 1, display: 'flex', minWidth: 0 }}>
+      <SkeletonSection minHeight={minHeight} sx={{ flex: 1, display: 'flex', minWidth: 0 }}>
         {inView && (
           <Section
             reveal='mount'
-            style={{ flex: 1, minHeight: 0 }}
+            sx={{ flex: 1, minHeight: 0 }}
             revealDuration={3000}
           >
             <SectionParagraph

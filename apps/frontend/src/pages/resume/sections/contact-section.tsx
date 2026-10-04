@@ -10,7 +10,7 @@ type ContactSectionProps = { style?: SystemStyleObject<Theme> };
 
 const ContactSection = ({ style }: ContactSectionProps) => {
   return (
-    <Section page={PAGE} title='contact' width='50%' style={style}>
+    <Section page={PAGE} title='contact' width='50%' sx={style}>
       <SectionParagraphByKey
         page={PAGE}
         i18nKey={'contact.name'}

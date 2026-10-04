@@ -40,7 +40,7 @@ const SkillsSection = ({ onSelectSkill, style }: SkillsSectionProps) => {
   const [expandedAccordion, setExpandedAccordion] = useState<number | undefined>(undefined);
 
   return (
-    <Section page={PAGE} title='skills' style={{ overflow: 'hidden', ...style }}>
+    <Section page={PAGE} title='skills' sx={{ overflow: 'hidden', ...style }}>
       <SectionAccordion
         title={'skills.languages'}
         page={PAGE}

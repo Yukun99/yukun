@@ -31,7 +31,7 @@ const reserve = (size: number | string | undefined, inset: number) => {
   return typeof size === 'number' ? `${size + inset * 2}px` : `calc(${size} + ${inset * 2}px)`;
 };
 
-export type SkeletonSectionProps = Pick<SectionStyleProps, 'width' | 'style' | 'snug'> & {
+export type SkeletonSectionProps = Pick<SectionStyleProps, 'width' | 'sx' | 'noMargin'> & {
   minHeight?: number | string;
   minWidth?: number | string;
   duration?: number;
@@ -41,8 +41,8 @@ export type SkeletonSectionProps = Pick<SectionStyleProps, 'width' | 'style' | '
 
 const SkeletonSection = ({
   width,
-  style,
-  snug,
+  sx,
+  noMargin,
   minHeight = 200,
   minWidth,
   duration = REVEAL_DURATION,
@@ -51,7 +51,7 @@ const SkeletonSection = ({
 }: SkeletonSectionProps) => {
   const { margin, padding } = useSpacing();
 
-  const inset = snug ? 0 : margin;
+  const inset = noMargin ? 0 : margin;
 
   return (
     <Box
@@ -77,7 +77,7 @@ const SkeletonSection = ({
           '&:has(> *)::before': { opacity: 0 },
           '@media (prefers-reduced-motion: reduce)': { '&::before': { transition: 'none' } },
         }),
-        ...(style ? [style] : []),
+        ...(sx ? [sx] : []),
       ]}
     >
       {children}

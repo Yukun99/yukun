@@ -32,14 +32,14 @@ const Week4Example = () => {
       }}
     >
       <Reveal trigger='mount'>
-        <Section snug>
+        <Section noMargin>
           <Box sx={{ width: `${SIZE}px`, height: `${SIZE}px` }} />
         </Section>
       </Reveal>
 
-      <SkeletonSection snug minHeight={slotSize} minWidth={slotSize} duration={DURATION}>
+      <SkeletonSection noMargin minHeight={slotSize} minWidth={slotSize} duration={DURATION}>
         {loaded && (
-          <Section snug reveal='mount' revealDuration={DURATION}>
+          <Section noMargin reveal='mount' revealDuration={DURATION}>
             <Box sx={{ width: `${SIZE}px`, height: `${SIZE}px` }} />
           </Section>
         )}

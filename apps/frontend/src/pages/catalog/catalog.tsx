@@ -152,10 +152,10 @@ const Catalog = () => {
 
     return (
       <Section page={PAGE}>
-        <SkeletonSection minHeight={200} style={{ width: '60%', alignSelf: 'center' }}>
+        <SkeletonSection minHeight={200} sx={{ width: '60%', alignSelf: 'center' }}>
           {Component && (
             <Suspense key={week} fallback={null}>
-              <Section blurless centered reveal='mount' style={{ minHeight: '200px' }}>
+              <Section variant='flat' centered reveal='mount' sx={{ minHeight: '200px' }}>
                 <Component />
               </Section>
             </Suspense>
@@ -180,7 +180,7 @@ const Catalog = () => {
 
   return (
     <Page>
-      <Section page={PAGE} tight>
+      <Section page={PAGE} noPadding>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <RoundIconButton
             icon={ArrowBack}

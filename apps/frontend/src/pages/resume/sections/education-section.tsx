@@ -14,7 +14,7 @@ const EducationSection = ({ style }: EducationSectionProps) => {
   const EDUCATION_NARROW_WIDTH = '25%';
 
   return (
-    <Section page={PAGE} title={'education'} width='50%' style={style}>
+    <Section page={PAGE} title={'education'} width='50%' sx={style}>
       <SectionParagraphByKey
         page={PAGE}
         i18nKey={'education.hcltech.name'}

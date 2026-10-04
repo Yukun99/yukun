@@ -55,7 +55,7 @@ const Week9Example = () => {
               scrollSnapAlign: 'center',
             }}
           >
-            <Section centered style={{ flex: 1, minWidth: 0 }}>
+            <Section centered sx={{ flex: 1, minWidth: 0 }}>
               <SectionParagraph style={{ fontWeight: 'bold', fontSize: '1.5rem' }} noGap>
                 {entry.label}
               </SectionParagraph>

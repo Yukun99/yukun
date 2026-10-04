@@ -21,14 +21,17 @@ export const FROSTED_BG = `
   ) border-box
 `;
 
+const BLUR = 'blur(20px) saturate(250%)';
+
+export type SectionVariant = 'frosted' | 'flat' | 'clear';
+
 export type SectionStyleProps = {
   width?: number | string;
-  style?: SystemStyleObject<Theme>;
+  sx?: SystemStyleObject<Theme>;
+  variant?: SectionVariant;
   centered?: boolean;
-  blurless?: boolean;
-  clear?: boolean;
-  snug?: boolean;
-  tight?: boolean;
+  noMargin?: boolean;
+  noPadding?: boolean;
   reveal?: RevealTrigger;
   revealDelay?: number;
   revealDuration?: number;
@@ -44,12 +47,11 @@ const Section = ({
   title,
   page,
   width,
-  style,
+  sx,
+  variant = 'frosted',
   centered,
-  blurless,
-  clear,
-  snug,
-  tight,
+  noMargin,
+  noPadding,
   reveal = false,
   revealDelay,
   revealDuration,
@@ -69,16 +71,16 @@ const Section = ({
         width,
         display: 'flex',
         flexDirection: 'column',
-        margin: snug ? undefined : `${margin}px`,
+        margin: noMargin ? undefined : `${margin}px`,
         border: '1px solid',
         borderColor: 'divider',
         borderRadius: `${padding}px`,
         boxShadow: (theme) => theme.shadows[16],
-        backdropFilter: blurless || clear ? undefined : 'blur(20px) saturate(250%)',
-        WebkitBackdropFilter: blurless || clear ? undefined : 'blur(20px) saturate(250%)',
-        background: clear ? undefined : FROSTED_BG,
+        backdropFilter: variant === 'frosted' ? BLUR : undefined,
+        WebkitBackdropFilter: variant === 'frosted' ? BLUR : undefined,
+        background: variant === 'clear' ? undefined : FROSTED_BG,
         ...revealSx,
-        ...style,
+        ...sx,
       }}
     >
       {/* scrolls only when the box can't grow; the handle sits in the padding, clear of the corners */}
@@ -91,7 +93,7 @@ const Section = ({
           alignItems: centered ? 'center' : undefined,
           justifyContent: centered ? 'safe center' : undefined,
         }}
-        style={{ flex: 1, minHeight: 0, padding: tight ? undefined : `${padding}px` }}
+        style={{ flex: 1, minHeight: 0, padding: noPadding ? undefined : `${padding}px` }}
       >
         {page && title && <SectionTitle title={title} page={page} underline />}
         {children}
