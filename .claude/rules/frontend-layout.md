@@ -21,6 +21,10 @@ Hooks that act once scrolling has stopped (`useScrollSnap`, `useSnapToLargest`) 
 
 Pages wrap content in `Page` and compose `Section` (the frosted-glass card in `common/components/sections/section.tsx`) plus the `section-*` helpers. The surface is picked with `variant`: `frosted` (default, blurred glass), `flat` (same background, no blur, for sections nested inside another section) or `clear` (no background at all). Layout flags are `centered`, `noMargin` and `noPadding`, and extra styles go through `sx`. Every section wraps its content in a `Scroller`, so a section that is kept from growing (a fixed height, or `flex: 1` with `minHeight: 0` in a constrained parent) scrolls on its own, with the handle sitting in the section padding clear of the rounded corners; a section that can grow never shows a scrollbar; entrance animation is `reveal='mount' | 'scroll'` via `useReveal`, or the `Reveal` wrapper for non-section content.
 
+Dialogs use `SectionDialog` (`common/components/sections/section-dialog.tsx`), which renders the paper's blur instantly and only fades the content, so the backdrop blur never pops in after the fade; put a `Section variant='flat' noMargin` inside it.
+
+Google sign-in state is app-wide: `EditorProvider` (`features/auth/editor-provider.tsx`) wraps the app and pages read it with `useEditorContext()` from `common/contexts/editor-context.ts`; the sign-in and sign-out control lives in the navigation (`NavigationAuthButton`).
+
 Colours come from the tokens in `common/utils/palette.ts` (`GRAY`, `OPACITY`, `PURPLE`, `getColor`, `getPageElementBgColor`) or the MUI theme, not ad-hoc hex values.
 
 ## Theme

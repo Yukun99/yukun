@@ -2,6 +2,7 @@ import { getPageElementBgColor } from '@/common/utils/palette';
 import logo from '@/assets/logo.svg';
 import RoundIconButton from '@/common/components/buttons/round-icon-button';
 import useIsMobile from '@/common/hooks/use-is-mobile';
+import NavigationAuthButton from '@/features/navigation/buttons/navigation-auth-button';
 import NavigationLanguageButton from '@/features/navigation/buttons/navigation-lang-button';
 import NavigationMenuButton from '@/features/navigation/buttons/navigation-menu-button';
 import NavigationThemeButton from '@/features/navigation/buttons/navigation-theme-button';
@@ -46,7 +47,8 @@ const Navigation = () => {
           <RoundIconButton icon={logo} isSpecial />
         </Box>
       </Portal>
-      <Box sx={{ marginLeft: 'auto' }}>
+      <Box sx={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+        <NavigationAuthButton variant='bar' />
         <NavigationLanguageButton />
         <NavigationThemeButton />
       </Box>

@@ -11,7 +11,7 @@ paths:
 ## Namespaces
 
 - `locales/en.json` / `zh.json` are the default `translation` namespace: shared strings (`common`), `routeNames`, footer. It is also the `fallbackNS`.
-- Each page has its own namespace (`home`, `resume`, `catalog`) in `locales/pages/<page>-<lang>.json`.
+- Each page has its own namespace (`home`, `resume`, `catalog`, `ideas`) in `locales/pages/<page>-<lang>.json`.
 - Namespaces are registered by hand in `locales/i18n.tsx`; a new JSON file does nothing until it is imported there.
 - Every key added to an `en` file needs its `zh` counterpart.
 

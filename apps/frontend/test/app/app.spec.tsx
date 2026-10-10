@@ -15,6 +15,9 @@ const renderApp = () =>
   );
 
 describe('App', () => {
+  beforeEach(() => vi.stubEnv('VITE_GOOGLE_CLIENT_ID', ''));
+  afterEach(() => vi.unstubAllEnvs());
+
   it('should render successfully', () => {
     const { baseElement } = renderApp();
     expect(baseElement).toBeTruthy();

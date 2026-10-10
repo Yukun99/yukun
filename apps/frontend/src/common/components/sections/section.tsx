@@ -21,7 +21,7 @@ export const FROSTED_BG = `
   ) border-box
 `;
 
-const BLUR = 'blur(20px) saturate(250%)';
+export const BLUR = 'blur(20px) saturate(250%)';
 
 export type SectionVariant = 'frosted' | 'flat' | 'clear';
 

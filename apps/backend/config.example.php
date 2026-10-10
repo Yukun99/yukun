@@ -9,4 +9,6 @@ return [
     'user' => '',
     'password' => '',
     'salt' => '',
+    'googleClientId' => '',
+    'editorEmail' => '',
 ];

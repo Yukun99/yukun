@@ -3,6 +3,7 @@ import RoundIconButton from '@/common/components/buttons/round-icon-button';
 import Scroller from '@/common/components/scroller';
 import useResolvedMode from '@/common/hooks/use-resolved-mode';
 import NavigationActionButton from '@/features/navigation/buttons/navigation-action-button';
+import NavigationAuthButton from '@/features/navigation/buttons/navigation-auth-button';
 import NavigationPageButton from '@/features/navigation/buttons/navigation-page-button';
 import { PAGES } from '@/features/navigation/pages';
 import useLanguageToggle from '@/features/navigation/use-language-toggle';
@@ -81,6 +82,7 @@ const NavigationDrawerMobile = ({
             label={theme.label}
             onClick={theme.toggle}
           />
+          <NavigationAuthButton variant='drawer' />
           <Box sx={{ marginLeft: 'auto' }}>
             <RoundIconButton icon={Close} onClick={onClose} size={40} iconScale={0.62} />
           </Box>

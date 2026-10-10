@@ -9,10 +9,21 @@
     "github": "https://github.com/yukun99",
     "website": "https://yukunxu.com"
   },
-  "routeNames": { "/": "Home", "/resume": "Resume", "/catalog": "Catalog" },
+  "routeNames": { "/": "Home", "/resume": "Resume", "/catalog": "Catalog", "/ideas": "Ideas" },
   "rotate": "Please turn your device sideways",
   "theme": { "dark": "Dark Mode", "light": "Light Mode" },
   "footer": {
     "views": "Congratulations, you are visitor number {{number}} of {{total}}!"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "notOwner": "Only the site owner can edit",
+    "dialog": {
+      "title": "Owner Sign In",
+      "body": "This sign-in is for the site owner to edit the ideas grid. Everyone else keeps read-only access.",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    }
   }
 }

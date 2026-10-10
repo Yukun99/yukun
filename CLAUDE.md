@@ -40,7 +40,7 @@ repo root (as the IDE does) resolves the `@/` alias too. Backend tests are plain
 - Before starting any large task, get a fresh context: ask the user to run `/clear` (Claude can't run it itself) and
   restate the task, unless the session is already fresh.
 - Large or complex tasks: plan first. Raise every doubt as a question instead of assuming, and only start executing once
-  the doubts are answered and the plan is confirmed.
+  the doubts are answered and the plan is confirmed. Then follow the Big Task Process below.
 - After finishing a large or complex task, test it in the browser on both desktop and mobile. Assume the dev server is
   already running at `localhost:4205`; only ask the user if it needs a restart.
 - When verifying a large or complex task, always run the test, lint and typecheck commands in the background so they
@@ -54,13 +54,25 @@ repo root (as the IDE does) resolves the `@/` alias too. Backend tests are plain
 - Don't run prettier. The IDE formats on file write.
 - Naming: prefer the shortest name that still explains the thing clearly.
 
+## Big Task Process
+
+Each stage of a large task runs on a different model. The main session is Fable, so stages 1 and 4 run in it directly
+and stages 2 and 3 run in child agents (the `Agent` tool with the `model` option).
+
+1. **Plan with Fable.** Explore the code, write the plan and clear every doubt with the user as described above.
+2. **Implement with Sonnet.** Hand the confirmed plan, as written, to a child agent with `model: sonnet`.
+3. **Check with Opus.** Hand the diff and the plan to a child agent with `model: opus` to review it for correctness,
+   convention violations and gaps against the plan, and apply the fixes it finds.
+4. **Final checks with Fable.** Back in the main session: run lint, typecheck and tests in the background, test in the
+   browser on desktop and mobile, and report the results.
+
 ## Structure
 
 `apps/frontend/src/`, imported through the `@/*` alias:
 
 - `app/` — shell: app, routes, document title
 - `pages/<page>/` — one lazy-loaded route each, with page-local `components/`, `sections/`, `utils/`
-- `features/` — cross-page chrome (navigation, footer, rotate gate)
+- `features/` — cross-page chrome (navigation, footer, rotate gate, auth)
 - `common/` — reusable components, hooks, contexts (scroll), skeletons, utils (palette tokens)
 - `locales/` — en/zh translations
 - `assets/catalog/` — Markdown entries for the catalog page

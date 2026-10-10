@@ -42,6 +42,7 @@ describe('FooterViewCounter', () => {
   });
 
   it('should only read while dev is proxied to the live site', async () => {
+    vi.stubEnv('VITE_API_URL', '');
     const fetchMock = mockFetch({ number: 1, total: 1 });
     render(<FooterViewCounter />);
     await waitFor(() => expect(fetchMock).toHaveBeenCalledWith('/api/visitors', { method: 'GET' }));

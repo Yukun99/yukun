@@ -36,6 +36,8 @@ jobs:
         run: pnpm nx run-many -t lint typecheck test
 
       - name: Build Project with Nx
+        env:
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
         run: pnpm build
 
       - name: Bundle API into Build
@@ -44,10 +46,12 @@ jobs:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           VISITOR_SALT: ${{ secrets.VISITOR_SALT }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          EDITOR_EMAIL: ${{ secrets.EDITOR_EMAIL }}
         run: |
           mkdir -p apps/frontend/dist/api
           cp -r apps/backend/index.php apps/backend/.htaccess apps/backend/src apps/frontend/dist/api/
-          php -r 'file_put_contents("apps/frontend/dist/api/config.php", "<?php\n\ndeclare(strict_types=1);\n\nreturn " . var_export(["host" => "localhost", "name" => getenv("DB_NAME"), "user" => getenv("DB_USER"), "password" => getenv("DB_PASSWORD"), "salt" => getenv("VISITOR_SALT")], true) . ";\n");'
+          php -r 'file_put_contents("apps/frontend/dist/api/config.php", "<?php\n\ndeclare(strict_types=1);\n\nreturn " . var_export(["host" => "localhost", "name" => getenv("DB_NAME"), "user" => getenv("DB_USER"), "password" => getenv("DB_PASSWORD"), "salt" => getenv("VISITOR_SALT"), "googleClientId" => getenv("GOOGLE_CLIENT_ID"), "editorEmail" => getenv("EDITOR_EMAIL")], true) . ";\n");'
 
       - name: Resolve FTP Host for Certificate Checks
         env:

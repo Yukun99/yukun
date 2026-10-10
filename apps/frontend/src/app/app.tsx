@@ -4,6 +4,7 @@ import FloatingCircles from '@/common/components/effects/floating-circles';
 import Scroller from '@/common/components/scroller';
 import useDocumentTitle from '@/app/use-document-title';
 import useNeedsRotate from '@/common/hooks/use-needs-rotate';
+import EditorProvider from '@/features/auth/editor-provider';
 import Footer from '@/features/footer/footer';
 import Navigation from '@/features/navigation/navigation';
 import RotateGate from '@/features/rotate-gate/rotate-gate';
@@ -18,21 +19,25 @@ const App = () => {
   const [viewport, setViewport] = useState<HTMLElement | null>(null);
   const needsRotate = useNeedsRotate();
 
-  if (needsRotate) return <RotateGate />;
-
   return (
-    <Box sx={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column' }}>
-      <FloatingCircles />
-      <Navigation />
-      <Scroller onViewport={setViewport} style={{ flexGrow: 1, minHeight: 0 }}>
-        <ScrollViewportContext.Provider value={viewport}>
-          <Suspense fallback={null}>
-            <AppRoutes />
-          </Suspense>
-          <Footer />
-        </ScrollViewportContext.Provider>
-      </Scroller>
-    </Box>
+    <EditorProvider>
+      {needsRotate ? (
+        <RotateGate />
+      ) : (
+        <Box sx={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column' }}>
+          <FloatingCircles />
+          <Navigation />
+          <Scroller onViewport={setViewport} style={{ flexGrow: 1, minHeight: 0 }}>
+            <ScrollViewportContext.Provider value={viewport}>
+              <Suspense fallback={null}>
+                <AppRoutes />
+              </Suspense>
+              <Footer />
+            </ScrollViewportContext.Provider>
+          </Scroller>
+        </Box>
+      )}
+    </EditorProvider>
   );
 };
 

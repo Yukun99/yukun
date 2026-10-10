@@ -6,6 +6,8 @@ namespace Yukun\Api;
 
 final class Http
 {
+    private const MAX_BODY = 16 * 1024 * 1024;
+
     public static function json(int $status, mixed $data): never
     {
         http_response_code($status);
@@ -34,5 +36,27 @@ final class Http
     public static function userAgent(): string
     {
         return (string) ($_SERVER['HTTP_USER_AGENT'] ?? '');
+    }
+
+    /** Apache on shared hosting often exposes the header only as the redirected variable. */
+    public static function authorization(): ?string
+    {
+        return $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? null;
+    }
+
+    public static function jsonBody(): mixed
+    {
+        $raw = file_get_contents('php://input', false, null, 0, self::MAX_BODY + 1);
+        if ($raw === false || $raw === '') {
+            return null;
+        }
+        if (strlen($raw) > self::MAX_BODY) {
+            throw new ApiError(413, 'Body too large');
+        }
+        try {
+            return json_decode($raw, true, 16, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            throw new ApiError(400, 'Invalid JSON');
+        }
     }
 }
