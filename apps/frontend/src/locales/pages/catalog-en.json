@@ -4,5 +4,18 @@
   "week13": {
     "few": { "title": "Few Circles" },
     "many": { "title": "Many Circles" }
+  },
+  "week14": {
+    "read": "Read",
+    "write": "Edit",
+    "edit": {
+      "title": "Edit Me",
+      "content": "Click a cell to change its title and idea. Nothing is saved, so a refresh resets everything."
+    },
+    "drag": { "title": "Drag Me", "content": "Drag a cell onto another one to swap them." },
+    "modes": {
+      "title": "Switch Modes",
+      "content": "Use the buttons above: the left one makes the cells read only, the right one lets you edit them again. Clear a cell with the X in its corner."
+    }
   }
 }
