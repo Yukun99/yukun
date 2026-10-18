@@ -32,7 +32,12 @@ const SkillButtonContent = <K extends SkillType>({
       {renderIcon[skillType](skill, isMobile)}
       <Typography
         variant='body2'
-        sx={{ paddingTop: '5%', color: 'text.primary', textTransform: 'capitalize' }}
+        sx={{
+          paddingTop: '5%',
+          color: 'text.primary',
+          textTransform: 'capitalize',
+          textAlign: 'center',
+        }}
       >
         {skill.name}
         {'level' in skill && (
