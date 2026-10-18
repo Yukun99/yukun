@@ -42,7 +42,7 @@ const useModels = (token: string | null, onUnauthorized: () => void) => {
     try {
       const res = await fetch(`${API}?${new URLSearchParams({ name, link })}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'model/gltf-binary', Authorization: `Bearer ${bearer}` },
+        headers: { 'Content-Type': 'application/octet-stream', Authorization: `Bearer ${bearer}` },
         body: data,
       });
       if (res.status === 401 || res.status === 403) {

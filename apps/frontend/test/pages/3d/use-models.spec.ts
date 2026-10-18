@@ -44,7 +44,7 @@ describe('useModels', () => {
     expect(url).toBe('/api/models?name=second&link=https%3A%2F%2Fmakerworld.com%2Fx');
     expect(init.method).toBe('POST');
     expect(init.headers).toEqual({
-      'Content-Type': 'model/gltf-binary',
+      'Content-Type': 'application/octet-stream',
       Authorization: 'Bearer token',
     });
   });

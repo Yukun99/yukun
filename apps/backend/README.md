@@ -10,7 +10,7 @@ Plain PHP 8.3 + PDO (MySQL), no Composer. Deployed to `/api/` beside the site an
 | `PUT`  | `/ideas`    | Takes the same body and returns the saved grid. Needs `Authorization: Bearer <Google access token>` of the configured editor. Answers `401` without a valid token, `403` for any other Google account and `400` for an invalid grid |
 | `GET`  | `/models`  | Returns `{ "models": [{ "id", "name", "link", "size", "createdAt" }, ...] }` without the file bytes |
 | `GET`  | `/models/{id}/file` | Returns the model as a GLB (`model/gltf-binary`), cached as immutable. Answers `404` for an unknown id |
-| `POST` | `/models?name=...&link=...` | Takes the GLB bytes as the raw body (`Content-Type: model/gltf-binary`) and returns the new model's metadata with `201`. Needs the editor's bearer token like `PUT /ideas`. `link` is optional |
+| `POST` | `/models?name=...&link=...` | Takes the GLB bytes as the raw body (`Content-Type: application/octet-stream`; mod_security on the host answers `406` to other binary types) and returns the new model's metadata with `201`. Needs the editor's bearer token like `PUT /ideas`. `link` is optional |
 | `DELETE` | `/models/{id}` | Deletes the model and its file, answering `204`. Needs the editor's bearer token; `404` for an unknown id |
 
 Visitors are identified by a salted hash of their IP address. The address itself is never stored.
