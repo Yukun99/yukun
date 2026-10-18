@@ -7,6 +7,7 @@ declare(strict_types=1);
 require __DIR__ . '/../src/autoload.php';
 require __DIR__ . '/MemoryVisitorStore.php';
 require __DIR__ . '/MemoryIdeaStore.php';
+require __DIR__ . '/MemoryModelStore.php';
 
 $failures = 0;
 

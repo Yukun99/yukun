@@ -1,0 +1,26 @@
+{
+  "empty": "暂无模型",
+  "upload": "上传模型",
+  "nameLabel": "名称",
+  "linkLabel": "MakerWorld 链接（可选）",
+  "pickFile": "选择 .3mf 文件",
+  "parsing": "正在读取模型…",
+  "converting": "正在转换…",
+  "uploading": "正在上传…",
+  "confirm": "上传",
+  "cancel": "取消",
+  "viewOnMakerWorld": "在 MakerWorld 查看",
+  "plate": "第 {{number}} 盘，共 {{total}} 盘",
+  "previousPlate": "上一盘",
+  "nextPlate": "下一盘",
+  "delete": "删除",
+  "deleteTitle": "删除模型",
+  "deleteBody": "删除“{{name}}”及其文件？此操作无法撤销。",
+  "deleteConfirm": "删除",
+  "errors": {
+    "parse": "无法读取此文件",
+    "tooLarge": "转换后的模型超过 16 MiB",
+    "upload": "上传失败",
+    "link": "链接必须以 https://makerworld.com/ 开头"
+  }
+}

@@ -44,14 +44,47 @@ final class Http
         return $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? null;
     }
 
-    public static function jsonBody(): mixed
+    /** Query string value, or null when absent or not a plain string. */
+    public static function query(string $key): ?string
+    {
+        $value = $_GET[$key] ?? null;
+        return is_string($value) ? $value : null;
+    }
+
+    public static function rawBody(): string
     {
         $raw = file_get_contents('php://input', false, null, 0, self::MAX_BODY + 1);
         if ($raw === false || $raw === '') {
-            return null;
+            return '';
         }
         if (strlen($raw) > self::MAX_BODY) {
             throw new ApiError(413, 'Body too large');
+        }
+        return $raw;
+    }
+
+    /** The second header() argument replaces the global no-store. */
+    public static function noContent(): never
+    {
+        http_response_code(204);
+        exit;
+    }
+
+    public static function binary(int $status, string $contentType, string $bytes): never
+    {
+        http_response_code($status);
+        header('Content-Type: ' . $contentType);
+        header('Content-Length: ' . strlen($bytes));
+        header('Cache-Control: public, max-age=31536000, immutable', true);
+        echo $bytes;
+        exit;
+    }
+
+    public static function jsonBody(): mixed
+    {
+        $raw = self::rawBody();
+        if ($raw === '') {
+            return null;
         }
         try {
             return json_decode($raw, true, 16, JSON_THROW_ON_ERROR);

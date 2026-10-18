@@ -8,7 +8,7 @@
     "linkedin": "https://www.linkedin.com/in/xu-yukun/",
     "github": "https://github.com/yukun99"
   },
-  "routeNames": { "/": "首页", "/resume": "简历", "/catalog": "目录", "/ideas": "灵感" },
+  "routeNames": { "/": "首页", "/resume": "简历", "/catalog": "目录", "/ideas": "灵感", "/3d": "3D" },
   "rotate": "请把设备转90°",
   "theme": { "dark": "深色模式", "light": "浅色模式" },
   "footer": {
@@ -20,7 +20,7 @@
     "notOwner": "仅站长可编辑",
     "dialog": {
       "title": "站长登录",
-      "body": "此登录用于站长编辑灵感网格，其他访客仍为只读。",
+      "body": "此登录用于站长编辑网站，其他访客仍为只读。",
       "confirm": "确认",
       "cancel": "取消"
     }

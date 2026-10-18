@@ -5,7 +5,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Overview
 
 Personal portfolio site (yukunxu.com). Nx 23 monorepo on pnpm 11.8 / Node 24. `apps/frontend` is the site and
-`apps/backend` is a small PHP API (visitor counter) deployed beside it under `/api/`; `packages/` is empty.
+`apps/backend` is a small PHP API (visitor counter, ideas grid, 3D models) deployed beside it under `/api/`; `packages/`
+is empty.
 
 Frontend stack: React 19, MUI 9 (Emotion), react-router 7, i18next, Vite 8. Backend stack: plain PHP 8.3 + PDO (MySQL),
 no Composer.

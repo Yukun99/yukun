@@ -1,4 +1,6 @@
 import en from '@/locales/en.json';
+import threeDEn from '@/locales/pages/3d-en.json';
+import threeDZh from '@/locales/pages/3d-zh.json';
 import catalogEn from '@/locales/pages/catalog-en.json';
 import catalogZh from '@/locales/pages/catalog-zh.json';
 import homeEn from '@/locales/pages/home-en.json';
@@ -17,8 +19,8 @@ i18n
   .use(initReactI18next)
   .init({
     resources: {
-      en: { translation: en, home: homeEn, resume: resumeEn, catalog: catalogEn, ideas: ideasEn },
-      zh: { translation: zh, home: homeZh, resume: resumeZh, catalog: catalogZh, ideas: ideasZh },
+      en: { translation: en, home: homeEn, resume: resumeEn, catalog: catalogEn, ideas: ideasEn, '3d': threeDEn },
+      zh: { translation: zh, home: homeZh, resume: resumeZh, catalog: catalogZh, ideas: ideasZh, '3d': threeDZh },
     },
     fallbackLng: 'en',
     fallbackNS: 'translation',
