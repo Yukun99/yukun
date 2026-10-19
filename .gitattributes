@@ -15,3 +15,4 @@
 *.svg text eol=lf
 *.woff binary
 *.woff2 binary
+*.3mf binary
