@@ -130,6 +130,7 @@ describe('parseThreeMf colours', () => {
   const verts = '<vertices><vertex x="0" y="0" z="0"/><vertex x="1" y="0" z="0"/><vertex x="0" y="1" z="0"/><vertex x="1" y="1" z="0"/></vertices>';
   const paintMesh = (...triangles: string[]) => `<mesh>${verts}<triangles>${triangles.join('')}</triangles></mesh>`;
   const tri = (v: string, attrs = '') => `<triangle ${v} ${attrs}/>`;
+  const el = (name: string, attrs: string, inner = '') => `<${name} ${attrs}>${inner}</${name}>`;
   const A = 'v1="0" v2="1" v3="2"';
   const B = 'v1="1" v2="3" v3="2"';
   const colours = (m: Mesh) => [m.material].flat().map((x) => (x as MeshStandardMaterial).color.getHexString());
@@ -156,7 +157,8 @@ describe('parseThreeMf colours', () => {
       ),
       'Metadata/project_settings.config': project('#FF0000', '#00FF00'),
       'Metadata/model_settings.config':
-        '<config><object id="1"><metadata key="extruder" value="1"/><part id="2"><metadata key="extruder" value="2"/></part></object></config>',
+        '<?xml version="1.0" encoding="UTF-8"?><config><object id="1"><metadata key="extruder" value="1"/>'
+        + '<part id="2"><metadata key="extruder" value="2"/></part></object></config>',
     });
     const [group] = await parseThreeMf(buffer);
     expect((group.children as Mesh[]).map(colours)).toEqual([['ff0000'], ['00ff00']]);
@@ -197,10 +199,14 @@ describe('parseThreeMf colours', () => {
   });
 
   it.each([
-    ['basematerials', '<basematerials id="5"><base name="a" displaycolor="#112233"/><base name="b" displaycolor="#445566"/></basematerials>'],
+    [
+      'basematerials',
+      el('basematerials', 'id="5"', el('base', 'name="a" displaycolor="#112233"') + el('base', 'name="b" displaycolor="#445566"')),
+    ],
     ['colorgroup', '<m:colorgroup xmlns:m="http://schemas.microsoft.com/3dmanufacturing/material/2015/02" id="5"><m:color color="#112233"/><m:color color="#445566"/></m:colorgroup>'],
   ])('should read %s properties', async (_label, group) => {
-    const body = `<resources>${group}<object id="1" pid="5" pindex="1">${paintMesh(tri(A), tri(B, 'pid="5" p1="0"'))}</object></resources>`;
+    const object = el('object', 'id="1" pid="5" pindex="1"', paintMesh(tri(A), tri(B, 'pid="5" p1="0"')));
+    const body = `<resources>${group}${object}</resources>`;
     const [plate] = await parseThreeMf(build(body));
     expect(colours(plate.children[0] as Mesh)).toEqual(['445566', '112233']);
   });
