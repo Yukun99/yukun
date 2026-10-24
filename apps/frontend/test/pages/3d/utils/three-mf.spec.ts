@@ -1,3 +1,4 @@
+import { buildPlates } from '@/pages/3d/utils/load-three-mf';
 import { parseThreeMf } from '@/pages/3d/utils/three-mf';
 import { Box3, Mesh, type MeshStandardMaterial, Vector3 } from 'three';
 import { strToU8, zipSync } from 'three/examples/jsm/libs/fflate.module.js';
@@ -28,7 +29,7 @@ const triangleCount = (meshes: Mesh[]) =>
   meshes.reduce((sum, m) => sum + (m.geometry.getIndex()?.count ?? 0) / 3, 0);
 
 describe('parseThreeMf', () => {
-  it('should read a generic file and apply the item transform', async () => {
+  it('should read a generic file and apply the item transform', () => {
     const buffer = zip({
       '_rels/.rels': RELS,
       '3D/3dmodel.model': model(
@@ -36,7 +37,7 @@ describe('parseThreeMf', () => {
           + '<build><item objectid="1" transform="1 0 0 0 1 0 0 0 1 10 0 0"/></build>',
       ),
     });
-    const [group] = await parseThreeMf(buffer);
+    const [group] = buildPlates(parseThreeMf(buffer));
     const meshes = group.children as Mesh[];
     expect(meshes).toHaveLength(1);
     expect(meshes[0].geometry.getAttribute('position').count).toBe(3);
@@ -47,7 +48,7 @@ describe('parseThreeMf', () => {
     expect(new Box3().setFromObject(group).getSize(new Vector3()).y).toBeCloseTo(0);
   });
 
-  it('should resolve components through the production path', async () => {
+  it('should resolve components through the production path', () => {
     const buffer = zip({
       '_rels/.rels': RELS,
       '3D/3dmodel.model': model(
@@ -58,14 +59,14 @@ describe('parseThreeMf', () => {
       ),
       '3D/Objects/object_1.model': model(`<resources><object id="1" type="model">${mesh(2)}</object></resources>`),
     });
-    const [group] = await parseThreeMf(buffer);
+    const [group] = buildPlates(parseThreeMf(buffer));
     expect(triangleCount(group.children as Mesh[])).toBe(2);
   });
 
   it.each([
     ['a triangle index out of range', '<vertex x="0" y="0" z="0"/>', '<triangle v1="0" v2="0" v3="5"/>'],
     ['a vertex that is not a number', '<vertex x="a" y="0" z="0"/>', '<triangle v1="0" v2="0" v3="0"/>'],
-  ])('should reject %s', async (_label, vertex, triangle) => {
+  ])('should reject %s', (_label, vertex, triangle) => {
     const buffer = zip({
       '_rels/.rels': RELS,
       '3D/3dmodel.model': model(
@@ -74,10 +75,10 @@ describe('parseThreeMf', () => {
           + '<build><item objectid="1"/></build>',
       ),
     });
-    await expect(parseThreeMf(buffer)).rejects.toThrow();
+    expect(() => parseThreeMf(buffer)).toThrow();
   });
 
-  it('should keep the winding outward under a mirroring transform', async () => {
+  it('should keep the winding outward under a mirroring transform', () => {
     const buffer = zip({
       '_rels/.rels': RELS,
       '3D/3dmodel.model': model(
@@ -85,16 +86,16 @@ describe('parseThreeMf', () => {
           + '<build><item objectid="1" transform="-1 0 0 0 1 0 0 0 1 0 0 0"/></build>',
       ),
     });
-    const [group] = await parseThreeMf(buffer);
+    const [group] = buildPlates(parseThreeMf(buffer));
     expect(Array.from((group.children[0] as Mesh).geometry.getIndex()?.array ?? [])).toEqual([0, 2, 1]);
   });
 
-  it('should reject a file without triangles', async () => {
+  it('should reject a file without triangles', () => {
     const buffer = zip({
       '_rels/.rels': RELS,
       '3D/3dmodel.model': model('<resources><object id="1" type="model"/></resources><build><item objectid="1"/></build>'),
     });
-    await expect(parseThreeMf(buffer)).rejects.toThrow();
+    expect(() => parseThreeMf(buffer)).toThrow();
   });
 });
 
@@ -111,15 +112,15 @@ describe('parseThreeMf plates', () => {
     ),
   };
 
-  it('should split build items by plate from the Bambu settings', async () => {
-    const plates = await parseThreeMf(zip({ ...files, 'Metadata/model_settings.config': SETTINGS }));
+  it('should split build items by plate from the Bambu settings', () => {
+    const plates = buildPlates(parseThreeMf(zip({ ...files, 'Metadata/model_settings.config': SETTINGS })));
     expect(plates).toHaveLength(2);
     expect(triangleCount(plates[0].children as Mesh[])).toBe(1);
     expect(triangleCount(plates[1].children as Mesh[])).toBe(2);
   });
 
-  it('should keep everything on one plate without settings', async () => {
-    const plates = await parseThreeMf(zip(files));
+  it('should keep everything on one plate without settings', () => {
+    const plates = buildPlates(parseThreeMf(zip(files)));
     expect(plates).toHaveLength(1);
     expect(triangleCount(plates[0].children as Mesh[])).toBe(3);
   });
@@ -138,13 +139,13 @@ describe('parseThreeMf colours', () => {
 
   const build = (body: string, extra: Record<string, string> = {}) =>
     zip({ '_rels/.rels': RELS, '3D/3dmodel.model': model(`${body}<build><item objectid="1"/></build>`), ...extra });
-  const single = async (m: string, extra: Record<string, string> = {}) => {
-    const [group] = await parseThreeMf(build(`<resources><object id="1" type="model">${m}</object></resources>`, extra));
+  const single = (m: string, extra: Record<string, string> = {}) => {
+    const [group] = buildPlates(parseThreeMf(build(`<resources><object id="1" type="model">${m}</object></resources>`, extra)));
     return group.children[0] as Mesh;
   };
   const PROJECT = { 'Metadata/project_settings.config': project('#FF0000', '#00FF00', '#0000FF') };
 
-  it('should colour parts by their own or their object extruder', async () => {
+  it('should colour parts by their own or their object extruder', () => {
     const buffer = zip({
       '_rels/.rels': RELS,
       '3D/3dmodel.model': model(
@@ -160,12 +161,12 @@ describe('parseThreeMf colours', () => {
         '<?xml version="1.0" encoding="UTF-8"?><config><object id="1"><metadata key="extruder" value="1"/>'
         + '<part id="2"><metadata key="extruder" value="2"/></part></object></config>',
     });
-    const [group] = await parseThreeMf(buffer);
+    const [group] = buildPlates(parseThreeMf(buffer));
     expect((group.children as Mesh[]).map(colours)).toEqual([['ff0000'], ['00ff00']]);
   });
 
-  it('should group painted triangles by extruder', async () => {
-    const m = await single(paintMesh(tri(A, 'paint_color="8"'), tri(B)), PROJECT);
+  it('should group painted triangles by extruder', () => {
+    const m = single(paintMesh(tri(A, 'paint_color="8"'), tri(B)), PROJECT);
     expect(colours(m)).toEqual(['00ff00', 'ff0000']);
     expect(m.geometry.groups).toHaveLength(2);
   });
@@ -173,27 +174,27 @@ describe('parseThreeMf colours', () => {
   it.each([
     ['0C', '0000ff'],
     ['0FC', GREY],
-  ])('should read the extended paint %s', async (paint, colour) => {
-    const m = await single(paintMesh(tri(A, `paint_color="${paint}"`)), PROJECT);
+  ])('should read the extended paint %s', (paint, colour) => {
+    const m = single(paintMesh(tri(A, `paint_color="${paint}"`)), PROJECT);
     expect(colours(m)).toContain(colour);
   });
 
-  it('should subdivide a split triangle', async () => {
-    const m = await single(paintMesh(tri(A, 'paint_color="481"')), PROJECT);
+  it('should subdivide a split triangle', () => {
+    const m = single(paintMesh(tri(A, 'paint_color="481"')), PROJECT);
     expect(m.geometry.getIndex()?.count).toBe(6);
     expect(m.geometry.getAttribute('position').count).toBe(5);
     expect(colours(m)).toEqual(['ff0000', '00ff00']);
     expect(Array.from(m.geometry.getIndex()?.array ?? [])).toEqual([0, 1, 4, 4, 2, 0]);
   });
 
-  it('should ignore a truncated paint string', async () => {
-    const m = await single(paintMesh(tri(A, 'paint_color="41"')), PROJECT);
+  it('should ignore a truncated paint string', () => {
+    const m = single(paintMesh(tri(A, 'paint_color="41"')), PROJECT);
     expect(colours(m)).toEqual(['ff0000']);
     expect(m.geometry.getIndex()?.count).toBe(3);
   });
 
-  it('should ignore an invalid paint string', async () => {
-    const m = await single(paintMesh(tri(A, 'paint_color="4G"')), PROJECT);
+  it('should ignore an invalid paint string', () => {
+    const m = single(paintMesh(tri(A, 'paint_color="4G"')), PROJECT);
     expect(colours(m)).toEqual(['ff0000']);
     expect(m.geometry.getIndex()?.count).toBe(3);
   });
@@ -204,14 +205,14 @@ describe('parseThreeMf colours', () => {
       el('basematerials', 'id="5"', el('base', 'name="a" displaycolor="#112233"') + el('base', 'name="b" displaycolor="#445566"')),
     ],
     ['colorgroup', '<m:colorgroup xmlns:m="http://schemas.microsoft.com/3dmanufacturing/material/2015/02" id="5"><m:color color="#112233"/><m:color color="#445566"/></m:colorgroup>'],
-  ])('should read %s properties', async (_label, group) => {
+  ])('should read %s properties', (_label, group) => {
     const object = el('object', 'id="1" pid="5" pindex="1"', paintMesh(tri(A), tri(B, 'pid="5" p1="0"')));
     const body = `<resources>${group}${object}</resources>`;
-    const [plate] = await parseThreeMf(build(body));
+    const [plate] = buildPlates(parseThreeMf(build(body)));
     expect(colours(plate.children[0] as Mesh)).toEqual(['445566', '112233']);
   });
 
-  it('should fall back to grey without settings or materials', async () => {
-    expect(colours(await single(mesh(1)))).toEqual([GREY]);
+  it('should fall back to grey without settings or materials', () => {
+    expect(colours(single(mesh(1)))).toEqual([GREY]);
   });
 });

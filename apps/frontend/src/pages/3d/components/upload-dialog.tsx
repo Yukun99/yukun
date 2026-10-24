@@ -6,9 +6,9 @@ import useSpacing from '@/common/hooks/use-spacing';
 import ModelViewer from '@/pages/3d/components/model-viewer';
 import { disposeObject } from '@/pages/3d/utils/dispose';
 import { toGlb } from '@/pages/3d/utils/glb';
+import { loadThreeMf } from '@/pages/3d/utils/load-three-mf';
 import { isValidLink, MAX_NAME, MAX_SIZE } from '@/pages/3d/utils/models';
 import { PAGE } from '@/pages/3d/utils/page';
-import { parseThreeMf } from '@/pages/3d/utils/three-mf';
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
@@ -40,6 +40,7 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
   const [status, setStatus] = useState<Status>('idle');
   const [failure, setFailure] = useState<Failure | null>(null);
   const session = useRef(0);
+  const abort = useRef<AbortController | null>(null);
 
   useEffect(
     () => () => {
@@ -51,6 +52,7 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
   useEffect(() => {
     if (open) return;
     session.current++;
+    abort.current?.abort();
     setPlates(null);
     setFileName('');
     setName('');
@@ -75,8 +77,10 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
     setFailure(null);
     setFileName(file.name);
     setStatus('parsing');
+    const controller = new AbortController();
+    abort.current = controller;
     try {
-      const parsed = await parseThreeMf(await file.arrayBuffer());
+      const parsed = await loadThreeMf(await file.arrayBuffer(), controller.signal);
       if (session.current !== current) {
         parsed.forEach(disposeObject);
         return;

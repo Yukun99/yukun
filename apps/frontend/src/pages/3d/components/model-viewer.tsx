@@ -1,8 +1,15 @@
+import {
+  BUTTON_SIZE,
+  ICON_GRADIENT_ID,
+  ICON_SCALE,
+  IconGradient,
+} from '@/common/components/buttons/round-icon-button';
 import { disposeObject } from '@/pages/3d/utils/dispose';
 import { PAGE } from '@/pages/3d/utils/page';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import Box from '@mui/material/Box';
+import CircularProgress, { circularProgressClasses } from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { Center, type OnCenterCallbackProps, OrbitControls } from '@react-three/drei';
@@ -12,7 +19,9 @@ import { useTranslation } from 'react-i18next';
 import { Mesh, type Object3D, PerspectiveCamera, Vector2, Vector3 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-type ModelViewerProps = { url?: string; objects?: Object3D[] };
+type ModelViewerProps = { url?: string; objects?: Object3D[]; loading?: boolean };
+const SPINNER_DELAY = 500;
+
 type Controls = { target: Vector3; update: () => void };
 type Extent = { radius: number; height: number };
 
@@ -72,11 +81,32 @@ const Rig = ({ plate, extent }: { plate: number; extent: Extent }) => {
   return null;
 };
 
+// extent state lives inside the canvas so the camera is placed in the same commit as the model
+const Stage = ({ object, plate }: { object: Object3D; plate: number }) => {
+  const [extent, setExtent] = useState<Extent>({ radius: 0, height: 0 });
+  const onCentered = useCallback(
+    ({ boundingSphere, height }: OnCenterCallbackProps) =>
+      setExtent({ radius: boundingSphere.radius, height }),
+    [],
+  );
+
+  return (
+    <>
+      <Center key={object.uuid} top onCentered={onCentered}>
+        <primitive object={object} />
+      </Center>
+      <Rig plate={plate} extent={extent} />
+    </>
+  );
+};
+
 const useScenes = (url: string | undefined) => {
   const [scenes, setScenes] = useState<Object3D[]>([]);
+  const [loading, setLoading] = useState(!!url);
   useEffect(() => {
-    if (!url) return;
+    if (!url) return setLoading(false);
     let active = true;
+    setLoading(true);
     let owned: Object3D[] = [];
     new GLTFLoader()
       .loadAsync(url)
@@ -86,28 +116,31 @@ const useScenes = (url: string | undefined) => {
         owned = gltf.scenes;
         setScenes(owned);
       })
-      .catch(() => undefined);
+      .catch(() => undefined)
+      .finally(() => active && setLoading(false));
     return () => {
       active = false;
       owned.forEach(disposeObject);
       setScenes([]);
     };
   }, [url]);
-  return scenes;
+  return { scenes, loading };
 };
 
-const ModelViewer = ({ url, objects }: ModelViewerProps) => {
+const ModelViewer = ({ url, objects, loading = false }: ModelViewerProps) => {
   const { t } = useTranslation(PAGE);
-  const loaded = useScenes(url);
+  const { scenes: loaded, loading: scenesLoading } = useScenes(url);
   const [plate, setPlate] = useState(0);
-  const [extent, setExtent] = useState<Extent>({ radius: 0, height: 0 });
   const plates = objects ?? loaded;
   const current = plates[Math.min(plate, plates.length - 1)];
-  const onCentered = useCallback(
-    ({ boundingSphere, height }: OnCenterCallbackProps) =>
-      setExtent({ radius: boundingSphere.radius, height }),
-    [],
-  );
+  const busy = (objects ? loading : scenesLoading) && !current;
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    if (!busy) return setShow(false);
+    const timer = setTimeout(() => setShow(true), SPINNER_DELAY);
+    return () => clearTimeout(timer);
+  }, [busy]);
 
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -121,12 +154,7 @@ const ModelViewer = ({ url, objects }: ModelViewerProps) => {
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 8, 5]} intensity={0.9} />
         <directionalLight position={[-5, -3, -5]} intensity={0.35} />
-        {current && (
-          <Center key={current.uuid} top onCentered={onCentered}>
-            <primitive object={current} />
-          </Center>
-        )}
-        <Rig plate={plate} extent={extent} />
+        {current && <Stage object={current} plate={plate} />}
         <OrbitControls
           makeDefault
           enableDamping
@@ -135,6 +163,24 @@ const ModelViewer = ({ url, objects }: ModelViewerProps) => {
           autoRotateSpeed={1}
         />
       </Canvas>
+      {show && (
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pointerEvents: 'none',
+          }}
+        >
+          <IconGradient />
+          <CircularProgress
+            size={BUTTON_SIZE * ICON_SCALE}
+            sx={{ [`& .${circularProgressClasses.circle}`]: { stroke: `url(#${ICON_GRADIENT_ID})` } }}
+          />
+        </Box>
+      )}
       {plates.length > 1 && (
         <Box
           sx={{

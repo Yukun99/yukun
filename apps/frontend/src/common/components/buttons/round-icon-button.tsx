@@ -9,13 +9,23 @@ import Typography from '@mui/material/Typography';
 import type { SystemStyleObject } from '@mui/system';
 import { type MouseEvent, useRef } from 'react';
 
-const ICON_GRADIENT_ID = 'round-icon-button-purple-gradient';
+export const ICON_GRADIENT_ID = 'round-icon-button-purple-gradient';
+export const ICON_SCALE = 0.5;
+
+export const IconGradient = () => (
+  <svg width={0} height={0} style={{ position: 'absolute' }}>
+    <linearGradient id={ICON_GRADIENT_ID} x1={0} y1={0} x2={1} y2={1}>
+      <stop offset={0} stopColor={PURPLE[0]} />
+      <stop offset={1} stopColor={PURPLE[4]} />
+    </linearGradient>
+  </svg>
+);
 
 export function getFormattedIcon(
   Icon: SvgIconComponent | string,
   size: number | string,
   disabled: boolean,
-  scale = 0.5,
+  scale = ICON_SCALE,
 ) {
   const parsedSize = typeof size === 'number' ? size * scale : size;
   if (typeof Icon === 'string') {
@@ -23,12 +33,7 @@ export function getFormattedIcon(
   }
   return (
     <>
-      <svg width={0} height={0} style={{ position: 'absolute' }}>
-        <linearGradient id={ICON_GRADIENT_ID} x1={0} y1={0} x2={1} y2={1}>
-          <stop offset={0} stopColor={PURPLE[0]} />
-          <stop offset={1} stopColor={PURPLE[4]} />
-        </linearGradient>
-      </svg>
+      <IconGradient />
       <Icon
         sx={{
           width: parsedSize,
