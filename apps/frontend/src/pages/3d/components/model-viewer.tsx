@@ -112,14 +112,15 @@ const ModelViewer = ({ url, objects }: ModelViewerProps) => {
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
       <Canvas
+        flat
         gl={{ alpha: true, antialias: true }}
         dpr={[1, 2]}
         camera={{ position: [0, 0, 5], fov: 45 }}
         style={{ width: '100%', height: '100%', touchAction: 'none' }}
       >
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[5, 8, 5]} intensity={1.5} />
-        <directionalLight position={[-5, -3, -5]} intensity={0.6} />
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[5, 8, 5]} intensity={0.9} />
+        <directionalLight position={[-5, -3, -5]} intensity={0.35} />
         {current && (
           <Center key={current.uuid} top onCentered={onCentered}>
             <primitive object={current} />

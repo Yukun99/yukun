@@ -1,5 +1,5 @@
 import { parseThreeMf } from '@/pages/3d/utils/three-mf';
-import { Box3, Mesh, Vector3 } from 'three';
+import { Box3, Mesh, type MeshStandardMaterial, Vector3 } from 'three';
 import { strToU8, zipSync } from 'three/examples/jsm/libs/fflate.module.js';
 
 const NS = 'xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02"';
@@ -122,5 +122,90 @@ describe('parseThreeMf plates', () => {
     const plates = await parseThreeMf(zip(files));
     expect(plates).toHaveLength(1);
     expect(triangleCount(plates[0].children as Mesh[])).toBe(3);
+  });
+});
+
+describe('parseThreeMf colours', () => {
+  const GREY = 'bfbfbf';
+  const verts = '<vertices><vertex x="0" y="0" z="0"/><vertex x="1" y="0" z="0"/><vertex x="0" y="1" z="0"/><vertex x="1" y="1" z="0"/></vertices>';
+  const paintMesh = (...triangles: string[]) => `<mesh>${verts}<triangles>${triangles.join('')}</triangles></mesh>`;
+  const tri = (v: string, attrs = '') => `<triangle ${v} ${attrs}/>`;
+  const A = 'v1="0" v2="1" v3="2"';
+  const B = 'v1="1" v2="3" v3="2"';
+  const colours = (m: Mesh) => [m.material].flat().map((x) => (x as MeshStandardMaterial).color.getHexString());
+  const project = (...c: string[]) => JSON.stringify({ filament_colour: c });
+
+  const build = (body: string, extra: Record<string, string> = {}) =>
+    zip({ '_rels/.rels': RELS, '3D/3dmodel.model': model(`${body}<build><item objectid="1"/></build>`), ...extra });
+  const single = async (m: string, extra: Record<string, string> = {}) => {
+    const [group] = await parseThreeMf(build(`<resources><object id="1" type="model">${m}</object></resources>`, extra));
+    return group.children[0] as Mesh;
+  };
+  const PROJECT = { 'Metadata/project_settings.config': project('#FF0000', '#00FF00', '#0000FF') };
+
+  it('should colour parts by their own or their object extruder', async () => {
+    const buffer = zip({
+      '_rels/.rels': RELS,
+      '3D/3dmodel.model': model(
+        '<resources><object id="1" type="model"><components>'
+          + '<component p:path="/3D/Objects/o.model" objectid="1"/><component p:path="/3D/Objects/o.model" objectid="2"/>'
+          + '</components></object></resources><build><item objectid="1"/></build>',
+      ),
+      '3D/Objects/o.model': model(
+        `<resources><object id="1">${mesh(1)}</object><object id="2">${mesh(1)}</object></resources>`,
+      ),
+      'Metadata/project_settings.config': project('#FF0000', '#00FF00'),
+      'Metadata/model_settings.config':
+        '<config><object id="1"><metadata key="extruder" value="1"/><part id="2"><metadata key="extruder" value="2"/></part></object></config>',
+    });
+    const [group] = await parseThreeMf(buffer);
+    expect((group.children as Mesh[]).map(colours)).toEqual([['ff0000'], ['00ff00']]);
+  });
+
+  it('should group painted triangles by extruder', async () => {
+    const m = await single(paintMesh(tri(A, 'paint_color="8"'), tri(B)), PROJECT);
+    expect(colours(m)).toEqual(['00ff00', 'ff0000']);
+    expect(m.geometry.groups).toHaveLength(2);
+  });
+
+  it.each([
+    ['0C', '0000ff'],
+    ['0FC', GREY],
+  ])('should read the extended paint %s', async (paint, colour) => {
+    const m = await single(paintMesh(tri(A, `paint_color="${paint}"`)), PROJECT);
+    expect(colours(m)).toContain(colour);
+  });
+
+  it('should subdivide a split triangle', async () => {
+    const m = await single(paintMesh(tri(A, 'paint_color="481"')), PROJECT);
+    expect(m.geometry.getIndex()?.count).toBe(6);
+    expect(m.geometry.getAttribute('position').count).toBe(5);
+    expect(colours(m)).toEqual(['ff0000', '00ff00']);
+    expect(Array.from(m.geometry.getIndex()?.array ?? [])).toEqual([0, 1, 4, 4, 2, 0]);
+  });
+
+  it('should ignore a truncated paint string', async () => {
+    const m = await single(paintMesh(tri(A, 'paint_color="41"')), PROJECT);
+    expect(colours(m)).toEqual(['ff0000']);
+    expect(m.geometry.getIndex()?.count).toBe(3);
+  });
+
+  it('should ignore an invalid paint string', async () => {
+    const m = await single(paintMesh(tri(A, 'paint_color="4G"')), PROJECT);
+    expect(colours(m)).toEqual(['ff0000']);
+    expect(m.geometry.getIndex()?.count).toBe(3);
+  });
+
+  it.each([
+    ['basematerials', '<basematerials id="5"><base name="a" displaycolor="#112233"/><base name="b" displaycolor="#445566"/></basematerials>'],
+    ['colorgroup', '<m:colorgroup xmlns:m="http://schemas.microsoft.com/3dmanufacturing/material/2015/02" id="5"><m:color color="#112233"/><m:color color="#445566"/></m:colorgroup>'],
+  ])('should read %s properties', async (_label, group) => {
+    const body = `<resources>${group}<object id="1" pid="5" pindex="1">${paintMesh(tri(A), tri(B, 'pid="5" p1="0"'))}</object></resources>`;
+    const [plate] = await parseThreeMf(build(body));
+    expect(colours(plate.children[0] as Mesh)).toEqual(['445566', '112233']);
+  });
+
+  it('should fall back to grey without settings or materials', async () => {
+    expect(colours(await single(mesh(1)))).toEqual([GREY]);
   });
 });
