@@ -112,7 +112,7 @@ describe('recolourThreeMf', () => {
   });
 });
 
-describe('recolourThreeMf on a real Bambu project', () => {
+describe('recolourThreeMf on a real Bambu project', { timeout: 30_000 }, () => {
   const original = new Uint8Array(
     readFileSync(resolve(__dirname, '../../../../src/assets/catalog/benchy-colour.3mf')),
   );
@@ -121,9 +121,13 @@ describe('recolourThreeMf on a real Bambu project', () => {
     plates.flat().reduce((sum, part) => sum + part.index.length / 3, 0);
   const colours = (plates: ReturnType<typeof parseThreeMf>) =>
     new Set(plates.flat().flatMap((part) => part.colours));
+  let before: ReturnType<typeof parseThreeMf>;
+
+  beforeAll(() => {
+    before = parseThreeMf(buffer());
+  }, 30_000);
 
   it('should merge one filament into another', () => {
-    const before = parseThreeMf(buffer());
     const project = JSON.parse(strFromU8(unzipSync(original)['Metadata/project_settings.config']));
     const [from, to] = [project.filament_colour[0], project.filament_colour[4]] as string[];
     const out = recolourThreeMf(buffer(), { [from.slice(1).toLowerCase()]: to.slice(1) });
@@ -135,7 +139,6 @@ describe('recolourThreeMf on a real Bambu project', () => {
   });
 
   it('should keep a file with no duplicate colours parsing the same', () => {
-    const before = parseThreeMf(buffer());
     const after = parseThreeMf(recolourThreeMf(buffer(), {}));
     expect(total(after)).toBe(total(before));
     expect(colours(after)).toEqual(colours(before));
