@@ -4,8 +4,10 @@ import {
   ICON_SCALE,
   IconGradient,
 } from '@/common/components/buttons/round-icon-button';
+import { type Extent, placeCamera } from '@/pages/3d/utils/camera';
 import { disposeObject } from '@/pages/3d/utils/dispose';
 import { PAGE } from '@/pages/3d/utils/page';
+import { AMBIENT, DIRECTIONAL } from '@/pages/3d/utils/scene';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import Box from '@mui/material/Box';
@@ -16,17 +18,19 @@ import { Center, type OnCenterCallbackProps, OrbitControls } from '@react-three/
 import { Canvas, useThree } from '@react-three/fiber';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Mesh, type Object3D, PerspectiveCamera, Vector2, Vector3 } from 'three';
+import { Mesh, type Object3D, PerspectiveCamera, Vector2, type Vector3 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-type ModelViewerProps = { url?: string; objects?: Object3D[]; loading?: boolean };
+type ModelViewerProps = {
+  url?: string;
+  objects?: Object3D[];
+  loading?: boolean;
+  plate?: number;
+  onPlateChange?: (plate: number) => void;
+};
 const SPINNER_DELAY = 500;
 
 type Controls = { target: Vector3; update: () => void };
-type Extent = { radius: number; height: number };
-
-const VIEW = new Vector3(0.6, 0.4, 1).normalize();
-const MARGIN = 1.1;
 
 const flatten = (object: Object3D) =>
   object.traverse((child) => {
@@ -47,19 +51,7 @@ const Rig = ({ plate, extent }: { plate: number; extent: Extent }) => {
 
   useLayoutEffect(() => {
     if (!extent.radius || !(camera instanceof PerspectiveCamera)) return;
-    const reach = extent.radius + extent.height / 2;
-    const vertical = (camera.fov * Math.PI) / 180;
-    const horizontal = 2 * Math.atan(Math.tan(vertical / 2) * (width / height));
-    const distance = (reach * MARGIN) / Math.sin(Math.min(vertical, horizontal) / 2);
-    camera.position.copy(VIEW).multiplyScalar(distance);
-    camera.near = distance / 100;
-    camera.far = distance * 100;
-    camera.lookAt(0, 0, 0);
-    camera.clearViewOffset();
-    camera.updateMatrixWorld();
-    const middle = new Vector3(0, extent.height / 2, 0).project(camera);
-    pan.current.set(0, (-middle.y * height) / 2);
-    camera.setViewOffset(width, height, pan.current.x, pan.current.y, width, height);
+    pan.current.copy(placeCamera(camera, extent, width, height));
     if (controls) {
       controls.target.set(0, 0, 0);
       controls.update();
@@ -127,10 +119,21 @@ const useScenes = (url: string | undefined) => {
   return { scenes, loading };
 };
 
-const ModelViewer = ({ url, objects, loading = false }: ModelViewerProps) => {
+const ModelViewer = ({
+  url,
+  objects,
+  loading = false,
+  plate: plateProp,
+  onPlateChange,
+}: ModelViewerProps) => {
   const { t } = useTranslation(PAGE);
   const { scenes: loaded, loading: scenesLoading } = useScenes(url);
-  const [plate, setPlate] = useState(0);
+  const [innerPlate, setInnerPlate] = useState(0);
+  const plate = plateProp ?? innerPlate;
+  const setPlate = (value: number) => {
+    if (plateProp === undefined) setInnerPlate(value);
+    onPlateChange?.(value);
+  };
   const plates = objects ?? loaded;
   const current = plates[Math.min(plate, plates.length - 1)];
   const busy = (objects ? loading : scenesLoading) && !current;
@@ -151,9 +154,10 @@ const ModelViewer = ({ url, objects, loading = false }: ModelViewerProps) => {
         camera={{ position: [0, 0, 5], fov: 45 }}
         style={{ width: '100%', height: '100%', touchAction: 'none' }}
       >
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[5, 8, 5]} intensity={0.9} />
-        <directionalLight position={[-5, -3, -5]} intensity={0.35} />
+        <ambientLight intensity={AMBIENT} />
+        {DIRECTIONAL.map(({ position, intensity }) => (
+          <directionalLight key={position.join()} position={position} intensity={intensity} />
+        ))}
         {current && <Stage object={current} plate={plate} />}
         <OrbitControls
           makeDefault
@@ -196,7 +200,7 @@ const ModelViewer = ({ url, objects, loading = false }: ModelViewerProps) => {
           <IconButton
             aria-label={t('previousPlate')}
             disabled={plate === 0}
-            onClick={() => setPlate((value) => value - 1)}
+            onClick={() => setPlate(plate - 1)}
             sx={{ pointerEvents: 'auto' }}
           >
             <ChevronLeft />
@@ -210,7 +214,7 @@ const ModelViewer = ({ url, objects, loading = false }: ModelViewerProps) => {
           <IconButton
             aria-label={t('nextPlate')}
             disabled={plate >= plates.length - 1}
-            onClick={() => setPlate((value) => value + 1)}
+            onClick={() => setPlate(plate + 1)}
             sx={{ pointerEvents: 'auto' }}
           >
             <ChevronRight />

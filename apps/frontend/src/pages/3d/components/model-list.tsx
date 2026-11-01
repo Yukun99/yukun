@@ -1,8 +1,10 @@
 import { getFormattedIcon } from '@/common/components/buttons/round-icon-button';
+import Scroller from '@/common/components/scroller';
 import { FROSTED_BG } from '@/common/components/sections/section';
 import useIsMobile from '@/common/hooks/use-is-mobile';
 import useSpacing from '@/common/hooks/use-spacing';
 import { PURPLE } from '@/common/utils/palette';
+import ModelThumbnail from '@/pages/3d/components/model-thumbnail';
 import { type Model } from '@/pages/3d/utils/models';
 import { PAGE } from '@/pages/3d/utils/page';
 import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
@@ -33,7 +35,11 @@ const ModelList = ({ models, selected, onSelect, editable, onUpload, onDelete }:
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
-      <Box sx={{ flex: 1, minHeight: 0 }}>
+      <Scroller
+        axis='y'
+        thickness={padding}
+        style={{ flex: 1, minHeight: 0, marginRight: `${-padding}px`, paddingRight: `${padding}px` }}
+      >
         {models.length === 0 && <Typography variant='body2'>{t('empty')}</Typography>}
         <List disablePadding>
           {models.map((model) => (
@@ -43,6 +49,7 @@ const ModelList = ({ models, selected, onSelect, editable, onUpload, onDelete }:
               onClick={() => onSelect(model.id)}
               sx={{ borderRadius: `${padding / 2}px` }}
             >
+              <ModelThumbnail model={model} />
               <ListItemText
                 primary={model.name}
                 slotProps={{ primary: { noWrap: true, variant: 'body2' } }}
@@ -75,7 +82,7 @@ const ModelList = ({ models, selected, onSelect, editable, onUpload, onDelete }:
             </ListItemButton>
           ))}
         </List>
-      </Box>
+      </Scroller>
       {editable && (
         <Button
           fullWidth

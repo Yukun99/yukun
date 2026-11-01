@@ -1,12 +1,22 @@
-export type Model = { id: number; name: string; link: string; size: number; createdAt: number };
+export type Model = {
+  id: number;
+  name: string;
+  link: string;
+  size: number;
+  createdAt: number;
+  thumbnail: boolean;
+};
 
 export const MAX_NAME = 50;
 export const MAX_LINK = 500;
 export const MAX_SIZE = 16 * 1024 * 1024;
 export const LINK_PREFIX = 'https://makerworld.com/';
 export const API = '/api/models';
+export const THUMBNAIL_SIZE = 256;
+export const MAX_THUMBNAIL = 1024 * 1024;
 
 export const fileUrl = (id: number) => `${API}/${id}/file`;
+export const thumbnailUrl = (id: number) => `${API}/${id}/thumbnail`;
 
 export const isValidLink = (link: string) =>
   link === ''
@@ -14,17 +24,18 @@ export const isValidLink = (link: string) =>
 
 export const parseModel = (value: unknown): Model | null => {
   if (typeof value !== 'object' || value === null) return null;
-  const { id, name, link, size, createdAt } = value as Record<string, unknown>;
+  const { id, name, link, size, createdAt, thumbnail } = value as Record<string, unknown>;
   if (
     typeof id !== 'number'
     || typeof name !== 'string'
     || typeof link !== 'string'
     || typeof size !== 'number'
     || typeof createdAt !== 'number'
+    || typeof thumbnail !== 'boolean'
   ) {
     return null;
   }
-  return { id, name, link, size, createdAt };
+  return { id, name, link, size, createdAt, thumbnail };
 };
 
 export const parseModels = (body: unknown): Model[] | null => {

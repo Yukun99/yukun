@@ -7,8 +7,8 @@ const res = (body: unknown, status = 200) => ({
   json: () => Promise.resolve(body),
 });
 
-const first = { id: 1, name: 'first', link: '', size: 4, createdAt: 1 };
-const second = { id: 2, name: 'second', link: '', size: 4, createdAt: 2 };
+const first = { id: 1, name: 'first', link: '', size: 4, createdAt: 1, thumbnail: false };
+const second = { id: 2, name: 'second', link: '', size: 4, createdAt: 2, thumbnail: false };
 
 describe('useModels', () => {
   afterEach(() => {
@@ -34,7 +34,12 @@ describe('useModels', () => {
 
     let ok = false;
     await act(async () => {
-      ok = await result.current.upload(new ArrayBuffer(4), 'second', 'https://makerworld.com/x');
+      ok = await result.current.upload(
+        new ArrayBuffer(4),
+        'second',
+        'https://makerworld.com/x',
+        null,
+      );
     });
 
     expect(ok).toBe(true);
@@ -49,6 +54,71 @@ describe('useModels', () => {
     });
   });
 
+  it('should send the thumbnail after the model and mark it', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(res({ models: [first] }))
+      .mockResolvedValueOnce(res(second, 201))
+      .mockResolvedValueOnce(res(null, 204));
+    vi.stubGlobal('fetch', fetchMock);
+    const { result } = renderHook(() => useModels('token', vi.fn()));
+    await waitFor(() => expect(result.current.ready).toBe(true));
+    const thumbnail = new ArrayBuffer(8);
+
+    let ok = false;
+    await act(async () => {
+      ok = await result.current.upload(new ArrayBuffer(4), 'second', '', thumbnail);
+    });
+
+    expect(ok).toBe(true);
+    expect(result.current.models).toEqual([first, { ...second, thumbnail: true }]);
+    const [url, init] = fetchMock.mock.calls[2];
+    expect(url).toBe('/api/models/2/thumbnail');
+    expect(init.method).toBe('PUT');
+    expect(init.headers).toEqual({
+      'Content-Type': 'application/octet-stream',
+      Authorization: 'Bearer token',
+    });
+    expect(init.body).toBe(thumbnail);
+  });
+
+  it('should skip the thumbnail request when there is none', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(res({ models: [first] }))
+      .mockResolvedValueOnce(res(second, 201));
+    vi.stubGlobal('fetch', fetchMock);
+    const { result } = renderHook(() => useModels('token', vi.fn()));
+    await waitFor(() => expect(result.current.ready).toBe(true));
+
+    await act(async () => {
+      await result.current.upload(new ArrayBuffer(4), 'second', '', null);
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('should keep the model when the thumbnail upload fails', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockResolvedValueOnce(res({ models: [first] }))
+        .mockResolvedValueOnce(res(second, 201))
+        .mockResolvedValueOnce(res({}, 500)),
+    );
+    const { result } = renderHook(() => useModels('token', vi.fn()));
+    await waitFor(() => expect(result.current.ready).toBe(true));
+
+    let ok = false;
+    await act(async () => {
+      ok = await result.current.upload(new ArrayBuffer(4), 'second', '', new ArrayBuffer(8));
+    });
+
+    expect(ok).toBe(true);
+    expect(result.current.models).toEqual([first, second]);
+  });
+
   it('should call onUnauthorized when the upload is refused', async () => {
     const onUnauthorized = vi.fn();
     vi.stubGlobal(
@@ -60,12 +130,35 @@ describe('useModels', () => {
 
     let ok = true;
     await act(async () => {
-      ok = await result.current.upload(new ArrayBuffer(4), 'second', '');
+      ok = await result.current.upload(new ArrayBuffer(4), 'second', '', null);
     });
 
     expect(ok).toBe(false);
     expect(onUnauthorized).toHaveBeenCalledOnce();
     expect(result.current.models).toEqual([first]);
+  });
+
+  it('should keep the model and sign out when the thumbnail is refused', async () => {
+    const onUnauthorized = vi.fn();
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockResolvedValueOnce(res({ models: [first] }))
+        .mockResolvedValueOnce(res(second, 201))
+        .mockResolvedValueOnce(res({}, 403)),
+    );
+    const { result } = renderHook(() => useModels('token', onUnauthorized));
+    await waitFor(() => expect(result.current.ready).toBe(true));
+
+    let ok = false;
+    await act(async () => {
+      ok = await result.current.upload(new ArrayBuffer(4), 'second', '', new ArrayBuffer(8));
+    });
+
+    expect(ok).toBe(true);
+    expect(onUnauthorized).toHaveBeenCalledOnce();
+    expect(result.current.models).toEqual([first, second]);
   });
 
   it('should drop a deleted model and move the selection', async () => {

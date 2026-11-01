@@ -4,9 +4,10 @@ import {
   LINK_PREFIX,
   MAX_LINK,
   parseModels,
+  thumbnailUrl,
 } from '@/pages/3d/utils/models';
 
-const model = { id: 1, name: 'Benchy', link: '', size: 10, createdAt: 5 };
+const model = { id: 1, name: 'Benchy', link: '', size: 10, createdAt: 5, thumbnail: false };
 
 describe('parseModels', () => {
   it('should accept a valid body', () => {
@@ -27,6 +28,7 @@ describe('parseModels', () => {
     ['model not an object', { models: [1] }],
     ['model with a string id', { models: [{ ...model, id: '1' }] }],
     ['model without a name', { models: [{ ...model, name: undefined }] }],
+    ['model without a boolean thumbnail', { models: [{ ...model, thumbnail: 1 }] }],
   ])('should reject %s', (_label, body) => {
     expect(parseModels(body)).toBeNull();
   });
@@ -61,5 +63,11 @@ describe('isValidLink', () => {
 describe('fileUrl', () => {
   it('should point at the model file', () => {
     expect(fileUrl(7)).toBe('/api/models/7/file');
+  });
+});
+
+describe('thumbnailUrl', () => {
+  it('should point at the model thumbnail', () => {
+    expect(thumbnailUrl(7)).toBe('/api/models/7/thumbnail');
   });
 });

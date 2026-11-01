@@ -10,13 +10,15 @@ final class Models
     public const MAX_NAME = 50;
     public const MAX_LINK = 500;
     public const MAX_SIZE = 16 * 1024 * 1024;
+    public const MAX_THUMBNAIL = 1024 * 1024;
+    public const MAX_THUMBNAIL_PX = 1024;
     public const LINK_PREFIX = 'https://makerworld.com/';
 
     public function __construct(private readonly ModelStore $store)
     {
     }
 
-    /** @return array{models: list<array{id: int, name: string, link: string, size: int, createdAt: int}>} */
+    /** @return array{models: list<array{id: int, name: string, link: string, size: int, createdAt: int, thumbnail: bool}>} */
     public function all(): array
     {
         return ['models' => $this->store->all()];
@@ -27,6 +29,36 @@ final class Models
         return $this->store->file($id) ?? throw new ApiError(404, 'Model not found');
     }
 
+    public function thumbnail(int $id): string
+    {
+        return $this->store->thumbnail($id) ?? throw new ApiError(404, 'Thumbnail not found');
+    }
+
+    /** Write-once, so the immutable cache header on the thumbnail route stays valid. */
+    public function addThumbnail(int $id, string $data): void
+    {
+        if ($data === '') {
+            throw new ApiError(400, 'Thumbnail is required');
+        }
+        if (strlen($data) > self::MAX_THUMBNAIL) {
+            throw new ApiError(400, 'Thumbnail is over 1 MiB');
+        }
+        if (strlen($data) < 24 || !str_starts_with($data, "\x89PNG\r\n\x1a\n") || substr($data, 12, 4) !== 'IHDR') {
+            throw new ApiError(400, 'Thumbnail is not a PNG');
+        }
+        $size = unpack('Nwidth/Nheight', $data, 16);
+        foreach ($size as $pixels) {
+            if ($pixels < 1 || $pixels > self::MAX_THUMBNAIL_PX) {
+                throw new ApiError(400, 'Thumbnail must be 1 to ' . self::MAX_THUMBNAIL_PX . ' pixels on a side');
+            }
+        }
+        if (!$this->store->addThumbnail($id, $data)) {
+            throw $this->store->exists($id)
+                ? new ApiError(409, 'Thumbnail already set')
+                : new ApiError(404, 'Model not found');
+        }
+    }
+
     public function remove(int $id): void
     {
         if (!$this->store->remove($id)) {
@@ -34,7 +66,7 @@ final class Models
         }
     }
 
-    /** @return array{id: int, name: string, link: string, size: int, createdAt: int} */
+    /** @return array{id: int, name: string, link: string, size: int, createdAt: int, thumbnail: bool} */
     public function add(?string $name, ?string $link, string $data, int $now): array
     {
         $name = trim($name ?? '');
@@ -70,7 +102,7 @@ final class Models
         }
 
         $id = $this->store->add($name, $link, $data, $now);
-        return ['id' => $id, 'name' => $name, 'link' => $link, 'size' => $size, 'createdAt' => $now];
+        return ['id' => $id, 'name' => $name, 'link' => $link, 'size' => $size, 'createdAt' => $now, 'thumbnail' => false];
     }
 
     private static function isGlb(string $data): bool

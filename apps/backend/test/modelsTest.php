@@ -13,6 +13,11 @@ $glb = function (?int $total = null, int $version = 2, string $magic = 'glTF', i
     return $magic . pack('V', $version) . pack('V', $total ?? 12 + strlen($body)) . $body;
 };
 
+/** A minimal PNG header with the given size; the chunk CRC is not checked by the server. */
+$png = function (int $width = 256, int $height = 256, string $signature = "\x89PNG\r\n\x1a\n", string $chunk = 'IHDR'): string {
+    return $signature . pack('N', 13) . $chunk . pack('NN', $width, $height) . "\x08\x06\x00\x00\x00" . pack('N', 0);
+};
+
 /** Status of the ApiError thrown by `$run`, or null when nothing was thrown. */
 $status = function (callable $run): ?int {
     try {
@@ -28,13 +33,13 @@ $check('empty list', (new Models($store))->all(), ['models' => []]);
 
 $store = new MemoryModelStore();
 $store->rows = [
-    2 => ['name' => 'second', 'link' => '', 'data' => 'abcd', 'createdAt' => 20],
+    2 => ['name' => 'second', 'link' => '', 'data' => 'abcd', 'createdAt' => 20, 'thumbnail' => 'png'],
     1 => ['name' => 'first', 'link' => 'https://makerworld.com/x', 'data' => 'ab', 'createdAt' => 10],
 ];
 $models = new Models($store);
 $check('list is ordered and has no bytes', $models->all(), ['models' => [
-    ['id' => 1, 'name' => 'first', 'link' => 'https://makerworld.com/x', 'size' => 2, 'createdAt' => 10],
-    ['id' => 2, 'name' => 'second', 'link' => '', 'size' => 4, 'createdAt' => 20],
+    ['id' => 1, 'name' => 'first', 'link' => 'https://makerworld.com/x', 'size' => 2, 'createdAt' => 10, 'thumbnail' => false],
+    ['id' => 2, 'name' => 'second', 'link' => '', 'size' => 4, 'createdAt' => 20, 'thumbnail' => true],
 ]]);
 $check('file returns the bytes', $models->file(2), 'abcd');
 $check('missing file is 404', $status(fn () => $models->file(9)), 404);
@@ -49,6 +54,7 @@ $check('valid upload returns metadata', $added, [
     'link' => 'https://makerworld.com/en/models/1',
     'size' => strlen($data),
     'createdAt' => 1234,
+    'thumbnail' => false,
 ]);
 $check('valid upload writes once', $store->writes, 1);
 $check('valid upload stores the bytes', $store->rows[1]['data'], $data);
@@ -90,3 +96,39 @@ $models->remove(3);
 $check('remove deletes the row', $store->rows, []);
 $check('removing again is 404', $status(fn () => $models->remove(3)), 404);
 $check('removing an unknown id is 404', $status(fn () => $models->remove(9)), 404);
+
+$store = new MemoryModelStore();
+$store->rows = [
+    1 => ['name' => 'a', 'link' => '', 'data' => 'x', 'createdAt' => 1],
+    2 => ['name' => 'b', 'link' => '', 'data' => 'y', 'createdAt' => 2],
+];
+$models = new Models($store);
+$image = $png();
+$models->addThumbnail(1, $image);
+$check('thumbnail is stored', $store->rows[1]['thumbnail'], $image);
+$check('thumbnail is returned', $models->thumbnail(1), $image);
+$check('list flags the thumbnail', array_column($models->all()['models'], 'thumbnail'), [true, false]);
+$check('thumbnail of an unknown id is 404', $status(fn () => $models->thumbnail(9)), 404);
+$check('thumbnail of a model without one is 404', $status(fn () => $models->thumbnail(2)), 404);
+$check('the maximum size is accepted', $status(fn () => $models->addThumbnail(2, $png(Models::MAX_THUMBNAIL_PX, 1))), null);
+
+$store = new MemoryModelStore();
+$store->rows = [1 => ['name' => 'a', 'link' => '', 'data' => 'x', 'createdAt' => 1]];
+$models = new Models($store);
+$thumbnailRejects = [
+    'empty thumbnail' => '',
+    'thumbnail over 1 MiB' => $png() . str_repeat('a', Models::MAX_THUMBNAIL),
+    'thumbnail with a wrong signature' => $png(256, 256, "\x89PNX\r\n\x1a\n"),
+    'thumbnail without IHDR' => $png(256, 256, "\x89PNG\r\n\x1a\n", 'IDAT'),
+    'truncated thumbnail' => "\x89PNG\r\n\x1a\n",
+    'thumbnail 1025 pixels wide' => $png(Models::MAX_THUMBNAIL_PX + 1, 10),
+    'thumbnail 0 pixels high' => $png(10, 0),
+];
+foreach ($thumbnailRejects as $label => $bytes) {
+    $check("$label is 400", $status(fn () => $models->addThumbnail(1, $bytes)), 400);
+}
+$check('thumbnail rejections write nothing', $store->writes, 0);
+$models->addThumbnail(1, $png());
+$check('second thumbnail is 409', $status(fn () => $models->addThumbnail(1, $png())), 409);
+$check('thumbnail for an unknown id is 404', $status(fn () => $models->addThumbnail(9, $png())), 404);
+$check('conflicting thumbnail changes nothing', $store->writes, 1);

@@ -9,6 +9,7 @@ import { toGlb } from '@/pages/3d/utils/glb';
 import { loadThreeMf } from '@/pages/3d/utils/load-three-mf';
 import { isValidLink, MAX_NAME, MAX_SIZE } from '@/pages/3d/utils/models';
 import { PAGE } from '@/pages/3d/utils/page';
+import { renderThumbnail } from '@/pages/3d/utils/thumbnail';
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
@@ -23,10 +24,15 @@ import type { Group } from 'three';
 type UploadDialogProps = {
   open: boolean;
   onClose: () => void;
-  onUpload: (data: ArrayBuffer, name: string, link: string) => Promise<boolean>;
+  onUpload: (
+    data: ArrayBuffer,
+    name: string,
+    link: string,
+    thumbnail: ArrayBuffer | null,
+  ) => Promise<boolean>;
 };
 
-type Status = 'idle' | 'parsing' | 'converting' | 'uploading';
+type Status = 'idle' | 'parsing' | 'rendering' | 'converting' | 'uploading';
 type Failure = 'parse' | 'tooLarge' | 'upload';
 
 const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
@@ -34,6 +40,7 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
   const isMobile = useIsMobile();
   const { margin } = useSpacing();
   const [plates, setPlates] = useState<Group[] | null>(null);
+  const [plate, setPlate] = useState(0);
   const [fileName, setFileName] = useState('');
   const [name, setName] = useState('');
   const [link, setLink] = useState('');
@@ -54,6 +61,7 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
     session.current++;
     abort.current?.abort();
     setPlates(null);
+    setPlate(0);
     setFileName('');
     setName('');
     setLink('');
@@ -74,6 +82,7 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
     if (!file) return;
     const current = session.current;
     setPlates(null);
+    setPlate(0);
     setFailure(null);
     setFileName(file.name);
     setStatus('parsing');
@@ -98,6 +107,14 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
     if (!plates) return;
     const current = session.current;
     setFailure(null);
+    setStatus('rendering');
+    let thumbnail: ArrayBuffer | null;
+    try {
+      thumbnail = await renderThumbnail(plates[Math.min(plate, plates.length - 1)]);
+    } catch {
+      thumbnail = null;
+    }
+    if (session.current !== current) return;
     setStatus('converting');
     let glb: ArrayBuffer;
     try {
@@ -115,7 +132,7 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
       return;
     }
     setStatus('uploading');
-    const ok = await onUpload(glb, name.trim(), link.trim());
+    const ok = await onUpload(glb, name.trim(), link.trim(), thumbnail);
     if (session.current !== current) return;
     setStatus('idle');
     if (ok) onClose();
@@ -130,13 +147,31 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
     >
       <Section variant='flat' noMargin sx={{ height }}>
         <Box sx={{ display: 'flex', flex: 1, minHeight: 0, gap: `${margin}px` }}>
-          <Box sx={{ flex: 1, minHeight: 0, minWidth: 0, display: 'flex' }}>
-            {plates ? (
-              <ModelViewer key={plates[0].uuid} objects={plates} />
-            ) : (
-              <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Typography color={failure ? 'error' : 'text.secondary'}>{message}</Typography>
-              </Box>
+          <Box sx={{ flex: 1, minHeight: 0, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ flex: 1, minHeight: 0, display: 'flex' }}>
+              {plates ? (
+                <ModelViewer
+                  key={plates[0].uuid}
+                  objects={plates}
+                  plate={plate}
+                  onPlateChange={setPlate}
+                />
+              ) : (
+                <Box
+                  sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  <Typography color={failure ? 'error' : 'text.secondary'}>{message}</Typography>
+                </Box>
+              )}
+            </Box>
+            {plates && plates.length > 1 && (
+              <Typography
+                variant='caption'
+                color='text.secondary'
+                sx={{ textAlign: 'center', pt: 0.5 }}
+              >
+                {t('thumbnailPlate')}
+              </Typography>
             )}
           </Box>
           <Box

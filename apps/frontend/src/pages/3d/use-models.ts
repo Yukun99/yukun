@@ -35,33 +35,51 @@ const useModels = (token: string | null, onUnauthorized: () => void) => {
     };
   }, []);
 
-  const upload = useCallback(async (data: ArrayBuffer, name: string, link: string) => {
-    const { token: bearer, onUnauthorized: unauthorized } = auth.current;
-    if (busy.current || !bearer) return false;
-    busy.current = true;
-    try {
-      const res = await fetch(`${API}?${new URLSearchParams({ name, link })}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/octet-stream', Authorization: `Bearer ${bearer}` },
-        body: data,
-      });
-      if (res.status === 401 || res.status === 403) {
-        unauthorized();
+  const upload = useCallback(
+    async (data: ArrayBuffer, name: string, link: string, thumbnail: ArrayBuffer | null) => {
+      const { token: bearer, onUnauthorized: unauthorized } = auth.current;
+      if (busy.current || !bearer) return false;
+      busy.current = true;
+      try {
+        const res = await fetch(`${API}?${new URLSearchParams({ name, link })}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/octet-stream', Authorization: `Bearer ${bearer}` },
+          body: data,
+        });
+        if (res.status === 401 || res.status === 403) {
+          unauthorized();
+          return false;
+        }
+        let model = res.status === 201 ? parseModel(await res.json()) : null;
+        if (!model) return false;
+        let refused = false;
+        if (thumbnail) {
+          const put = await fetch(`${API}/${model.id}/thumbnail`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/octet-stream',
+              Authorization: `Bearer ${bearer}`,
+            },
+            body: thumbnail,
+          }).catch(() => null);
+          if (put?.status === 401 || put?.status === 403) refused = true;
+          else if (put?.status === 204) model = { ...model, thumbnail: true };
+        }
+        if (mounted.current) {
+          const added = model;
+          setModels((current) => [...current, added]);
+          setSelected(added.id);
+        }
+        if (refused) unauthorized();
+        return true;
+      } catch {
         return false;
+      } finally {
+        busy.current = false;
       }
-      const model = res.status === 201 ? parseModel(await res.json()) : null;
-      if (!model) return false;
-      if (mounted.current) {
-        setModels((current) => [...current, model]);
-        setSelected(model.id);
-      }
-      return true;
-    } catch {
-      return false;
-    } finally {
-      busy.current = false;
-    }
-  }, []);
+    },
+    [],
+  );
 
   const remove = useCallback(async (id: number) => {
     const { token: bearer, onUnauthorized: unauthorized } = auth.current;

@@ -40,6 +40,20 @@ $router->add('GET', '/models/{id}/file', function (array $params) use ($models):
     }
     Http::binary(200, 'model/gltf-binary', $models()->file((int) $params['id']));
 });
+$router->add('GET', '/models/{id}/thumbnail', function (array $params) use ($models): never {
+    if (!ctype_digit($params['id'])) {
+        throw new ApiError(404, 'Thumbnail not found');
+    }
+    Http::binary(200, 'image/png', $models()->thumbnail((int) $params['id']));
+});
+$router->add('PUT', '/models/{id}/thumbnail', function (array $params) use ($models, $auth): never {
+    $auth()->verify(Http::authorization());
+    if (!ctype_digit($params['id'])) {
+        throw new ApiError(404, 'Model not found');
+    }
+    $models()->addThumbnail((int) $params['id'], Http::rawBody());
+    Http::noContent();
+});
 $router->add('POST', '/models', function () use ($models, $auth, $now): never {
     $auth()->verify(Http::authorization());
     Http::json(201, $models()->add(Http::query('name'), Http::query('link'), Http::rawBody(), $now()));
