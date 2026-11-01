@@ -54,6 +54,20 @@ $router->add('PUT', '/models/{id}/thumbnail', function (array $params) use ($mod
     $models()->addThumbnail((int) $params['id'], Http::rawBody());
     Http::noContent();
 });
+$router->add('GET', '/models/{id}/source', function (array $params) use ($models): never {
+    if (!ctype_digit($params['id'])) {
+        throw new ApiError(404, 'Source not found');
+    }
+    Http::binary(200, 'model/3mf', $models()->source((int) $params['id']));
+});
+$router->add('PUT', '/models/{id}/source', function (array $params) use ($models, $auth): never {
+    $auth()->verify(Http::authorization());
+    if (!ctype_digit($params['id'])) {
+        throw new ApiError(404, 'Model not found');
+    }
+    $models()->addSource((int) $params['id'], Http::rawBody());
+    Http::noContent();
+});
 $router->add('POST', '/models', function () use ($models, $auth, $now): never {
     $auth()->verify(Http::authorization());
     Http::json(201, $models()->add(Http::query('name'), Http::query('link'), Http::rawBody(), $now()));

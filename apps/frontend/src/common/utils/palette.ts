@@ -49,3 +49,7 @@ export function getColor(hex: string, opacity: number): string {
 export function getPageElementBgColor(mode: 'light' | 'dark') {
   return mode === 'light' ? getColor(GRAY[20], OPACITY[100]) : getColor(GRAY[80], OPACITY[100]);
 }
+
+export function getInvertedPageElementBgColor(mode: 'light' | 'dark') {
+  return getPageElementBgColor(mode === 'light' ? 'dark' : 'light');
+}

@@ -1,4 +1,5 @@
 import type { PlateData, WorkerResult } from '@/pages/3d/utils/three-mf';
+import { runWorker } from '@/pages/3d/utils/worker';
 import {
   BufferAttribute,
   BufferGeometry,
@@ -37,31 +38,13 @@ export const buildPlates = (plates: PlateData[]): Group[] => {
   });
 };
 
-export const loadThreeMf = (buffer: ArrayBuffer, signal?: AbortSignal): Promise<Group[]> =>
-  new Promise((resolve, reject) => {
-    if (signal?.aborted) {
-      reject(signal.reason);
-      return;
-    }
-    const worker = new Worker(new URL('./three-mf.worker.ts', import.meta.url), {
-      type: 'module',
-    });
-    const settle = (finish: () => void) => {
-      signal?.removeEventListener('abort', onAbort);
-      worker.terminate();
-      try {
-        finish();
-      } catch (error) {
-        reject(error);
-      }
-    };
-    const onAbort = () => settle(() => reject(signal?.reason));
-    signal?.addEventListener('abort', onAbort);
-    worker.onmessage = ({ data }: MessageEvent<WorkerResult>) =>
-      settle(() => {
-        if ('error' in data) throw new Error(data.error);
-        resolve(buildPlates(data.plates));
-      });
-    worker.onerror = (event) => settle(() => reject(new Error(event.message)));
-    worker.postMessage(buffer, [buffer]);
-  });
+export const loadThreeMf = async (buffer: ArrayBuffer, signal?: AbortSignal): Promise<Group[]> => {
+  const result = await runWorker<ArrayBuffer, WorkerResult>(
+    () => new Worker(new URL('./three-mf.worker.ts', import.meta.url), { type: 'module' }),
+    buffer,
+    [buffer],
+    signal,
+  );
+  if ('error' in result) throw new Error(result.error);
+  return buildPlates(result.plates);
+};

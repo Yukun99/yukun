@@ -19,10 +19,23 @@
   "deleteTitle": "Delete Model",
   "deleteBody": "Delete “{{name}}” and its file? This cannot be undone.",
   "deleteConfirm": "Delete",
+  "colours": "Colour mapping",
+  "originalColour": "Original colour {{colour}}",
+  "mappedColour": "Change colour {{colour}}",
+  "download": "Download 3MF with mapped colours",
+  "apply": "Apply",
+  "hue": "Hue",
+  "shade": "Saturation and brightness",
+  "red": "R",
+  "green": "G",
+  "blue": "B",
+  "hex": "Hex",
+  "alpha": "Opacity",
   "errors": {
     "parse": "Could not read this file",
     "tooLarge": "Converted model is over 16 MiB",
     "upload": "Upload failed",
-    "link": "Link must start with https://makerworld.com/"
+    "link": "Link must start with https://makerworld.com/",
+    "download": "Download failed"
   }
 }

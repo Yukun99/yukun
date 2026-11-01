@@ -29,6 +29,7 @@ type UploadDialogProps = {
     name: string,
     link: string,
     thumbnail: ArrayBuffer | null,
+    source: ArrayBuffer | null,
   ) => Promise<boolean>;
 };
 
@@ -41,6 +42,7 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
   const { margin } = useSpacing();
   const [plates, setPlates] = useState<Group[] | null>(null);
   const [plate, setPlate] = useState(0);
+  const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState('');
   const [name, setName] = useState('');
   const [link, setLink] = useState('');
@@ -62,6 +64,7 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
     abort.current?.abort();
     setPlates(null);
     setPlate(0);
+    setFile(null);
     setFileName('');
     setName('');
     setLink('');
@@ -77,25 +80,26 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
   const message = failure ? t(`errors.${failure}`) : busy ? t(status) : '';
 
   const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const picked = e.target.files?.[0];
     e.target.value = '';
-    if (!file) return;
+    if (!picked) return;
     const current = session.current;
     setPlates(null);
     setPlate(0);
     setFailure(null);
-    setFileName(file.name);
+    setFile(picked);
+    setFileName(picked.name);
     setStatus('parsing');
     const controller = new AbortController();
     abort.current = controller;
     try {
-      const parsed = await loadThreeMf(await file.arrayBuffer(), controller.signal);
+      const parsed = await loadThreeMf(await picked.arrayBuffer(), controller.signal);
       if (session.current !== current) {
         parsed.forEach(disposeObject);
         return;
       }
       setPlates(parsed);
-      setName((value) => value || file.name.replace(/\.[^.]+$/, '').slice(0, MAX_NAME));
+      setName((value) => value || picked.name.replace(/\.[^.]+$/, '').slice(0, MAX_NAME));
     } catch {
       if (session.current !== current) return;
       setFailure('parse');
@@ -104,7 +108,7 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
   };
 
   const handleConfirm = async () => {
-    if (!plates) return;
+    if (!plates || !file) return;
     const current = session.current;
     setFailure(null);
     setStatus('rendering');
@@ -131,8 +135,10 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
       setStatus('idle');
       return;
     }
+    const source = file.size > MAX_SIZE ? null : await file.arrayBuffer().catch(() => null);
+    if (session.current !== current) return;
     setStatus('uploading');
-    const ok = await onUpload(glb, name.trim(), link.trim(), thumbnail);
+    const ok = await onUpload(glb, name.trim(), link.trim(), thumbnail, source);
     if (session.current !== current) return;
     setStatus('idle');
     if (ok) onClose();

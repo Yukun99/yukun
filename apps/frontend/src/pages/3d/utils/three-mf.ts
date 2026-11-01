@@ -1,3 +1,4 @@
+import { hex } from '@/pages/3d/utils/colour';
 import { parseXml, type XmlNode } from '@/pages/3d/utils/xml';
 import { strFromU8, unzipSync } from 'three/examples/jsm/libs/fflate.module.js';
 
@@ -72,11 +73,6 @@ const applyToPositions = (m: Matrix, positions: Float32Array) => {
 };
 
 const parseBytes = (bytes: Uint8Array) => parseXml(strFromU8(bytes));
-
-const hex = (value: unknown) => {
-  const match = /^#?([0-9a-f]{6})(?:[0-9a-f]{2})?$/i.exec(typeof value === 'string' ? value.trim() : '');
-  return match ? match[1].toLowerCase() : null;
-};
 
 const metadata = (node: XmlNode, key: string) =>
   children(node, 'metadata').find((meta) => meta.attrs.key === key)?.attrs.value;

@@ -5,6 +5,7 @@ export type Model = {
   size: number;
   createdAt: number;
   thumbnail: boolean;
+  source: boolean;
 };
 
 export const MAX_NAME = 50;
@@ -17,6 +18,7 @@ export const MAX_THUMBNAIL = 1024 * 1024;
 
 export const fileUrl = (id: number) => `${API}/${id}/file`;
 export const thumbnailUrl = (id: number) => `${API}/${id}/thumbnail`;
+export const sourceUrl = (id: number) => `${API}/${id}/source`;
 
 export const isValidLink = (link: string) =>
   link === ''
@@ -24,7 +26,7 @@ export const isValidLink = (link: string) =>
 
 export const parseModel = (value: unknown): Model | null => {
   if (typeof value !== 'object' || value === null) return null;
-  const { id, name, link, size, createdAt, thumbnail } = value as Record<string, unknown>;
+  const { id, name, link, size, createdAt, thumbnail, source } = value as Record<string, unknown>;
   if (
     typeof id !== 'number'
     || typeof name !== 'string'
@@ -32,10 +34,11 @@ export const parseModel = (value: unknown): Model | null => {
     || typeof size !== 'number'
     || typeof createdAt !== 'number'
     || typeof thumbnail !== 'boolean'
+    || typeof source !== 'boolean'
   ) {
     return null;
   }
-  return { id, name, link, size, createdAt, thumbnail };
+  return { id, name, link, size, createdAt, thumbnail, source };
 };
 
 export const parseModels = (body: unknown): Model[] | null => {

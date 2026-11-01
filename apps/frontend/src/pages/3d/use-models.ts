@@ -1,4 +1,4 @@
-import { API, type Model, parseModel, parseModels } from '@/pages/3d/utils/models';
+import { API, type Model, parseModel, parseModels, sourceUrl } from '@/pages/3d/utils/models';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const useModels = (token: string | null, onUnauthorized: () => void) => {
@@ -36,7 +36,13 @@ const useModels = (token: string | null, onUnauthorized: () => void) => {
   }, []);
 
   const upload = useCallback(
-    async (data: ArrayBuffer, name: string, link: string, thumbnail: ArrayBuffer | null) => {
+    async (
+      data: ArrayBuffer,
+      name: string,
+      link: string,
+      thumbnail: ArrayBuffer | null,
+      source: ArrayBuffer | null,
+    ) => {
       const { token: bearer, onUnauthorized: unauthorized } = auth.current;
       if (busy.current || !bearer) return false;
       busy.current = true;
@@ -64,6 +70,18 @@ const useModels = (token: string | null, onUnauthorized: () => void) => {
           }).catch(() => null);
           if (put?.status === 401 || put?.status === 403) refused = true;
           else if (put?.status === 204) model = { ...model, thumbnail: true };
+        }
+        if (source) {
+          const put = await fetch(sourceUrl(model.id), {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/octet-stream',
+              Authorization: `Bearer ${bearer}`,
+            },
+            body: source,
+          }).catch(() => null);
+          if (put?.status === 401 || put?.status === 403) refused = true;
+          else if (put?.status === 204) model = { ...model, source: true };
         }
         if (mounted.current) {
           const added = model;

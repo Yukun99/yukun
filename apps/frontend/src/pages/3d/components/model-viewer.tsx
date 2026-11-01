@@ -4,6 +4,7 @@ import {
   ICON_SCALE,
   IconGradient,
 } from '@/common/components/buttons/round-icon-button';
+import ColourMapping from '@/pages/3d/components/colour-mapping';
 import { type Extent, placeCamera } from '@/pages/3d/utils/camera';
 import { disposeObject } from '@/pages/3d/utils/dispose';
 import { PAGE } from '@/pages/3d/utils/page';
@@ -27,6 +28,7 @@ type ModelViewerProps = {
   loading?: boolean;
   plate?: number;
   onPlateChange?: (plate: number) => void;
+  recolour?: { name: string; sourceUrl?: string };
 };
 const SPINNER_DELAY = 500;
 
@@ -125,6 +127,7 @@ const ModelViewer = ({
   loading = false,
   plate: plateProp,
   onPlateChange,
+  recolour,
 }: ModelViewerProps) => {
   const { t } = useTranslation(PAGE);
   const { scenes: loaded, loading: scenesLoading } = useScenes(url);
@@ -183,6 +186,11 @@ const ModelViewer = ({
             size={BUTTON_SIZE * ICON_SCALE}
             sx={{ [`& .${circularProgressClasses.circle}`]: { stroke: `url(#${ICON_GRADIENT_ID})` } }}
           />
+        </Box>
+      )}
+      {recolour && plates.length > 0 && (
+        <Box sx={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+          <ColourMapping plates={plates} name={recolour.name} sourceUrl={recolour.sourceUrl} />
         </Box>
       )}
       {plates.length > 1 && (

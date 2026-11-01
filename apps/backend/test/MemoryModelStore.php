@@ -7,7 +7,7 @@ use Yukun\Api\ModelStore;
 /** In-memory stand-in for the MySQL store. */
 final class MemoryModelStore implements ModelStore
 {
-    /** @var array<int, array{name: string, link: string, data: string, createdAt: int, thumbnail?: ?string}> */
+    /** @var array<int, array{name: string, link: string, data: string, createdAt: int, thumbnail?: ?string, source?: ?string}> */
     public array $rows = [];
 
     public int $writes = 0;
@@ -24,6 +24,7 @@ final class MemoryModelStore implements ModelStore
                 'size' => strlen($row['data']),
                 'createdAt' => $row['createdAt'],
                 'thumbnail' => isset($row['thumbnail']),
+                'source' => isset($row['source']),
             ];
         }
         return $all;
@@ -39,6 +40,11 @@ final class MemoryModelStore implements ModelStore
         return $this->rows[$id]['thumbnail'] ?? null;
     }
 
+    public function source(int $id): ?string
+    {
+        return $this->rows[$id]['source'] ?? null;
+    }
+
     public function exists(int $id): bool
     {
         return isset($this->rows[$id]);
@@ -51,6 +57,16 @@ final class MemoryModelStore implements ModelStore
         }
         $this->writes++;
         $this->rows[$id]['thumbnail'] = $data;
+        return true;
+    }
+
+    public function addSource(int $id, string $data): bool
+    {
+        if (!isset($this->rows[$id]) || isset($this->rows[$id]['source'])) {
+            return false;
+        }
+        $this->writes++;
+        $this->rows[$id]['source'] = $data;
         return true;
     }
 

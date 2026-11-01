@@ -38,8 +38,8 @@ $store->rows = [
 ];
 $models = new Models($store);
 $check('list is ordered and has no bytes', $models->all(), ['models' => [
-    ['id' => 1, 'name' => 'first', 'link' => 'https://makerworld.com/x', 'size' => 2, 'createdAt' => 10, 'thumbnail' => false],
-    ['id' => 2, 'name' => 'second', 'link' => '', 'size' => 4, 'createdAt' => 20, 'thumbnail' => true],
+    ['id' => 1, 'name' => 'first', 'link' => 'https://makerworld.com/x', 'size' => 2, 'createdAt' => 10, 'thumbnail' => false, 'source' => false],
+    ['id' => 2, 'name' => 'second', 'link' => '', 'size' => 4, 'createdAt' => 20, 'thumbnail' => true, 'source' => false],
 ]]);
 $check('file returns the bytes', $models->file(2), 'abcd');
 $check('missing file is 404', $status(fn () => $models->file(9)), 404);
@@ -55,6 +55,7 @@ $check('valid upload returns metadata', $added, [
     'size' => strlen($data),
     'createdAt' => 1234,
     'thumbnail' => false,
+    'source' => false,
 ]);
 $check('valid upload writes once', $store->writes, 1);
 $check('valid upload stores the bytes', $store->rows[1]['data'], $data);
@@ -132,3 +133,36 @@ $models->addThumbnail(1, $png());
 $check('second thumbnail is 409', $status(fn () => $models->addThumbnail(1, $png())), 409);
 $check('thumbnail for an unknown id is 404', $status(fn () => $models->addThumbnail(9, $png())), 404);
 $check('conflicting thumbnail changes nothing', $store->writes, 1);
+
+$store = new MemoryModelStore();
+$store->rows = [
+    1 => ['name' => 'a', 'link' => '', 'data' => 'x', 'createdAt' => 1],
+    2 => ['name' => 'b', 'link' => '', 'data' => 'y', 'createdAt' => 2],
+];
+$models = new Models($store);
+$archive = "PK\x03\x04" . str_repeat('a', 20);
+$models->addSource(1, $archive);
+$check('source is stored', $store->rows[1]['source'], $archive);
+$check('source is returned', $models->source(1), $archive);
+$check('list flags the source', array_column($models->all()['models'], 'source'), [true, false]);
+$check('source of an unknown id is 404', $status(fn () => $models->source(9)), 404);
+$check('source of a model without one is 404', $status(fn () => $models->source(2)), 404);
+$check('the maximum source size is accepted', $status(fn () => $models->addSource(2, "PK\x03\x04" . str_repeat('a', Models::MAX_SOURCE - 4))), null);
+
+$store = new MemoryModelStore();
+$store->rows = [1 => ['name' => 'a', 'link' => '', 'data' => 'x', 'createdAt' => 1]];
+$models = new Models($store);
+$sourceRejects = [
+    'empty source' => '',
+    'source over 16 MiB' => "PK\x03\x04" . str_repeat('a', Models::MAX_SOURCE),
+    'source with a wrong signature' => "PK\x03\x05" . str_repeat('a', 20),
+    'source that is not a zip' => 'glTF' . str_repeat('a', 20),
+];
+foreach ($sourceRejects as $label => $bytes) {
+    $check("$label is 400", $status(fn () => $models->addSource(1, $bytes)), 400);
+}
+$check('source rejections write nothing', $store->writes, 0);
+$models->addSource(1, $archive);
+$check('second source is 409', $status(fn () => $models->addSource(1, $archive)), 409);
+$check('source for an unknown id is 404', $status(fn () => $models->addSource(9, $archive)), 404);
+$check('conflicting source changes nothing', $store->writes, 1);

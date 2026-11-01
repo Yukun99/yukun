@@ -8,7 +8,7 @@ import ModelList from '@/pages/3d/components/model-list';
 import ModelViewer from '@/pages/3d/components/model-viewer';
 import UploadDialog from '@/pages/3d/components/upload-dialog';
 import useModels from '@/pages/3d/use-models';
-import { fileUrl, type Model } from '@/pages/3d/utils/models';
+import { fileUrl, type Model, sourceUrl } from '@/pages/3d/utils/models';
 import Page from '@/pages/page';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
@@ -22,6 +22,7 @@ const ThreeD = () => {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [deleting, setDeleting] = useState<Model | null>(null);
   const editable = editor && ready;
+  const model = models.find((item) => item.id === selected);
 
   return (
     <Page>
@@ -29,7 +30,16 @@ const ThreeD = () => {
         <Section noMargin noPadding sx={{ flex: 1, minWidth: 0, height: '100%' }}>
           {selected !== null && (
             <Box sx={{ width: '100%', height: '100%' }}>
-              <ModelViewer key={selected} url={fileUrl(selected)} />
+              <ModelViewer
+                key={selected}
+                url={fileUrl(selected)}
+                recolour={
+                  model && {
+                    name: model.name,
+                    sourceUrl: model.source ? sourceUrl(model.id) : undefined,
+                  }
+                }
+              />
             </Box>
           )}
         </Section>

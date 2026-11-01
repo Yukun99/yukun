@@ -19,10 +19,23 @@
   "deleteTitle": "删除模型",
   "deleteBody": "删除“{{name}}”及其文件？此操作无法撤销。",
   "deleteConfirm": "删除",
+  "colours": "颜色映射",
+  "originalColour": "原始颜色 {{colour}}",
+  "mappedColour": "更改颜色 {{colour}}",
+  "download": "下载已映射颜色的 3MF",
+  "apply": "应用",
+  "hue": "色相",
+  "shade": "饱和度与明度",
+  "red": "红",
+  "green": "绿",
+  "blue": "蓝",
+  "hex": "十六进制",
+  "alpha": "不透明度",
   "errors": {
     "parse": "无法读取此文件",
     "tooLarge": "转换后的模型超过 16 MiB",
     "upload": "上传失败",
-    "link": "链接必须以 https://makerworld.com/ 开头"
+    "link": "链接必须以 https://makerworld.com/ 开头",
+    "download": "下载失败"
   }
 }

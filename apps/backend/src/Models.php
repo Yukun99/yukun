@@ -12,13 +12,14 @@ final class Models
     public const MAX_SIZE = 16 * 1024 * 1024;
     public const MAX_THUMBNAIL = 1024 * 1024;
     public const MAX_THUMBNAIL_PX = 1024;
+    public const MAX_SOURCE = 16 * 1024 * 1024;
     public const LINK_PREFIX = 'https://makerworld.com/';
 
     public function __construct(private readonly ModelStore $store)
     {
     }
 
-    /** @return array{models: list<array{id: int, name: string, link: string, size: int, createdAt: int, thumbnail: bool}>} */
+    /** @return array{models: list<array{id: int, name: string, link: string, size: int, createdAt: int, thumbnail: bool, source: bool}>} */
     public function all(): array
     {
         return ['models' => $this->store->all()];
@@ -59,6 +60,30 @@ final class Models
         }
     }
 
+    public function source(int $id): string
+    {
+        return $this->store->source($id) ?? throw new ApiError(404, 'Source not found');
+    }
+
+    /** Write-once, so the immutable cache header on the source route stays valid. */
+    public function addSource(int $id, string $data): void
+    {
+        if ($data === '') {
+            throw new ApiError(400, 'Source is required');
+        }
+        if (strlen($data) > self::MAX_SOURCE) {
+            throw new ApiError(400, 'Source is over 16 MiB');
+        }
+        if (!str_starts_with($data, "PK\x03\x04")) {
+            throw new ApiError(400, 'Source is not a 3MF');
+        }
+        if (!$this->store->addSource($id, $data)) {
+            throw $this->store->exists($id)
+                ? new ApiError(409, 'Source already set')
+                : new ApiError(404, 'Model not found');
+        }
+    }
+
     public function remove(int $id): void
     {
         if (!$this->store->remove($id)) {
@@ -66,7 +91,7 @@ final class Models
         }
     }
 
-    /** @return array{id: int, name: string, link: string, size: int, createdAt: int, thumbnail: bool} */
+    /** @return array{id: int, name: string, link: string, size: int, createdAt: int, thumbnail: bool, source: bool} */
     public function add(?string $name, ?string $link, string $data, int $now): array
     {
         $name = trim($name ?? '');
@@ -102,7 +127,7 @@ final class Models
         }
 
         $id = $this->store->add($name, $link, $data, $now);
-        return ['id' => $id, 'name' => $name, 'link' => $link, 'size' => $size, 'createdAt' => $now, 'thumbnail' => false];
+        return ['id' => $id, 'name' => $name, 'link' => $link, 'size' => $size, 'createdAt' => $now, 'thumbnail' => false, 'source' => false];
     }
 
     private static function isGlb(string $data): bool
