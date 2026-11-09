@@ -33,6 +33,7 @@ const ThreeD = () => {
               <ModelViewer
                 key={selected}
                 url={fileUrl(selected)}
+                title={model?.name}
                 recolour={
                   model && {
                     name: model.name,
@@ -45,7 +46,12 @@ const ThreeD = () => {
         </Section>
         <Section
           noMargin
-          sx={{ width: isMobile ? 180 : 280, marginLeft: `${margin}px`, height: '100%' }}
+          sx={{
+            width: isMobile ? 180 : '20%',
+            flexShrink: 0,
+            marginLeft: `${margin}px`,
+            height: '100%',
+          }}
         >
           <ModelList
             models={models}

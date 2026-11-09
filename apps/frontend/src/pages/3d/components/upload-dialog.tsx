@@ -172,7 +172,7 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
             </Box>
             {plates && plates.length > 1 && (
               <Typography
-                variant='caption'
+                variant='body1'
                 color='text.secondary'
                 sx={{ textAlign: 'center', pt: 0.5 }}
               >
@@ -193,7 +193,7 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
               <input type='file' accept='.3mf' hidden onChange={handleFile} />
             </Button>
             {fileName && (
-              <Typography variant='caption' noWrap>
+              <Typography variant='body1' noWrap>
                 {fileName}
               </Typography>
             )}
@@ -209,7 +209,7 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
                   endAdornment: (
                     <InputAdornment position='end'>
                       <Typography
-                        variant='caption'
+                        variant='body1'
                         color={name.length >= MAX_NAME ? 'error' : 'text.primary'}
                       >
                         {`${name.length}/${MAX_NAME}`}
@@ -229,7 +229,7 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
               onChange={(e) => setLink(e.target.value)}
             />
             {plates && message && (
-              <Typography variant='body2' color={failure ? 'error' : 'text.secondary'}>
+              <Typography variant='body1' color={failure ? 'error' : 'text.secondary'}>
                 {message}
               </Typography>
             )}

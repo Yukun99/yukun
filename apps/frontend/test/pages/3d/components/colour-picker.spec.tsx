@@ -5,22 +5,27 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 const value: Rgba = { r: 255, g: 0, b: 0, a: 255 };
 
-const setup = () => {
+const green: Rgba = { r: 0, g: 255, b: 0, a: 128 };
+
+const setup = (others: { hex: string; rgba: Rgba }[] = []) => {
   const anchor = document.createElement('button');
   document.body.appendChild(anchor);
   const onChange = vi.fn();
   const onCancel = vi.fn();
+  const onSwap = vi.fn();
   render(
     <ColourPicker
       anchor={anchor}
       value={value}
+      others={others}
       onChange={onChange}
+      onSwap={onSwap}
       onConfirm={vi.fn()}
       onCancel={onCancel}
     />,
   );
   const field = (label: string) => screen.getByLabelText(label) as HTMLInputElement;
-  return { onChange, onCancel, field };
+  return { onChange, onCancel, onSwap, field };
 };
 
 describe('ColourPicker', () => {
@@ -58,5 +63,34 @@ describe('ColourPicker', () => {
     const { onCancel } = setup();
     fireEvent.keyDown(screen.getByRole('presentation'), { key: 'Escape' });
     expect(onCancel).toHaveBeenCalledOnce();
+  });
+
+  it('should not offer other colours when there are none', () => {
+    setup();
+    expect(screen.queryByRole('button', { name: /^Swap with/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: /^Copy / })).toBeNull();
+    expect(screen.getByText('Pick colour')).toBeTruthy();
+    expect(screen.queryByText('Swap / copy')).toBeNull();
+  });
+
+  it('should label both columns when there are other colours', () => {
+    setup([{ hex: '00ff00', rgba: green }]);
+    expect(screen.getByText('Pick colour')).toBeTruthy();
+    expect(screen.getByText('Swap / copy')).toBeTruthy();
+  });
+
+  it('should copy another colour', () => {
+    const { onChange, onSwap, field } = setup([{ hex: '00ff00', rgba: green }]);
+    fireEvent.click(screen.getByRole('button', { name: 'Copy 00ff00' }));
+    expect(onChange).toHaveBeenLastCalledWith(green);
+    expect(field('Hex').value).toBe('00ff00');
+    expect(onSwap).not.toHaveBeenCalled();
+  });
+
+  it('should swap with another colour', () => {
+    const { onChange, onSwap } = setup([{ hex: '00ff00', rgba: green }]);
+    fireEvent.click(screen.getByRole('button', { name: 'Swap with 00ff00' }));
+    expect(onChange).toHaveBeenLastCalledWith(green);
+    expect(onSwap).toHaveBeenCalledWith('00ff00', value);
   });
 });

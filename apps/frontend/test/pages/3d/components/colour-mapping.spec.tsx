@@ -8,7 +8,7 @@ const setup = (sourceUrl?: string) => {
   const blue = new MeshStandardMaterial({ color: '#0000ff' });
   const plates = [new Group().add(new Mesh(new BufferGeometry(), [red, blue]))];
   render(<ColourMapping plates={plates} name='model' sourceUrl={sourceUrl} />);
-  return { red };
+  return { red, blue };
 };
 
 describe('ColourMapping', () => {
@@ -35,5 +35,16 @@ describe('ColourMapping', () => {
     expect(red.color.getHexString()).toBe('00ff00');
     fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
     expect(red.color.getHexString()).toBe('ff0000');
+  });
+
+  it('should swap two colours and restore both when cancelled', () => {
+    const { red, blue } = setup();
+    fireEvent.click(screen.getByRole('button', { name: 'Change colour ff0000' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Swap with 0000ff' }));
+    expect(red.color.getHexString()).toBe('0000ff');
+    expect(blue.color.getHexString()).toBe('ff0000');
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(red.color.getHexString()).toBe('ff0000');
+    expect(blue.color.getHexString()).toBe('0000ff');
   });
 });

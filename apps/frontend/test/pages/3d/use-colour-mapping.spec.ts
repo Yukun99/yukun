@@ -38,4 +38,14 @@ describe('useColourMapping', () => {
     expect(red.color.getHexString()).toBe('ff0000');
     expect(red.transparent).toBe(false);
   });
+
+  it('should replace the whole mapping', () => {
+    const { plates, red, blue } = setup();
+    const { result } = renderHook(() => useColourMapping(plates));
+    act(() => result.current.set('ff0000', { r: 0, g: 255, b: 0, a: 255 }));
+    act(() => result.current.replace({ '0000ff': { r: 255, g: 255, b: 0, a: 255 } }));
+    expect(Object.keys(result.current.mapping)).toEqual(['0000ff']);
+    expect(red.color.getHexString()).toBe('ff0000');
+    expect(blue.color.getHexString()).toBe('ffff00');
+  });
 });

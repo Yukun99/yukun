@@ -28,6 +28,7 @@ type ModelViewerProps = {
   loading?: boolean;
   plate?: number;
   onPlateChange?: (plate: number) => void;
+  title?: string;
   recolour?: { name: string; sourceUrl?: string };
 };
 const SPINNER_DELAY = 500;
@@ -127,6 +128,7 @@ const ModelViewer = ({
   loading = false,
   plate: plateProp,
   onPlateChange,
+  title,
   recolour,
 }: ModelViewerProps) => {
   const { t } = useTranslation(PAGE);
@@ -188,6 +190,22 @@ const ModelViewer = ({
           />
         </Box>
       )}
+      {title && (
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            pointerEvents: 'none',
+          }}
+        >
+          <Typography variant='body1' noWrap sx={{ mt: 1, maxWidth: '50%' }}>
+            {title}
+          </Typography>
+        </Box>
+      )}
       {recolour && plates.length > 0 && (
         <Box sx={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
           <ColourMapping plates={plates} name={recolour.name} sourceUrl={recolour.sourceUrl} />
@@ -214,7 +232,7 @@ const ModelViewer = ({
             <ChevronLeft />
           </IconButton>
           <Typography
-            variant='caption'
+            variant='body1'
             sx={{ position: 'absolute', bottom: 8, left: 0, right: 0, textAlign: 'center' }}
           >
             {t('plate', { number: plate + 1, total: plates.length })}

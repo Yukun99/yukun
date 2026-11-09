@@ -4,6 +4,7 @@ import useResolvedMode from '@/common/hooks/use-resolved-mode';
 import useSpacing from '@/common/hooks/use-spacing';
 import { getInvertedPageElementBgColor, GRAY } from '@/common/utils/palette';
 import ColourPicker from '@/pages/3d/components/colour-picker';
+import Swatch from '@/pages/3d/components/swatch';
 import useColourMapping from '@/pages/3d/use-colour-mapping';
 import { hexToRgba, type Rgba, rgbaToHex } from '@/pages/3d/utils/colour';
 import { PAGE } from '@/pages/3d/utils/page';
@@ -19,10 +20,7 @@ import { useTranslation } from 'react-i18next';
 import type { Object3D } from 'three';
 
 type ColourMappingProps = { plates: Object3D[]; name: string; sourceUrl?: string };
-type SwatchProps = { rgba: Rgba; size: number; border: string };
-type Editing = { hex: string; anchor: HTMLElement; previous: Rgba | null };
-
-const CHECKER = 'conic-gradient(#ccc 25%, #fff 0 50%, #ccc 0 75%, #fff 0) 0 0 / 8px 8px';
+type Editing = { hex: string; anchor: HTMLElement; previous: Record<string, Rgba> };
 
 const recolourSource = async (url: string, hexes: Record<string, string>, signal: AbortSignal) => {
   const res = await fetch(url, { signal });
@@ -30,29 +28,12 @@ const recolourSource = async (url: string, hexes: Record<string, string>, signal
   return recolourInWorker(await res.arrayBuffer(), hexes, signal);
 };
 
-const Swatch = ({ rgba, size, border }: SwatchProps) => {
-  const colour = `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a / 255})`;
-  return (
-    <Box
-      sx={{
-        width: size,
-        height: size,
-        borderRadius: '50%',
-        border: `1px solid ${border}`,
-        boxSizing: 'border-box',
-        flexShrink: 0,
-        background: `linear-gradient(${colour}, ${colour}), ${CHECKER}`,
-      }}
-    />
-  );
-};
-
 const ColourMapping = ({ plates, name, sourceUrl }: ColourMappingProps) => {
   const { t } = useTranslation(PAGE);
   const isMobile = useIsMobile();
   const mode = useResolvedMode();
   const { padding } = useSpacing();
-  const { colours, mapping, set } = useColourMapping(plates);
+  const { colours, mapping, set, replace } = useColourMapping(plates);
   const [editing, setEditing] = useState<Editing | null>(null);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -104,6 +85,7 @@ const ColourMapping = ({ plates, name, sourceUrl }: ColourMappingProps) => {
             alignItems: 'flex-end',
             gap: 0.75,
             p: `${padding / 2}px`,
+            px: `${padding}px`,
           }}
         >
           {colours.map((hex) => {
@@ -118,7 +100,7 @@ const ColourMapping = ({ plates, name, sourceUrl }: ColourMappingProps) => {
                   aria-label={t('mappedColour', { colour: hex })}
                   sx={{ p: 0 }}
                   onClick={(event) =>
-                    setEditing({ hex, anchor: event.currentTarget, previous: mapping[hex] ?? null })
+                    setEditing({ hex, anchor: event.currentTarget, previous: mapping })
                   }
                 >
                   <Swatch rgba={mapping[hex] ?? original} size={size} border={mappedBorder} />
@@ -147,7 +129,7 @@ const ColourMapping = ({ plates, name, sourceUrl }: ColourMappingProps) => {
               {busy ? <CircularProgress size={size - 8} /> : <Download fontSize='small' />}
             </IconButton>
             {failed && (
-              <Typography variant='caption' color='error'>
+              <Typography variant='body1' color='error'>
                 {t('errors.download')}
               </Typography>
             )}
@@ -159,10 +141,14 @@ const ColourMapping = ({ plates, name, sourceUrl }: ColourMappingProps) => {
           key={editing.hex}
           anchor={editing.anchor}
           value={mapping[editing.hex] ?? (hexToRgba(editing.hex) as Rgba)}
+          others={colours
+            .filter((hex) => hex !== editing.hex)
+            .map((hex) => ({ hex, rgba: mapping[hex] ?? (hexToRgba(hex) as Rgba) }))}
           onChange={(rgba) => set(editing.hex, rgba)}
+          onSwap={set}
           onConfirm={() => setEditing(null)}
           onCancel={() => {
-            set(editing.hex, editing.previous);
+            replace(editing.previous);
             setEditing(null);
           }}
         />

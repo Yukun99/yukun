@@ -36,7 +36,12 @@ const useColourMapping = (plates: Object3D[]) => {
     [plates],
   );
 
-  return { colours: useMemo(() => [...groups.keys()], [groups]), mapping, set };
+  const replace = useCallback(
+    (next: Record<string, Rgba>) => setState({ plates, mapping: next }),
+    [plates],
+  );
+
+  return { colours: useMemo(() => [...groups.keys()], [groups]), mapping, set, replace };
 };
 
 export default useColourMapping;

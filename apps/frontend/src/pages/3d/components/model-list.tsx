@@ -16,6 +16,7 @@ import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 
@@ -40,7 +41,7 @@ const ModelList = ({ models, selected, onSelect, editable, onUpload, onDelete }:
         thickness={padding}
         style={{ flex: 1, minHeight: 0, marginRight: `${-padding}px`, paddingRight: `${padding}px` }}
       >
-        {models.length === 0 && <Typography variant='body2'>{t('empty')}</Typography>}
+        {models.length === 0 && <Typography variant='body1'>{t('empty')}</Typography>}
         <List disablePadding>
           {models.map((model) => (
             <ListItemButton
@@ -50,10 +51,12 @@ const ModelList = ({ models, selected, onSelect, editable, onUpload, onDelete }:
               sx={{ borderRadius: `${padding / 2}px` }}
             >
               <ModelThumbnail model={model} />
-              <ListItemText
-                primary={model.name}
-                slotProps={{ primary: { noWrap: true, variant: 'body2' } }}
-              />
+              <Tooltip title={model.name}>
+                <ListItemText
+                  primary={model.name}
+                  slotProps={{ primary: { noWrap: true, variant: 'body1' } }}
+                />
+              </Tooltip>
               {model.link && (
                 <IconButton
                   size='small'
@@ -100,7 +103,7 @@ const ModelList = ({ models, selected, onSelect, editable, onUpload, onDelete }:
           }}
         >
           {getFormattedIcon(Upload, 40, false, 1)}
-          <Typography variant='button' sx={{ color: PURPLE[0] }}>
+          <Typography variant='body1' sx={{ color: PURPLE[0] }}>
             {t('upload')}
           </Typography>
         </Button>
