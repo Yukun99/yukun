@@ -29,7 +29,13 @@ type ModelViewerProps = {
   plate?: number;
   onPlateChange?: (plate: number) => void;
   title?: string;
-  recolour?: { id?: number; updatedAt?: number; name: string; sourceUrl?: string };
+  recolour?: {
+    id?: number;
+    updatedAt?: number;
+    name: string;
+    sourceUrl?: string;
+    noSwap?: boolean;
+  };
 };
 const SPINNER_DELAY = 500;
 
@@ -214,6 +220,7 @@ const ModelViewer = ({
             updatedAt={recolour.updatedAt}
             name={recolour.name}
             sourceUrl={recolour.sourceUrl}
+            noSwap={recolour.noSwap}
           />
         </Box>
       )}

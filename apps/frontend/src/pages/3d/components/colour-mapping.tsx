@@ -26,6 +26,7 @@ type ColourMappingProps = {
   updatedAt?: number;
   name: string;
   sourceUrl?: string;
+  noSwap?: boolean;
 };
 type Editing = { hex: string; anchor: HTMLElement; previous: Record<string, Rgba> };
 
@@ -46,7 +47,7 @@ const isStale = async (id: number, updatedAt: number, signal: AbortSignal) => {
   }
 };
 
-const ColourMapping = ({ plates, id, updatedAt, name, sourceUrl }: ColourMappingProps) => {
+const ColourMapping = ({ plates, id, updatedAt, name, sourceUrl, noSwap }: ColourMappingProps) => {
   const { t } = useTranslation(PAGE);
   const isMobile = useIsMobile();
   const mode = useResolvedMode();
@@ -163,9 +164,13 @@ const ColourMapping = ({ plates, id, updatedAt, name, sourceUrl }: ColourMapping
           key={editing.hex}
           anchor={editing.anchor}
           value={mapping[editing.hex] ?? (hexToRgba(editing.hex) as Rgba)}
-          others={colours
-            .filter((hex) => hex !== editing.hex)
-            .map((hex) => ({ hex, rgba: mapping[hex] ?? (hexToRgba(hex) as Rgba) }))}
+          others={
+            noSwap
+              ? []
+              : colours
+                  .filter((hex) => hex !== editing.hex)
+                  .map((hex) => ({ hex, rgba: mapping[hex] ?? (hexToRgba(hex) as Rgba) }))
+          }
           onChange={(rgba) => set(editing.hex, rgba)}
           onSwap={set}
           onConfirm={() => setEditing(null)}

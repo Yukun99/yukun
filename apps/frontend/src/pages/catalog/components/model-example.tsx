@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 
 const HEIGHT = { desktop: 480, mobile: 260 };
 
-type ModelExampleProps = { url: string; recolour?: { name: string; sourceUrl?: string } };
+type ModelExampleProps = { url: string; recolour?: { name: string; sourceUrl?: string; noSwap?: boolean } };
 
 const ModelExample = ({ url, recolour }: ModelExampleProps) => {
   const isMobile = useIsMobile();

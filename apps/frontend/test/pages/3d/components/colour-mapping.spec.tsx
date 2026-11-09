@@ -3,11 +3,20 @@ import ColourMapping from '@/pages/3d/components/colour-mapping';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BufferGeometry, Group, Mesh, MeshStandardMaterial } from 'three';
 
-const setup = (sourceUrl?: string) => {
+const setup = (sourceUrl?: string, noSwap?: boolean) => {
   const red = new MeshStandardMaterial({ color: '#ff0000' });
   const blue = new MeshStandardMaterial({ color: '#0000ff' });
   const plates = [new Group().add(new Mesh(new BufferGeometry(), [red, blue]))];
-  render(<ColourMapping plates={plates} id={1} updatedAt={5} name='model' sourceUrl={sourceUrl} />);
+  render(
+    <ColourMapping
+      plates={plates}
+      id={1}
+      updatedAt={5}
+      name='model'
+      sourceUrl={sourceUrl}
+      noSwap={noSwap}
+    />,
+  );
   return { red, blue };
 };
 
@@ -46,6 +55,12 @@ describe('ColourMapping', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
     expect(red.color.getHexString()).toBe('ff0000');
     expect(blue.color.getHexString()).toBe('0000ff');
+  });
+
+  it('should hide the swap panel when swapping is off', () => {
+    setup(undefined, true);
+    fireEvent.click(screen.getByRole('button', { name: 'Change colour ff0000' }));
+    expect(screen.queryByRole('button', { name: 'Swap with 0000ff' })).toBeNull();
   });
 
   it('should reload instead of downloading when the model changed', async () => {
