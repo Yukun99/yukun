@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yukun\Api;
 
-/** Uploaded 3D models, stored as GLB files; the owner can add and delete them but never change one. */
+/** Uploaded 3D models, stored as GLB files; the owner can add, edit (name, link and file) and delete them. */
 final class Models
 {
     public const MAX_NAME = 50;
@@ -19,7 +19,7 @@ final class Models
     {
     }
 
-    /** @return array{models: list<array{id: int, name: string, link: string, size: int, createdAt: int, thumbnail: bool, source: bool}>} */
+    /** @return array{models: list<array{id: int, name: string, link: string, size: int, createdAt: int, updatedAt: int, thumbnail: bool, source: bool}>} */
     public function all(): array
     {
         return ['models' => $this->store->all()];
@@ -91,8 +91,55 @@ final class Models
         }
     }
 
-    /** @return array{id: int, name: string, link: string, size: int, createdAt: int, thumbnail: bool, source: bool} */
+    /** @return array{id: int, name: string, link: string, size: int, createdAt: int, updatedAt: int, thumbnail: bool, source: bool} */
     public function add(?string $name, ?string $link, string $data, int $now): array
+    {
+        $name = self::checkName($name);
+        $link = self::checkLink($link);
+        self::checkFile($data);
+
+        $id = $this->store->add($name, $link, $data, $now);
+        return ['id' => $id, 'name' => $name, 'link' => $link, 'size' => strlen($data), 'createdAt' => $now, 'updatedAt' => $now, 'thumbnail' => false, 'source' => false];
+    }
+
+    /** @return array{id: int, name: string, link: string, size: int, createdAt: int, updatedAt: int, thumbnail: bool, source: bool} */
+    public function update(int $id, mixed $body, int $now): array
+    {
+        if (!is_array($body)) {
+            throw new ApiError(400, 'Body must be an object');
+        }
+        $name = $body['name'] ?? null;
+        $link = $body['link'] ?? null;
+        if ($name !== null && !is_string($name)) {
+            throw new ApiError(400, 'Name must be a string');
+        }
+        if ($link !== null && !is_string($link)) {
+            throw new ApiError(400, 'Link must be a string');
+        }
+        $name = self::checkName($name);
+        $link = self::checkLink($link);
+
+        if (!$this->store->update($id, $name, $link, $now)) {
+            throw new ApiError(404, 'Model not found');
+        }
+        return $this->store->one($id) ?? throw new ApiError(404, 'Model not found');
+    }
+
+    /**
+     * Clears the thumbnail and source, which belong to the old file, so they can be set again.
+     *
+     * @return array{id: int, name: string, link: string, size: int, createdAt: int, updatedAt: int, thumbnail: bool, source: bool}
+     */
+    public function replaceFile(int $id, string $data, int $now): array
+    {
+        self::checkFile($data);
+        if (!$this->store->replaceFile($id, $data, $now)) {
+            throw new ApiError(404, 'Model not found');
+        }
+        return $this->store->one($id) ?? throw new ApiError(404, 'Model not found');
+    }
+
+    private static function checkName(?string $name): string
     {
         $name = trim($name ?? '');
         if ($name === '') {
@@ -101,7 +148,11 @@ final class Models
         if (self::length($name) > self::MAX_NAME) {
             throw new ApiError(400, 'Name is over ' . self::MAX_NAME . ' characters');
         }
+        return $name;
+    }
 
+    private static function checkLink(?string $link): string
+    {
         $link ??= '';
         if ($link !== '') {
             if (!str_starts_with($link, self::LINK_PREFIX)) {
@@ -114,7 +165,11 @@ final class Models
                 throw new ApiError(400, 'Link is over ' . self::MAX_LINK . ' characters');
             }
         }
+        return $link;
+    }
 
+    private static function checkFile(string $data): void
+    {
         $size = strlen($data);
         if ($size === 0) {
             throw new ApiError(400, 'File is required');
@@ -125,9 +180,6 @@ final class Models
         if (!self::isGlb($data)) {
             throw new ApiError(400, 'File is not a GLB');
         }
-
-        $id = $this->store->add($name, $link, $data, $now);
-        return ['id' => $id, 'name' => $name, 'link' => $link, 'size' => $size, 'createdAt' => $now, 'thumbnail' => false, 'source' => false];
     }
 
     private static function isGlb(string $data): bool

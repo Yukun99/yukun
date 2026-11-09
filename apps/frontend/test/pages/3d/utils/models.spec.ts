@@ -8,7 +8,7 @@ import {
   thumbnailUrl,
 } from '@/pages/3d/utils/models';
 
-const model = { id: 1, name: 'Benchy', link: '', size: 10, createdAt: 5, thumbnail: false, source: false };
+const model = { id: 1, name: 'Benchy', link: '', size: 10, createdAt: 5, updatedAt: 6, thumbnail: false, source: false };
 
 describe('parseModels', () => {
   it('should accept a valid body', () => {
@@ -29,6 +29,7 @@ describe('parseModels', () => {
     ['model not an object', { models: [1] }],
     ['model with a string id', { models: [{ ...model, id: '1' }] }],
     ['model without a name', { models: [{ ...model, name: undefined }] }],
+    ['model without a numeric updatedAt', { models: [{ ...model, updatedAt: '6' }] }],
     ['model without a boolean thumbnail', { models: [{ ...model, thumbnail: 1 }] }],
     ['model without a boolean source', { models: [{ ...model, source: 1 }] }],
   ])('should reject %s', (_label, body) => {

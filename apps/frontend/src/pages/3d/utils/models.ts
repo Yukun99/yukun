@@ -4,6 +4,7 @@ export type Model = {
   link: string;
   size: number;
   createdAt: number;
+  updatedAt: number;
   thumbnail: boolean;
   source: boolean;
 };
@@ -26,19 +27,23 @@ export const isValidLink = (link: string) =>
 
 export const parseModel = (value: unknown): Model | null => {
   if (typeof value !== 'object' || value === null) return null;
-  const { id, name, link, size, createdAt, thumbnail, source } = value as Record<string, unknown>;
+  const { id, name, link, size, createdAt, updatedAt, thumbnail, source } = value as Record<
+    string,
+    unknown
+  >;
   if (
     typeof id !== 'number'
     || typeof name !== 'string'
     || typeof link !== 'string'
     || typeof size !== 'number'
     || typeof createdAt !== 'number'
+    || typeof updatedAt !== 'number'
     || typeof thumbnail !== 'boolean'
     || typeof source !== 'boolean'
   ) {
     return null;
   }
-  return { id, name, link, size, createdAt, thumbnail, source };
+  return { id, name, link, size, createdAt, updatedAt, thumbnail, source };
 };
 
 export const parseModels = (body: unknown): Model[] | null => {

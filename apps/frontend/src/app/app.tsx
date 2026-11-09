@@ -3,6 +3,7 @@ import { ScrollViewportContext } from '@/common/contexts/scroll-context';
 import FloatingCircles from '@/common/components/effects/floating-circles';
 import Scroller from '@/common/components/scroller';
 import useDocumentTitle from '@/app/use-document-title';
+import useScrollReset from '@/app/use-scroll-reset';
 import useNeedsRotate from '@/common/hooks/use-needs-rotate';
 import EditorProvider from '@/features/auth/editor-provider';
 import Footer from '@/features/footer/footer';
@@ -13,6 +14,11 @@ import { Suspense, useState } from 'react';
 import { useRoutes } from 'react-router-dom';
 
 const AppRoutes = () => useRoutes(routes);
+
+const ScrollReset = () => {
+  useScrollReset();
+  return null;
+};
 
 const App = () => {
   useDocumentTitle();
@@ -29,6 +35,7 @@ const App = () => {
           <Navigation />
           <Scroller onViewport={setViewport} style={{ flexGrow: 1, minHeight: 0 }}>
             <ScrollViewportContext.Provider value={viewport}>
+              <ScrollReset />
               <Suspense fallback={null}>
                 <AppRoutes />
               </Suspense>

@@ -1,13 +1,13 @@
 import '@/locales/i18n';
 import ColourMapping from '@/pages/3d/components/colour-mapping';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BufferGeometry, Group, Mesh, MeshStandardMaterial } from 'three';
 
 const setup = (sourceUrl?: string) => {
   const red = new MeshStandardMaterial({ color: '#ff0000' });
   const blue = new MeshStandardMaterial({ color: '#0000ff' });
   const plates = [new Group().add(new Mesh(new BufferGeometry(), [red, blue]))];
-  render(<ColourMapping plates={plates} name='model' sourceUrl={sourceUrl} />);
+  render(<ColourMapping plates={plates} id={1} updatedAt={5} name='model' sourceUrl={sourceUrl} />);
   return { red, blue };
 };
 
@@ -46,5 +46,50 @@ describe('ColourMapping', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
     expect(red.color.getHexString()).toBe('ff0000');
     expect(blue.color.getHexString()).toBe('0000ff');
+  });
+
+  it('should reload instead of downloading when the model changed', async () => {
+    const model = {
+      id: 1,
+      name: 'm',
+      link: '',
+      size: 1,
+      createdAt: 1,
+      updatedAt: 9,
+      thumbnail: false,
+      source: true,
+    };
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue({ ok: true, json: () => Promise.resolve({ models: [model] }) });
+    const reload = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    vi.stubGlobal('location', { ...window.location, reload });
+    setup('/api/models/1/source');
+
+    fireEvent.click(screen.getByRole('button', { name: /Download/ }));
+
+    await waitFor(() => expect(reload).toHaveBeenCalledOnce());
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0][0]).toBe('/api/models');
+    vi.unstubAllGlobals();
+  });
+
+  it('should go on to the download when the model list cannot be fetched', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('offline'))
+      .mockResolvedValue({ ok: false });
+    const reload = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    vi.stubGlobal('location', { ...window.location, reload });
+    setup('/api/models/1/source');
+
+    fireEvent.click(screen.getByRole('button', { name: /Download/ }));
+
+    expect(await screen.findByText('Download failed')).toBeTruthy();
+    expect(fetchMock.mock.calls.map(([url]) => url)).toEqual(['/api/models', '/api/models/1/source']);
+    expect(reload).not.toHaveBeenCalled();
+    vi.unstubAllGlobals();
   });
 });

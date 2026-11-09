@@ -72,6 +72,20 @@ $router->add('POST', '/models', function () use ($models, $auth, $now): never {
     $auth()->verify(Http::authorization());
     Http::json(201, $models()->add(Http::query('name'), Http::query('link'), Http::rawBody(), $now()));
 });
+$router->add('PATCH', '/models/{id}', function (array $params) use ($models, $auth, $now): never {
+    $auth()->verify(Http::authorization());
+    if (!ctype_digit($params['id'])) {
+        throw new ApiError(404, 'Model not found');
+    }
+    Http::json(200, $models()->update((int) $params['id'], Http::jsonBody(), $now()));
+});
+$router->add('PUT', '/models/{id}/file', function (array $params) use ($models, $auth, $now): never {
+    $auth()->verify(Http::authorization());
+    if (!ctype_digit($params['id'])) {
+        throw new ApiError(404, 'Model not found');
+    }
+    Http::json(200, $models()->replaceFile((int) $params['id'], Http::rawBody(), $now()));
+});
 $router->add('DELETE', '/models/{id}', function (array $params) use ($models, $auth): never {
     $auth()->verify(Http::authorization());
     if (!ctype_digit($params['id'])) {

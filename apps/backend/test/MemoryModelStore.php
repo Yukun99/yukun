@@ -7,7 +7,7 @@ use Yukun\Api\ModelStore;
 /** In-memory stand-in for the MySQL store. */
 final class MemoryModelStore implements ModelStore
 {
-    /** @var array<int, array{name: string, link: string, data: string, createdAt: int, thumbnail?: ?string, source?: ?string}> */
+    /** @var array<int, array{name: string, link: string, data: string, createdAt: int, updatedAt?: int, thumbnail?: ?string, source?: ?string}> */
     public array $rows = [];
 
     public int $writes = 0;
@@ -23,6 +23,7 @@ final class MemoryModelStore implements ModelStore
                 'link' => $row['link'],
                 'size' => strlen($row['data']),
                 'createdAt' => $row['createdAt'],
+                'updatedAt' => $row['updatedAt'] ?? $row['createdAt'],
                 'thumbnail' => isset($row['thumbnail']),
                 'source' => isset($row['source']),
             ];
@@ -74,8 +75,42 @@ final class MemoryModelStore implements ModelStore
     {
         $this->writes++;
         $id = $this->rows === [] ? 1 : max(array_keys($this->rows)) + 1;
-        $this->rows[$id] = ['name' => $name, 'link' => $link, 'data' => $data, 'createdAt' => $now];
+        $this->rows[$id] = ['name' => $name, 'link' => $link, 'data' => $data, 'createdAt' => $now, 'updatedAt' => $now];
         return $id;
+    }
+
+    public function one(int $id): ?array
+    {
+        foreach ($this->all() as $model) {
+            if ($model['id'] === $id) {
+                return $model;
+            }
+        }
+        return null;
+    }
+
+    public function update(int $id, string $name, string $link, int $now): bool
+    {
+        if (!isset($this->rows[$id])) {
+            return false;
+        }
+        $this->writes++;
+        $this->rows[$id]['name'] = $name;
+        $this->rows[$id]['link'] = $link;
+        $this->rows[$id]['updatedAt'] = $now;
+        return true;
+    }
+
+    public function replaceFile(int $id, string $data, int $now): bool
+    {
+        if (!isset($this->rows[$id])) {
+            return false;
+        }
+        $this->writes++;
+        $this->rows[$id]['data'] = $data;
+        unset($this->rows[$id]['thumbnail'], $this->rows[$id]['source']);
+        $this->rows[$id]['updatedAt'] = $now;
+        return true;
     }
 
     public function remove(int $id): bool

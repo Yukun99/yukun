@@ -63,19 +63,29 @@ final class Http
         return $raw;
     }
 
-    /** The second header() argument replaces the global no-store. */
     public static function noContent(): never
     {
         http_response_code(204);
         exit;
     }
 
+    /** The second header() argument replaces the global no-store. */
     public static function binary(int $status, string $contentType, string $bytes): never
     {
+        $etag = '"' . md5($bytes) . '"';
+        header('Cache-Control: no-cache', true);
+        header('ETag: ' . $etag);
+        $sent = array_map(
+            fn (string $tag): string => preg_replace('#^W/#', '', trim($tag)),
+            explode(',', (string) ($_SERVER['HTTP_IF_NONE_MATCH'] ?? '')),
+        );
+        if (in_array($etag, $sent, true)) {
+            http_response_code(304);
+            exit;
+        }
         http_response_code($status);
         header('Content-Type: ' . $contentType);
         header('Content-Length: ' . strlen($bytes));
-        header('Cache-Control: public, max-age=31536000, immutable', true);
         echo $bytes;
         exit;
     }

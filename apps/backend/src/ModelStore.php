@@ -6,7 +6,7 @@ namespace Yukun\Api;
 
 interface ModelStore
 {
-    /** @return list<array{id: int, name: string, link: string, size: int, createdAt: int, thumbnail: bool, source: bool}> Ordered by id, without the bytes. */
+    /** @return list<array{id: int, name: string, link: string, size: int, createdAt: int, updatedAt: int, thumbnail: bool, source: bool}> Ordered by id, without the bytes. */
     public function all(): array;
 
     /** The GLB bytes, or null when there is no such model. */
@@ -28,6 +28,15 @@ interface ModelStore
 
     /** Returns the new id. */
     public function add(string $name, string $link, string $data, int $now): int;
+
+    /** One model's metadata, or null when there is no such model. */
+    public function one(int $id): ?array;
+
+    /** Changes name and link; false when there is no such model. */
+    public function update(int $id, string $name, string $link, int $now): bool;
+
+    /** Swaps the GLB bytes and clears thumbnail and source; false when there is no such model. */
+    public function replaceFile(int $id, string $data, int $now): bool;
 
     /** Deletes the row and its bytes; false when there is no such model. */
     public function remove(int $id): bool;

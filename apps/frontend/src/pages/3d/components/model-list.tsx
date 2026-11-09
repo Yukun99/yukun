@@ -8,6 +8,7 @@ import ModelThumbnail from '@/pages/3d/components/model-thumbnail';
 import { type Model } from '@/pages/3d/utils/models';
 import { PAGE } from '@/pages/3d/utils/page';
 import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
+import EditOutlined from '@mui/icons-material/EditOutlined';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import Upload from '@mui/icons-material/Upload';
 import Box from '@mui/material/Box';
@@ -26,10 +27,19 @@ type ModelListProps = {
   onSelect: (id: number) => void;
   editable: boolean;
   onUpload: () => void;
+  onEdit: (model: Model) => void;
   onDelete: (model: Model) => void;
 };
 
-const ModelList = ({ models, selected, onSelect, editable, onUpload, onDelete }: ModelListProps) => {
+const ModelList = ({
+  models,
+  selected,
+  onSelect,
+  editable,
+  onUpload,
+  onEdit,
+  onDelete,
+}: ModelListProps) => {
   const { t } = useTranslation(PAGE);
   const isMobile = useIsMobile();
   const { padding } = useSpacing();
@@ -68,6 +78,18 @@ const ModelList = ({ models, selected, onSelect, editable, onUpload, onDelete }:
                   onClick={(e) => e.stopPropagation()}
                 >
                   <OpenInNew fontSize='small' />
+                </IconButton>
+              )}
+              {editable && (
+                <IconButton
+                  size='small'
+                  aria-label={t('edit')}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEdit(model);
+                  }}
+                >
+                  <EditOutlined fontSize='small' />
                 </IconButton>
               )}
               {editable && (

@@ -1,5 +1,41 @@
-import { API, type Model, parseModel, parseModels, sourceUrl } from '@/pages/3d/utils/models';
+import {
+  API,
+  fileUrl,
+  type Model,
+  parseModel,
+  parseModels,
+  sourceUrl,
+  thumbnailUrl,
+} from '@/pages/3d/utils/models';
 import { useCallback, useEffect, useRef, useState } from 'react';
+
+const put = (url: string, body: ArrayBuffer, bearer: string) =>
+  fetch(url, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/octet-stream', Authorization: `Bearer ${bearer}` },
+    body,
+  }).catch(() => null);
+
+const attach = async (
+  model: Model,
+  thumbnail: ArrayBuffer | null,
+  source: ArrayBuffer | null,
+  bearer: string,
+) => {
+  let result = model;
+  let refused = false;
+  if (thumbnail) {
+    const res = await put(thumbnailUrl(model.id), thumbnail, bearer);
+    if (res?.status === 401 || res?.status === 403) refused = true;
+    else if (res?.status === 204) result = { ...result, thumbnail: true };
+  }
+  if (source) {
+    const res = await put(sourceUrl(model.id), source, bearer);
+    if (res?.status === 401 || res?.status === 403) refused = true;
+    else if (res?.status === 204) result = { ...result, source: true };
+  }
+  return { model: result, refused };
+};
 
 const useModels = (token: string | null, onUnauthorized: () => void) => {
   const [models, setModels] = useState<Model[]>([]);
@@ -56,37 +92,72 @@ const useModels = (token: string | null, onUnauthorized: () => void) => {
           unauthorized();
           return false;
         }
-        let model = res.status === 201 ? parseModel(await res.json()) : null;
-        if (!model) return false;
-        let refused = false;
-        if (thumbnail) {
-          const put = await fetch(`${API}/${model.id}/thumbnail`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/octet-stream',
-              Authorization: `Bearer ${bearer}`,
-            },
-            body: thumbnail,
-          }).catch(() => null);
-          if (put?.status === 401 || put?.status === 403) refused = true;
-          else if (put?.status === 204) model = { ...model, thumbnail: true };
-        }
-        if (source) {
-          const put = await fetch(sourceUrl(model.id), {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/octet-stream',
-              Authorization: `Bearer ${bearer}`,
-            },
-            body: source,
-          }).catch(() => null);
-          if (put?.status === 401 || put?.status === 403) refused = true;
-          else if (put?.status === 204) model = { ...model, source: true };
-        }
+        const created = res.status === 201 ? parseModel(await res.json()) : null;
+        if (!created) return false;
+        const { model, refused } = await attach(created, thumbnail, source, bearer);
         if (mounted.current) {
-          const added = model;
-          setModels((current) => [...current, added]);
-          setSelected(added.id);
+          setModels((current) => [...current, model]);
+          setSelected(model.id);
+        }
+        if (refused) unauthorized();
+        return true;
+      } catch {
+        return false;
+      } finally {
+        busy.current = false;
+      }
+    },
+    [],
+  );
+
+  const update = useCallback(async (id: number, name: string, link: string) => {
+    const { token: bearer, onUnauthorized: unauthorized } = auth.current;
+    if (busy.current || !bearer) return false;
+    busy.current = true;
+    try {
+      const res = await fetch(`${API}/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${bearer}` },
+        body: JSON.stringify({ name, link }),
+      });
+      if (res.status === 401 || res.status === 403) {
+        unauthorized();
+        return false;
+      }
+      const model = res.status === 200 ? parseModel(await res.json()) : null;
+      if (!model) return false;
+      if (mounted.current) {
+        setModels((current) => current.map((item) => (item.id === id ? model : item)));
+      }
+      return true;
+    } catch {
+      return false;
+    } finally {
+      busy.current = false;
+    }
+  }, []);
+
+  const replace = useCallback(
+    async (
+      id: number,
+      data: ArrayBuffer,
+      thumbnail: ArrayBuffer | null,
+      source: ArrayBuffer | null,
+    ) => {
+      const { token: bearer, onUnauthorized: unauthorized } = auth.current;
+      if (busy.current || !bearer) return false;
+      busy.current = true;
+      try {
+        const res = await put(fileUrl(id), data, bearer);
+        if (res?.status === 401 || res?.status === 403) {
+          unauthorized();
+          return false;
+        }
+        const replaced = res?.status === 200 ? parseModel(await res.json()) : null;
+        if (!replaced) return false;
+        const { model, refused } = await attach(replaced, thumbnail, source, bearer);
+        if (mounted.current) {
+          setModels((current) => current.map((item) => (item.id === id ? model : item)));
         }
         if (refused) unauthorized();
         return true;
@@ -126,7 +197,7 @@ const useModels = (token: string | null, onUnauthorized: () => void) => {
     }
   }, []);
 
-  return { models, ready, selected, select: setSelected, upload, remove };
+  return { models, ready, selected, select: setSelected, upload, update, replace, remove };
 };
 
 export default useModels;

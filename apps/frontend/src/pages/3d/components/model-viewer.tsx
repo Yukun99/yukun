@@ -29,7 +29,7 @@ type ModelViewerProps = {
   plate?: number;
   onPlateChange?: (plate: number) => void;
   title?: string;
-  recolour?: { name: string; sourceUrl?: string };
+  recolour?: { id?: number; updatedAt?: number; name: string; sourceUrl?: string };
 };
 const SPINNER_DELAY = 500;
 
@@ -208,7 +208,13 @@ const ModelViewer = ({
       )}
       {recolour && plates.length > 0 && (
         <Box sx={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-          <ColourMapping plates={plates} name={recolour.name} sourceUrl={recolour.sourceUrl} />
+          <ColourMapping
+            plates={plates}
+            id={recolour.id}
+            updatedAt={recolour.updatedAt}
+            name={recolour.name}
+            sourceUrl={recolour.sourceUrl}
+          />
         </Box>
       )}
       {plates.length > 1 && (

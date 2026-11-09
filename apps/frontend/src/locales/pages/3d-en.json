@@ -1,6 +1,8 @@
 {
   "empty": "No models yet",
   "upload": "Upload Model",
+  "uploadTitle": "Upload Model",
+  "editTitle": "Edit Model",
   "nameLabel": "Name",
   "linkLabel": "MakerWorld link (optional)",
   "pickFile": "Choose a .3mf file",
@@ -8,13 +10,14 @@
   "rendering": "Rendering thumbnail…",
   "converting": "Converting…",
   "uploading": "Uploading…",
-  "confirm": "Upload",
+  "save": "Save",
   "cancel": "Cancel",
   "viewOnMakerWorld": "View on MakerWorld",
   "plate": "Plate {{number}} of {{total}}",
   "thumbnailPlate": "The plate shown is used as the thumbnail",
   "previousPlate": "Previous plate",
   "nextPlate": "Next plate",
+  "edit": "Edit",
   "delete": "Delete",
   "deleteTitle": "Delete Model",
   "deleteBody": "Delete “{{name}}” and its file? This cannot be undone.",
@@ -39,6 +42,7 @@
     "parse": "Could not read this file",
     "tooLarge": "Converted model is over 16 MiB",
     "upload": "Upload failed",
+    "save": "Could not save changes",
     "link": "Link must start with https://makerworld.com/",
     "download": "Download failed"
   }

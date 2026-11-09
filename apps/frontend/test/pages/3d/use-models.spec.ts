@@ -7,8 +7,8 @@ const res = (body: unknown, status = 200) => ({
   json: () => Promise.resolve(body),
 });
 
-const first = { id: 1, name: 'first', link: '', size: 4, createdAt: 1, thumbnail: false, source: false };
-const second = { id: 2, name: 'second', link: '', size: 4, createdAt: 2, thumbnail: false, source: false };
+const first = { id: 1, name: 'first', link: '', size: 4, createdAt: 1, updatedAt: 1, thumbnail: false, source: false };
+const second = { id: 2, name: 'second', link: '', size: 4, createdAt: 2, updatedAt: 2, thumbnail: false, source: false };
 
 const HEADERS = { 'Content-Type': 'application/octet-stream', Authorization: 'Bearer token' };
 
@@ -149,6 +149,82 @@ describe('useModels', () => {
     expect(await upload(result, new ArrayBuffer(8), null)).toBe(true);
     expect(onUnauthorized).toHaveBeenCalledOnce();
     expect(result.current.models).toEqual([first, second]);
+  });
+
+  it('should replace the entry and send a PATCH with the new name and link', async () => {
+    const renamed = { ...first, name: 'renamed', link: 'https://makerworld.com/x', updatedAt: 9 };
+    const fetchMock = stubFetch(res({ models: [first, second] }), res(renamed));
+    const result = await load();
+
+    let ok = false;
+    await act(async () => {
+      ok = await result.current.update(1, 'renamed', 'https://makerworld.com/x');
+    });
+
+    expect(ok).toBe(true);
+    expect(result.current.models).toEqual([renamed, second]);
+    const [url, init] = fetchMock.mock.calls[1];
+    expect(url).toBe('/api/models/1');
+    expect(init.method).toBe('PATCH');
+    expect(init.headers).toEqual({ ...HEADERS, 'Content-Type': 'application/json' });
+    expect(JSON.parse(init.body)).toEqual({ name: 'renamed', link: 'https://makerworld.com/x' });
+  });
+
+  it('should sign out and keep the list when the update is refused', async () => {
+    const onUnauthorized = vi.fn();
+    stubFetch(res({ models: [first] }), res({}, 403));
+    const result = await load('token', onUnauthorized);
+
+    let ok = true;
+    await act(async () => {
+      ok = await result.current.update(1, 'renamed', '');
+    });
+
+    expect(ok).toBe(false);
+    expect(onUnauthorized).toHaveBeenCalledOnce();
+    expect(result.current.models).toEqual([first]);
+  });
+
+  it('should send the file, then the thumbnail and source', async () => {
+    const fetchMock = stubFetch(
+      res({ models: [first] }),
+      res({ ...first, updatedAt: 9 }),
+      res(null, 204),
+      res(null, 204),
+    );
+    const result = await load();
+    const data = new ArrayBuffer(4);
+    const thumbnail = new ArrayBuffer(8);
+    const source = new ArrayBuffer(16);
+
+    let ok = false;
+    await act(async () => {
+      ok = await result.current.replace(1, data, thumbnail, source);
+    });
+
+    expect(ok).toBe(true);
+    const calls = fetchMock.mock.calls.slice(1).map(([url, init]) => [url, init.method, init.body]);
+    expect(calls).toEqual([
+      ['/api/models/1/file', 'PUT', data],
+      ['/api/models/1/thumbnail', 'PUT', thumbnail],
+      ['/api/models/1/source', 'PUT', source],
+    ]);
+    expect(fetchMock.mock.calls[1][1].headers).toEqual(HEADERS);
+  });
+
+  it('should sign out and return false when the replace is refused', async () => {
+    const onUnauthorized = vi.fn();
+    const fetchMock = stubFetch(res({ models: [first] }), res({}, 401));
+    const result = await load('token', onUnauthorized);
+
+    let ok = true;
+    await act(async () => {
+      ok = await result.current.replace(1, new ArrayBuffer(4), new ArrayBuffer(8), null);
+    });
+
+    expect(ok).toBe(false);
+    expect(onUnauthorized).toHaveBeenCalledOnce();
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
   it('should drop a deleted model and move the selection', async () => {

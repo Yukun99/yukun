@@ -1,13 +1,14 @@
 import RoundIconButton from '@/common/components/buttons/round-icon-button';
 import Section from '@/common/components/sections/section';
 import SectionDialog from '@/common/components/sections/section-dialog';
+import SectionTitle from '@/common/components/sections/section-title';
 import useIsMobile from '@/common/hooks/use-is-mobile';
 import useSpacing from '@/common/hooks/use-spacing';
 import ModelViewer from '@/pages/3d/components/model-viewer';
 import { disposeObject } from '@/pages/3d/utils/dispose';
 import { toGlb } from '@/pages/3d/utils/glb';
 import { loadThreeMf } from '@/pages/3d/utils/load-three-mf';
-import { isValidLink, MAX_NAME, MAX_SIZE } from '@/pages/3d/utils/models';
+import { fileUrl, isValidLink, MAX_NAME, MAX_SIZE, type Model } from '@/pages/3d/utils/models';
 import { PAGE } from '@/pages/3d/utils/page';
 import { renderThumbnail } from '@/pages/3d/utils/thumbnail';
 import Check from '@mui/icons-material/Check';
@@ -23,6 +24,7 @@ import type { Group } from 'three';
 
 type UploadDialogProps = {
   open: boolean;
+  model?: Model | null;
   onClose: () => void;
   onUpload: (
     data: ArrayBuffer,
@@ -31,12 +33,19 @@ type UploadDialogProps = {
     thumbnail: ArrayBuffer | null,
     source: ArrayBuffer | null,
   ) => Promise<boolean>;
+  onUpdate: (id: number, name: string, link: string) => Promise<boolean>;
+  onReplace: (
+    id: number,
+    data: ArrayBuffer,
+    thumbnail: ArrayBuffer | null,
+    source: ArrayBuffer | null,
+  ) => Promise<boolean>;
 };
 
 type Status = 'idle' | 'parsing' | 'rendering' | 'converting' | 'uploading';
-type Failure = 'parse' | 'tooLarge' | 'upload';
+type Failure = 'parse' | 'tooLarge' | 'upload' | 'save';
 
-const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
+const UploadDialog = ({ open, model, onClose, onUpload, onUpdate, onReplace }: UploadDialogProps) => {
   const { t } = useTranslation(PAGE);
   const isMobile = useIsMobile();
   const { margin } = useSpacing();
@@ -72,11 +81,19 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
     setFailure(null);
   }, [open]);
 
+  useEffect(() => {
+    if (!open || !model) return;
+    setName(model.name);
+    setLink(model.link);
+  }, [open, model]);
+
   const busy = status !== 'idle';
   const width = isMobile ? '90vw' : '70vw';
   const height = isMobile ? '85vh' : '70vh';
   const linkValid = isValidLink(link.trim());
-  const canConfirm = !!plates && !!name.trim() && linkValid && !busy;
+  const changed = !!model && (name.trim() !== model.name || link.trim() !== model.link);
+  const canConfirm =
+    !busy && !!name.trim() && linkValid && (model ? changed || !!plates : !!plates);
   const message = failure ? t(`errors.${failure}`) : busy ? t(status) : '';
 
   const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -108,9 +125,24 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
   };
 
   const handleConfirm = async () => {
-    if (!plates || !file) return;
     const current = session.current;
     setFailure(null);
+    if (model && changed) {
+      setStatus('uploading');
+      const saved = await onUpdate(model.id, name.trim(), link.trim());
+      if (session.current !== current) return;
+      if (!saved) {
+        setFailure('save');
+        setStatus('idle');
+        return;
+      }
+      if (!plates) {
+        setStatus('idle');
+        onClose();
+        return;
+      }
+    }
+    if (!plates || !file) return;
     setStatus('rendering');
     let thumbnail: ArrayBuffer | null;
     try {
@@ -138,6 +170,17 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
     const source = file.size > MAX_SIZE ? null : await file.arrayBuffer().catch(() => null);
     if (session.current !== current) return;
     setStatus('uploading');
+    if (model) {
+      const replaced = await onReplace(model.id, glb, thumbnail, source);
+      if (session.current !== current) return;
+      if (replaced) {
+        window.location.reload();
+        return;
+      }
+      setStatus('idle');
+      setFailure('save');
+      return;
+    }
     const ok = await onUpload(glb, name.trim(), link.trim(), thumbnail, source);
     if (session.current !== current) return;
     setStatus('idle');
@@ -162,6 +205,8 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
                   plate={plate}
                   onPlateChange={setPlate}
                 />
+              ) : model ? (
+                <ModelViewer key={model.id} url={fileUrl(model.id)} />
               ) : (
                 <Box
                   sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -188,6 +233,11 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
               gap: `${margin}px`,
             }}
           >
+            <SectionTitle
+              message={t(model ? 'editTitle' : 'uploadTitle')}
+              variant={isMobile ? 'subtitle1' : 'h5'}
+              underline
+            />
             <Button component='label' variant='outlined' disabled={busy}>
               {t('pickFile')}
               <input type='file' accept='.3mf' hidden onChange={handleFile} />
@@ -228,7 +278,7 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
               helperText={linkValid ? undefined : t('errors.link')}
               onChange={(e) => setLink(e.target.value)}
             />
-            {plates && message && (
+            {(plates || model) && message && (
               <Typography variant='body1' color={failure ? 'error' : 'text.secondary'}>
                 {message}
               </Typography>
@@ -243,7 +293,7 @@ const UploadDialog = ({ open, onClose, onUpload }: UploadDialogProps) => {
               />
               <RoundIconButton
                 icon={Check}
-                label={t('confirm')}
+                label={t('save')}
                 onClick={handleConfirm}
                 disabled={!canConfirm}
                 style={{ marginRight: 0 }}

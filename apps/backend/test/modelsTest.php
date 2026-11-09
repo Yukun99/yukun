@@ -38,8 +38,8 @@ $store->rows = [
 ];
 $models = new Models($store);
 $check('list is ordered and has no bytes', $models->all(), ['models' => [
-    ['id' => 1, 'name' => 'first', 'link' => 'https://makerworld.com/x', 'size' => 2, 'createdAt' => 10, 'thumbnail' => false, 'source' => false],
-    ['id' => 2, 'name' => 'second', 'link' => '', 'size' => 4, 'createdAt' => 20, 'thumbnail' => true, 'source' => false],
+    ['id' => 1, 'name' => 'first', 'link' => 'https://makerworld.com/x', 'size' => 2, 'createdAt' => 10, 'updatedAt' => 10, 'thumbnail' => false, 'source' => false],
+    ['id' => 2, 'name' => 'second', 'link' => '', 'size' => 4, 'createdAt' => 20, 'updatedAt' => 20, 'thumbnail' => true, 'source' => false],
 ]]);
 $check('file returns the bytes', $models->file(2), 'abcd');
 $check('missing file is 404', $status(fn () => $models->file(9)), 404);
@@ -54,6 +54,7 @@ $check('valid upload returns metadata', $added, [
     'link' => 'https://makerworld.com/en/models/1',
     'size' => strlen($data),
     'createdAt' => 1234,
+    'updatedAt' => 1234,
     'thumbnail' => false,
     'source' => false,
 ]);
@@ -166,3 +167,72 @@ $models->addSource(1, $archive);
 $check('second source is 409', $status(fn () => $models->addSource(1, $archive)), 409);
 $check('source for an unknown id is 404', $status(fn () => $models->addSource(9, $archive)), 404);
 $check('conflicting source changes nothing', $store->writes, 1);
+
+$store = new MemoryModelStore();
+$store->rows = [
+    1 => ['name' => 'a', 'link' => '', 'data' => 'x', 'createdAt' => 1],
+    2 => ['name' => 'b', 'link' => '', 'data' => 'y', 'createdAt' => 2],
+];
+$models = new Models($store);
+$updated = $models->update(1, ['name' => '  New  ', 'link' => 'https://makerworld.com/en/models/2'], 500);
+$check('update returns the metadata', $updated, [
+    'id' => 1,
+    'name' => 'New',
+    'link' => 'https://makerworld.com/en/models/2',
+    'size' => 1,
+    'createdAt' => 1,
+    'updatedAt' => 500,
+    'thumbnail' => false,
+    'source' => false,
+]);
+$check('update stores name and link', [$store->rows[1]['name'], $store->rows[1]['link']], ['New', 'https://makerworld.com/en/models/2']);
+$check('update bumps updatedAt', $store->rows[1]['updatedAt'], 500);
+$check('update leaves other models alone', $store->rows[2]['name'], 'b');
+$check('update with an empty link clears it', $models->update(1, ['name' => 'New', 'link' => ''], 600)['link'], '');
+$check('update with a missing link clears it', $models->update(1, ['name' => 'New'], 700)['link'], '');
+
+$store->writes = 0;
+$updateRejects = [
+    'non-array body' => null,
+    'string body' => 'name',
+    'empty name' => ['name' => ''],
+    'missing name' => ['link' => ''],
+    'name over 50 characters' => ['name' => str_repeat('a', 51)],
+    'link with wrong prefix' => ['name' => 'a', 'link' => 'https://example.com/x'],
+    'link with whitespace' => ['name' => 'a', 'link' => 'https://makerworld.com/a b'],
+    'non-string name' => ['name' => 5],
+    'non-string link' => ['name' => 'a', 'link' => ['x']],
+];
+foreach ($updateRejects as $label => $body) {
+    $check("update with $label is 400", $status(fn () => $models->update(1, $body, 800)), 400);
+}
+$check('update rejections write nothing', $store->writes, 0);
+$check('update of an unknown id is 404', $status(fn () => $models->update(9, ['name' => 'a'], 800)), 404);
+
+$store = new MemoryModelStore();
+$store->rows = [1 => ['name' => 'a', 'link' => '', 'data' => 'x', 'createdAt' => 1, 'thumbnail' => 'png', 'source' => 'zip']];
+$models = new Models($store);
+$data = $glb();
+$replaced = $models->replaceFile(1, $data, 900);
+$check('replaceFile returns the metadata', $replaced, [
+    'id' => 1,
+    'name' => 'a',
+    'link' => '',
+    'size' => strlen($data),
+    'createdAt' => 1,
+    'updatedAt' => 900,
+    'thumbnail' => false,
+    'source' => false,
+]);
+$check('replaceFile stores the new bytes', $store->rows[1]['data'], $data);
+$check('replaceFile clears the thumbnail and source', [isset($store->rows[1]['thumbnail']), isset($store->rows[1]['source'])], [false, false]);
+$check('replaceFile bumps updatedAt', $store->rows[1]['updatedAt'], 900);
+$check('replaceFile writes once', $store->writes, 1);
+$store->writes = 0;
+$check('replaceFile rejects a non-GLB with 400', $status(fn () => $models->replaceFile(1, 'not a glb', 1000)), 400);
+$check('replaceFile rejects an empty file with 400', $status(fn () => $models->replaceFile(1, '', 1000)), 400);
+$check('replaceFile rejections write nothing', $store->writes, 0);
+$check('replaceFile of an unknown id is 404', $status(fn () => $models->replaceFile(9, $data, 1000)), 404);
+$models->addThumbnail(1, $png());
+$models->addSource(1, "PK\x03\x04" . str_repeat('a', 20));
+$check('thumbnail and source can be set again after a replace', $models->all()['models'][0]['thumbnail'] && $models->all()['models'][0]['source'], true);

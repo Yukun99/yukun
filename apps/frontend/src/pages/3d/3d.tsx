@@ -18,8 +18,14 @@ const ThreeD = () => {
   const { margin } = useSpacing();
   const { height } = useViewportSize();
   const { token, editor, signOut } = useEditorContext();
-  const { models, ready, selected, select, upload, remove } = useModels(token, signOut);
-  const [uploadOpen, setUploadOpen] = useState(false);
+  const { models, ready, selected, select, upload, update, replace, remove } = useModels(
+    token,
+    signOut,
+  );
+  const [dialog, setDialog] = useState<{ open: boolean; model: Model | null }>({
+    open: false,
+    model: null,
+  });
   const [deleting, setDeleting] = useState<Model | null>(null);
   const editable = editor && ready;
   const model = models.find((item) => item.id === selected);
@@ -36,6 +42,8 @@ const ThreeD = () => {
                 title={model?.name}
                 recolour={
                   model && {
+                    id: model.id,
+                    updatedAt: model.updatedAt,
                     name: model.name,
                     sourceUrl: model.source ? sourceUrl(model.id) : undefined,
                   }
@@ -58,12 +66,20 @@ const ThreeD = () => {
             selected={selected}
             onSelect={select}
             editable={editable}
-            onUpload={() => setUploadOpen(true)}
+            onUpload={() => setDialog({ open: true, model: null })}
+            onEdit={(item) => setDialog({ open: true, model: item })}
             onDelete={setDeleting}
           />
         </Section>
       </Box>
-      <UploadDialog open={uploadOpen} onClose={() => setUploadOpen(false)} onUpload={upload} />
+      <UploadDialog
+        open={dialog.open}
+        model={dialog.model}
+        onClose={() => setDialog((current) => ({ ...current, open: false }))}
+        onUpload={upload}
+        onUpdate={update}
+        onReplace={replace}
+      />
       <DeleteDialog
         model={deleting}
         onClose={() => setDeleting(null)}

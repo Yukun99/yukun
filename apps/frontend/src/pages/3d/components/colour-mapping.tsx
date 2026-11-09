@@ -7,6 +7,7 @@ import ColourPicker from '@/pages/3d/components/colour-picker';
 import Swatch from '@/pages/3d/components/swatch';
 import useColourMapping from '@/pages/3d/use-colour-mapping';
 import { hexToRgba, type Rgba, rgbaToHex } from '@/pages/3d/utils/colour';
+import { API, parseModels } from '@/pages/3d/utils/models';
 import { PAGE } from '@/pages/3d/utils/page';
 import { recolourInWorker } from '@/pages/3d/utils/recolour';
 import ArrowRightAlt from '@mui/icons-material/ArrowRightAlt';
@@ -19,7 +20,13 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Object3D } from 'three';
 
-type ColourMappingProps = { plates: Object3D[]; name: string; sourceUrl?: string };
+type ColourMappingProps = {
+  plates: Object3D[];
+  id?: number;
+  updatedAt?: number;
+  name: string;
+  sourceUrl?: string;
+};
 type Editing = { hex: string; anchor: HTMLElement; previous: Record<string, Rgba> };
 
 const recolourSource = async (url: string, hexes: Record<string, string>, signal: AbortSignal) => {
@@ -28,7 +35,18 @@ const recolourSource = async (url: string, hexes: Record<string, string>, signal
   return recolourInWorker(await res.arrayBuffer(), hexes, signal);
 };
 
-const ColourMapping = ({ plates, name, sourceUrl }: ColourMappingProps) => {
+const isStale = async (id: number, updatedAt: number, signal: AbortSignal) => {
+  try {
+    const res = await fetch(API, { signal });
+    const models = res.ok ? parseModels(await res.json()) : null;
+    const latest = models?.find((model) => model.id === id);
+    return !!latest && latest.updatedAt !== updatedAt;
+  } catch {
+    return false;
+  }
+};
+
+const ColourMapping = ({ plates, id, updatedAt, name, sourceUrl }: ColourMappingProps) => {
   const { t } = useTranslation(PAGE);
   const isMobile = useIsMobile();
   const mode = useResolvedMode();
@@ -50,6 +68,10 @@ const ColourMapping = ({ plates, name, sourceUrl }: ColourMappingProps) => {
     setBusy(true);
     setFailed(false);
     try {
+      if (id !== undefined && updatedAt !== undefined && (await isStale(id, updatedAt, controller.signal))) {
+        window.location.reload();
+        return;
+      }
       const hexes = Object.fromEntries(Object.entries(mapping).map(([k, v]) => [k, rgbaToHex(v)]));
       const out = await recolourSource(sourceUrl, hexes, controller.signal);
       const url = URL.createObjectURL(new Blob([out], { type: 'model/3mf' }));
