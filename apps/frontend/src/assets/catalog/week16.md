@@ -12,6 +12,11 @@ Since the colour is already in the 3mf files, we just have to apply them to the 
 
 Although adding colour itself might not have been hard, the addition of colour also caused some models to take much longer to load and parse. With the original method we used to load the models, this resulted in the main thread blocking, and also a period where the model just does not show up. To tackle this, an async parser that converts models into the actual geometry data for display had to be added, with a spinner in the interim while the processing is done on another thread.
 
+### Source Code
+
+pages/3d/utils/three-mf.ts
+pages/3d/utils/load-three-mf.ts
+
 ### Component
 
 ./components/week16.tsx

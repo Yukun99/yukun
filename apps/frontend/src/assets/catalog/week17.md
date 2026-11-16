@@ -14,6 +14,11 @@ The main difference is that I have to store the 3MF file in addition to the geom
 
 The difficult part this week was moreso figuring out how to store the updated colour data in the 3MF file in a way that does not break how it loads. Once that was done things were easier.
 
+### Source Code
+
+pages/3d/components/colour-mapping.tsx
+pages/3d/utils/recolour.ts
+
 ### Component
 
 ./components/week17.tsx

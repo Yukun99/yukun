@@ -14,6 +14,11 @@ Other than that, it is just a simple section at the side that allows me to uploa
 
 New library and figuring out storage of the 3D files in the database took some work figuring out, and deciding on how best to shade the models. The lack of time also made it such that I could not go for some of the stretch goals, but I think it was fun to mess with this as an MVP.
 
+### Source Code
+
+pages/3d/components/model-viewer.tsx
+pages/3d/use-models.ts
+
 ### Component
 
 ./components/week15.tsx

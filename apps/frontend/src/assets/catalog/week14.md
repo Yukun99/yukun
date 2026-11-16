@@ -16,6 +16,11 @@ Been a long time since I've done anything related to Google auth, so that was a 
 
 There were some funny interactions and weird UI element offsets from the catalog entry example component, but as usual, it just needed a portal.
 
+### Source Code
+
+pages/ideas/ideas.tsx
+pages/ideas/components/idea-tile.tsx
+
 ### Component
 
 ./components/week14.tsx

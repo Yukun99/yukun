@@ -33,6 +33,11 @@ The thought process for this week's design was the most complicated part of the 
 
 Honestly, I hope to do it more, since I think this is such an important skill to have in the age where developers might be so easily replaced by AI. It's precisely these intuitions and eye for detail in the frontend development space that AI tends to lack :)
 
+### Source Code
+
+pages/3d/components/colour-picker.tsx
+pages/3d/components/upload-dialog.tsx
+
 ### Component
 
 ./components/week18.tsx

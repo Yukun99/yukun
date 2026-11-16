@@ -18,6 +18,11 @@ While I thought about saving more data, I also realise that that extra data coul
 
 Look, I still don't know what PHP is, and the theme for my life this weekend was touching grass, so Claude is back out in full force. I'll figure PHP myself out one day, but today is not the day. See you next week for less PHP and more JS/TS again :P
 
+### Source Code
+
+features/footer/use-visitors.ts
+features/footer/footer-view-counter.tsx
+
 ### Component
 
 ./components/week11.tsx
