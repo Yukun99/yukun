@@ -7,6 +7,7 @@ import IdeaDialog from '@/pages/ideas/components/idea-dialog';
 import IdeaTile from '@/pages/ideas/components/idea-tile';
 import IdeaTileContent from '@/pages/ideas/components/idea-tile-content';
 import { clear, type Idea, swap, update } from '@/pages/ideas/utils/ideas';
+import { createStagger } from '@/pages/ideas/utils/stagger';
 import {
   closestCenter,
   DndContext,
@@ -44,6 +45,7 @@ const Week14Example = () => {
     useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 8 } }),
   );
   const cols = isMobile ? 2 : 3;
+  const [stagger] = useState(createStagger);
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (over && active.id !== over.id) {
@@ -85,7 +87,7 @@ const Week14Example = () => {
               onOpen={setOpenIndex}
               onClear={(i) => setIdeas((current) => clear(current, i))}
               editable={editable}
-              revealDelay={(index % cols) * 150}
+              revealDelay={() => stagger(Math.floor(index / cols))}
             />
           ))}
         </Box>

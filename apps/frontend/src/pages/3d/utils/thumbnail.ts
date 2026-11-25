@@ -1,4 +1,4 @@
-import { type Extent, MARGIN, placeCamera } from '@/pages/3d/utils/camera';
+import { MARGIN, placeCamera } from '@/pages/3d/utils/camera';
 import { MAX_THUMBNAIL, THUMBNAIL_SIZE } from '@/pages/3d/utils/models';
 import { AMBIENT, DIRECTIONAL } from '@/pages/3d/utils/scene';
 import {
@@ -34,10 +34,10 @@ const projectedExtent = (camera: PerspectiveCamera, box: Box3) => {
 };
 
 // the bounding sphere leaves flat models small, so pull in until the box's corners fill the frame
-const fitCamera = (camera: PerspectiveCamera, box: Box3, extent: Extent) => {
+const fitCamera = (camera: PerspectiveCamera, box: Box3, radius: number) => {
   let margin = MARGIN;
   for (let i = 0; i < 3; i++) {
-    placeCamera(camera, extent, THUMBNAIL_SIZE, THUMBNAIL_SIZE, margin);
+    placeCamera(camera, radius, 1, margin);
     margin *= projectedExtent(camera, box) / FILL;
   }
 };
@@ -49,7 +49,7 @@ export const renderThumbnail = async (object: Object3D): Promise<ArrayBuffer | n
   if (box.isEmpty()) return null;
   const centre = box.getCenter(new Vector3());
   const holder = new Group();
-  holder.position.set(-centre.x, -box.min.y, -centre.z);
+  holder.position.copy(centre).negate();
   holder.add(clone);
   holder.updateMatrixWorld(true);
 
@@ -74,11 +74,8 @@ export const renderThumbnail = async (object: Object3D): Promise<ArrayBuffer | n
     renderer.setClearColor(0, 0);
     renderer.toneMapping = NoToneMapping;
     const camera = new PerspectiveCamera(45, 1, 0.1, 100);
-    const extent = {
-      radius: box.getBoundingSphere(new Sphere()).radius,
-      height: box.max.y - box.min.y,
-    };
-    fitCamera(camera, new Box3().setFromObject(holder), extent);
+    const radius = box.getBoundingSphere(new Sphere()).radius;
+    fitCamera(camera, new Box3().setFromObject(holder), radius);
     renderer.render(scene, camera);
     const blob = await toPng(renderer.domElement);
     if (!blob) return null;

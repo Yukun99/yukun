@@ -10,7 +10,7 @@ import { useDraggable, useDroppable } from '@dnd-kit/core';
 import Close from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import { SyntheticEvent } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type IdeaTileProps = {
@@ -19,12 +19,13 @@ type IdeaTileProps = {
   onOpen: (index: number) => void;
   onClear: (index: number) => void;
   editable: boolean;
-  revealDelay: number;
+  revealDelay: () => number;
 };
 
 const stop = (e: SyntheticEvent) => e.stopPropagation();
 
 const DraggableTile = ({ index, idea, onOpen, onClear, editable, revealDelay }: IdeaTileProps) => {
+  const [delay] = useState(revealDelay);
   const { t } = useTranslation(PAGE);
   const blank = isEmpty(idea);
   const draggable = editable && !blank;
@@ -36,7 +37,7 @@ const DraggableTile = ({ index, idea, onOpen, onClear, editable, revealDelay }: 
     isDragging,
   } = useDraggable({ id: index, disabled: !draggable });
   const { setNodeRef: setDropRef, isOver } = useDroppable({ id: index, disabled: !editable });
-  const { ref: revealRef, sx: revealSx } = useReveal({ trigger: 'mount', delay: revealDelay });
+  const { ref: revealRef, sx: revealSx } = useReveal({ trigger: 'mount', delay });
 
   return (
     <Box

@@ -5,7 +5,7 @@ import {
   IconGradient,
 } from '@/common/components/buttons/round-icon-button';
 import ColourMapping from '@/pages/3d/components/colour-mapping';
-import { type Extent, placeCamera } from '@/pages/3d/utils/camera';
+import { placeCamera } from '@/pages/3d/utils/camera';
 import { disposeObject } from '@/pages/3d/utils/dispose';
 import { PAGE } from '@/pages/3d/utils/page';
 import { AMBIENT, DIRECTIONAL } from '@/pages/3d/utils/scene';
@@ -50,8 +50,8 @@ const flatten = (object: Object3D) =>
     });
   });
 
-// orbit target stays at the origin (the plate centre under the model); panning only shifts the view
-const Rig = ({ plate, extent }: { plate: number; extent: Extent }) => {
+// orbit target stays at the origin (the model's centre); panning only shifts the view
+const Rig = ({ plate, radius }: { plate: number; radius: number }) => {
   const camera = useThree((state) => state.camera);
   const controls = useThree((state) => state.controls) as Controls | null;
   const gl = useThree((state) => state.gl);
@@ -59,13 +59,14 @@ const Rig = ({ plate, extent }: { plate: number; extent: Extent }) => {
   const pan = useRef(new Vector2());
 
   useLayoutEffect(() => {
-    if (!extent.radius || !(camera instanceof PerspectiveCamera)) return;
-    pan.current.copy(placeCamera(camera, extent, width, height));
+    if (!radius || !(camera instanceof PerspectiveCamera)) return;
+    placeCamera(camera, radius, width / height);
+    pan.current.set(0, 0);
     if (controls) {
       controls.target.set(0, 0, 0);
       controls.update();
     }
-  }, [plate, extent, camera, controls, width, height]);
+  }, [plate, radius, camera, controls, width, height]);
 
   useEffect(() => {
     const element = gl.domElement;
@@ -79,24 +80,33 @@ const Rig = ({ plate, extent }: { plate: number; extent: Extent }) => {
     return () => element.removeEventListener('pointermove', move);
   }, [gl, camera, width, height]);
 
+  useEffect(() => {
+    const element = gl.domElement;
+    // middle-button mousedown starts the browser's autoscroll unless cancelled
+    const block = (event: MouseEvent) => {
+      if (event.button === 1) event.preventDefault();
+    };
+    element.addEventListener('mousedown', block);
+    return () => element.removeEventListener('mousedown', block);
+  }, [gl]);
+
   return null;
 };
 
-// extent state lives inside the canvas so the camera is placed in the same commit as the model
+// radius state lives inside the canvas so the camera is placed in the same commit as the model
 const Stage = ({ object, plate }: { object: Object3D; plate: number }) => {
-  const [extent, setExtent] = useState<Extent>({ radius: 0, height: 0 });
+  const [radius, setRadius] = useState(0);
   const onCentered = useCallback(
-    ({ boundingSphere, height }: OnCenterCallbackProps) =>
-      setExtent({ radius: boundingSphere.radius, height }),
+    ({ boundingSphere }: OnCenterCallbackProps) => setRadius(boundingSphere.radius),
     [],
   );
 
   return (
     <>
-      <Center key={object.uuid} top onCentered={onCentered}>
+      <Center key={object.uuid} onCentered={onCentered}>
         <primitive object={object} />
       </Center>
-      <Rig plate={plate} extent={extent} />
+      <Rig plate={plate} radius={radius} />
     </>
   );
 };

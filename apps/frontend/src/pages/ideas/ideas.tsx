@@ -10,6 +10,7 @@ import IdeaTileContent from '@/pages/ideas/components/idea-tile-content';
 import useIdeas from '@/pages/ideas/use-ideas';
 import { COLS } from '@/pages/ideas/utils/ideas';
 import { PAGE } from '@/pages/ideas/utils/page';
+import { createStagger } from '@/pages/ideas/utils/stagger';
 import Page from '@/pages/page';
 import {
   closestCenter,
@@ -42,6 +43,7 @@ const Ideas = () => {
     useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 8 } }),
   );
   const cols = isMobile ? 3 : COLS;
+  const [stagger] = useState(createStagger);
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (over && active.id !== over.id) swapIdeas(Number(active.id), Number(over.id));
@@ -73,7 +75,7 @@ const Ideas = () => {
               onOpen={setOpenIndex}
               onClear={clearIdea}
               editable={editable}
-              revealDelay={(index % cols) * 150}
+              revealDelay={() => stagger(Math.floor(index / cols))}
             />
           ))}
         </Box>

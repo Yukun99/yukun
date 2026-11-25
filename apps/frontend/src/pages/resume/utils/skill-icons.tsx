@@ -3,6 +3,7 @@ import IbmRtc from '@/assets/resume/IBM RTC.png';
 import ModuleFederation from '@/assets/resume/ModuleFederation.png';
 import Nx from '@/assets/resume/Nx.svg';
 import Rspack from '@/assets/resume/Rspack.svg';
+import { ICON_GRADIENT_ID, IconGradient } from '@/common/components/buttons/round-icon-button';
 import { SvgIconComponent } from '@mui/icons-material';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import CallMergeIcon from '@mui/icons-material/CallMerge';
@@ -48,7 +49,14 @@ const imageIcon = (src: string, alt: string): SkillIcon => {
 };
 
 const muiIcon = (Icon: SvgIconComponent, transform?: string): SkillIcon => {
-  return ({ size }) => <Icon style={{ width: size, height: size, transform }} />;
+  return ({ size }) => (
+    <>
+      <IconGradient />
+      <Icon
+        style={{ width: size, height: size, transform, fill: `url(#${ICON_GRADIENT_ID})` }}
+      />
+    </>
+  );
 };
 
 const EnglishFlag: SkillIcon = ({ size }) => (
