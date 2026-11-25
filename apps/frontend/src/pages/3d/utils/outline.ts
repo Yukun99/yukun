@@ -4,37 +4,63 @@ import {
   Box3,
   BufferGeometry,
   Mesh,
+  NotEqualStencilFunc,
   type Object3D,
+  ReplaceStencilOp,
   ShaderMaterial,
   Vector3,
 } from 'three';
 
 const NAME = 'outline';
 const WIDTH = 0.004;
+const REFS = 255;
 const VERTEX = `
 uniform float width;
 void main() {
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position + normalize(normal) * width, 1.0);
 }`;
+const FLAT = 'void main() { gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }';
 const FRAGMENT = 'void main() { gl_FragColor = vec4(1.0); }';
 
-const hull = (mesh: Mesh, width: number) => {
+const overlay = (geometry: BufferGeometry, material: ShaderMaterial, order: number) => {
+  const mesh = new Mesh(geometry, material);
+  mesh.name = NAME;
+  mesh.renderOrder = order;
+  mesh.raycast = () => undefined;
+  return mesh;
+};
+
+// the mask stencils the visible part of the item, so the hull only shows as a silhouette around it
+const hull = (mesh: Mesh, width: number, item: number) => {
   const geometry = new BufferGeometry();
   geometry.setAttribute('position', mesh.geometry.getAttribute('position'));
   geometry.setIndex(mesh.geometry.getIndex());
   geometry.computeVertexNormals();
-  const material = new ShaderMaterial({
+  const stencil = { transparent: true, depthWrite: false, stencilRef: (item % REFS) + 1 };
+  // the bias keeps the mask from z-fighting with the surface it copies
+  const mask = new ShaderMaterial({
+    vertexShader: FLAT,
+    fragmentShader: FRAGMENT,
+    colorWrite: false,
+    polygonOffset: true,
+    polygonOffsetFactor: -2,
+    polygonOffsetUnits: -2,
+    stencilWrite: true,
+    stencilZPass: ReplaceStencilOp,
+    ...stencil,
+  });
+  const edge = new ShaderMaterial({
     uniforms: { width: { value: width } },
     vertexShader: VERTEX,
     fragmentShader: FRAGMENT,
     side: BackSide,
-    depthWrite: false,
+    stencilWrite: true,
+    stencilFunc: NotEqualStencilFunc,
+    ...stencil,
   });
-  const outline = new Mesh(geometry, material);
-  outline.name = NAME;
-  // drawn first without depth, so every mesh paints over it and only the silhouette is left
-  outline.renderOrder = -1;
-  outline.raycast = () => undefined;
+  // both draw after the model, and the depth test hides the hull behind anything nearer
+  const outline = overlay(geometry, edge, 2);
+  outline.add(overlay(geometry, mask, 1));
   return outline;
 };
 
@@ -43,7 +69,7 @@ const dispose = (outline: Mesh) => {
   outline.geometry.deleteAttribute('position');
   outline.geometry.setIndex(null);
   outline.geometry.dispose();
-  (outline.material as ShaderMaterial).dispose();
+  outline.traverse((node) => node instanceof Mesh && (node.material as ShaderMaterial).dispose());
 };
 
 // an inverted hull per selected mesh keeps the shared colour materials untouched
@@ -61,7 +87,7 @@ export const syncOutlines = (plates: Object3D[], selected: ReadonlySet<number>) 
         dispose(existing);
       } else if (!existing && wanted) {
         width ||= new Box3().setFromObject(plate).getSize(new Vector3()).length() * WIDTH;
-        mesh.add(hull(mesh, width));
+        mesh.add(hull(mesh, width, item));
       }
     }
   }

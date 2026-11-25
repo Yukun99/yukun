@@ -29,4 +29,19 @@ describe('ModelViewer', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Previous plate' }));
     expect(removal.deselect).toHaveBeenCalledTimes(2);
   });
+
+  it('should reset deletions and ask the owner of the objects to reload', () => {
+    const onReload = vi.fn();
+    render(
+      <ModelViewer
+        objects={[new Group()]}
+        editable
+        onReload={onReload}
+        recolour={{ name: 'model' }}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Reload model' }));
+    expect(removal.reset).toHaveBeenCalledTimes(1);
+    expect(onReload).toHaveBeenCalledTimes(1);
+  });
 });

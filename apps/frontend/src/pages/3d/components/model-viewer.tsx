@@ -32,6 +32,7 @@ type ModelViewerProps = {
   onPlateChange?: (plate: number) => void;
   title?: string;
   editable?: boolean;
+  onReload?: () => void;
   recolour?: {
     id?: number;
     updatedAt?: number;
@@ -170,6 +171,7 @@ const ModelViewer = ({
   onPlateChange,
   title,
   editable = false,
+  onReload,
   recolour,
 }: ModelViewerProps) => {
   const { t } = useTranslation(PAGE);
@@ -192,6 +194,7 @@ const ModelViewer = ({
     removal.reset();
     setPlate(0);
     setVersion((value) => value + 1);
+    onReload?.();
   };
 
   useEffect(() => {
@@ -204,7 +207,7 @@ const ModelViewer = ({
     <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
       <Canvas
         flat
-        gl={{ alpha: true, antialias: true }}
+        gl={{ alpha: true, antialias: true, stencil: true }}
         dpr={[1, 2]}
         camera={{ position: [0, 0, 5], fov: 45 }}
         style={{ width: '100%', height: '100%', touchAction: 'none' }}

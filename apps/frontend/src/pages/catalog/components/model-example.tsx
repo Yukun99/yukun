@@ -5,15 +5,25 @@ import Box from '@mui/material/Box';
 
 const HEIGHT = { desktop: 480, mobile: 260 };
 
-type ModelExampleProps = { url: string; recolour?: { name: string; sourceUrl?: string; noSwap?: boolean } };
+type ModelExampleProps = {
+  url: string;
+  editable?: boolean;
+  recolour?: { name: string; sourceUrl?: string; noSwap?: boolean };
+};
 
-const ModelExample = ({ url, recolour }: ModelExampleProps) => {
+const ModelExample = ({ url, editable, recolour }: ModelExampleProps) => {
   const isMobile = useIsMobile();
-  const { plates, loading } = usePlates(url);
+  const { plates, loading, reload } = usePlates(url);
 
   return (
     <Box sx={{ width: '100%', height: isMobile ? HEIGHT.mobile : HEIGHT.desktop }}>
-      <ModelViewer objects={plates} loading={loading} recolour={recolour} />
+      <ModelViewer
+        objects={plates}
+        loading={loading}
+        editable={editable}
+        onReload={reload}
+        recolour={recolour}
+      />
     </Box>
   );
 };

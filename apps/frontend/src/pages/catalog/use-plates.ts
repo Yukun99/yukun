@@ -1,11 +1,13 @@
 import { disposeObject } from '@/pages/3d/utils/dispose';
 import { loadThreeMf } from '@/pages/3d/utils/load-three-mf';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { Group } from 'three';
 
 const usePlates = (url: string) => {
   const [plates, setPlates] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
+  const [version, setVersion] = useState(0);
+  const reload = useCallback(() => setVersion((value) => value + 1), []);
   useEffect(() => {
     const controller = new AbortController();
     const { signal } = controller;
@@ -28,8 +30,8 @@ const usePlates = (url: string) => {
       owned.forEach(disposeObject);
       setPlates([]);
     };
-  }, [url]);
-  return { plates, loading };
+  }, [url, version]);
+  return { plates, loading, reload };
 };
 
 export default usePlates;
