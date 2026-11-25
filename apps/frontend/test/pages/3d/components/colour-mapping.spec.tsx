@@ -107,4 +107,44 @@ describe('ColourMapping', () => {
     expect(reload).not.toHaveBeenCalled();
     vi.unstubAllGlobals();
   });
+
+  it('should show the reload button without a source or colours', () => {
+    const onReload = vi.fn();
+    render(<ColourMapping plates={[new Group()]} name='model' onReload={onReload} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Reload model' }));
+    expect(onReload).toHaveBeenCalledOnce();
+    expect(screen.queryByRole('button', { name: /Download/ })).toBeNull();
+  });
+
+  it('should only show the delete button when a handler is given', () => {
+    const onDelete = vi.fn();
+    const { rerender } = render(
+      <ColourMapping plates={[new Group()]} name='model' onReload={() => undefined} />,
+    );
+    expect(screen.queryByRole('button', { name: 'Delete selected objects' })).toBeNull();
+    rerender(
+      <ColourMapping
+        plates={[new Group()]}
+        name='model'
+        onReload={() => undefined}
+        onDelete={onDelete}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Delete selected objects' }));
+    expect(onDelete).toHaveBeenCalledOnce();
+  });
+
+  it('should disable the download when every object is removed', () => {
+    render(
+      <ColourMapping plates={[new Group()]} name='model' sourceUrl='/api/models/1/source' empty />,
+    );
+    expect((screen.getByRole('button', { name: /Download/ }) as HTMLButtonElement).disabled).toBe(
+      true,
+    );
+  });
+
+  it('should leave the bar out for a catalog example', () => {
+    setup();
+    expect(screen.queryByRole('button', { name: 'Reload model' })).toBeNull();
+  });
 });

@@ -13,6 +13,7 @@ type MeshData = {
   index: Uint32Array;
   groups: { start: number; count: number }[];
   colours: string[];
+  item: number;
 };
 export type PlateData = MeshData[];
 export type WorkerResult = { plates: PlateData[] } | { error: string };
@@ -179,7 +180,11 @@ const decodePaint = (paint: string, tri: Tri, midpoint: (a: number, b: number) =
   }
 };
 
-const buildMesh = (mesh: XmlNode, matrix: Matrix, info: MeshInfo): MeshData | null => {
+const buildMesh = (
+  mesh: XmlNode,
+  matrix: Matrix,
+  info: MeshInfo,
+): Omit<MeshData, 'item'> | null => {
   const vertices = children(children(mesh, 'vertices')[0] ?? mesh, 'vertex');
   const triangles = children(children(mesh, 'triangles')[0] ?? mesh, 'triangle');
   if (!vertices.length || !triangles.length) return null;
@@ -309,6 +314,7 @@ export const parseThreeMf = (buffer: ArrayBuffer): PlateData[] => {
     depth: number,
     config: Config,
     extruder: number,
+    item: number,
   ) => {
     if (depth > MAX_DEPTH) throw new Error('Components nested too deeply');
     const object = objects(path).get(id ?? '');
@@ -319,7 +325,7 @@ export const parseThreeMf = (buffer: ArrayBuffer): PlateData[] => {
       const built = buildMesh(mesh, matrix, { groups: groupsOf(path), object, extruder, filaments });
       if (built) {
         triangleCount += built.index.length / 3;
-        plate.push(built);
+        plate.push({ ...built, item });
       }
     }
     const components = children(object, 'components')[0];
@@ -335,6 +341,7 @@ export const parseThreeMf = (buffer: ArrayBuffer): PlateData[] => {
           depth + 1,
           config,
           config.parts.get(part ?? '') ?? extruder,
+          item,
         );
       }
     }
@@ -343,7 +350,7 @@ export const parseThreeMf = (buffer: ArrayBuffer): PlateData[] => {
   const { plates: plateOf, configs } = readSettings(files[SETTINGS]);
   const instances = new Map<string, number>();
   const build = children(read(rootPath), 'build')[0];
-  for (const item of build ? children(build, 'item') : []) {
+  (build ? children(build, 'item') : []).forEach((item, n) => {
     const id = attribute(item, 'objectid') ?? '';
     const instance = instances.get(id) ?? 0;
     instances.set(id, instance + 1);
@@ -352,8 +359,8 @@ export const parseThreeMf = (buffer: ArrayBuffer): PlateData[] => {
     const path = attribute(item, 'path');
     const config = configs.get(id) ?? { extruder: 1, parts: new Map<string, number>() };
     const transform = readTransform(attribute(item, 'transform'));
-    walk(plate, id, path ? strip(path) : rootPath, transform, 0, config, config.extruder);
-  }
+    walk(plate, id, path ? strip(path) : rootPath, transform, 0, config, config.extruder, n);
+  });
 
   if (!triangleCount) throw new Error('No triangles in model');
   return plates.filter((plate) => plate.length);

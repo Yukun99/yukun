@@ -215,4 +215,17 @@ describe('parseThreeMf colours', () => {
   it('should fall back to grey without settings or materials', () => {
     expect(colours(single(mesh(1)))).toEqual([GREY]);
   });
+
+  it('should stamp each mesh with the index of its build item', () => {
+    const buffer = zip({
+      '_rels/.rels': RELS,
+      '3D/3dmodel.model': model(
+        `<resources><object id="1" type="model">${mesh(1)}</object><object id="2" type="model">${mesh(1)}</object></resources>`
+          + '<build><item objectid="2"/><item objectid="1"/><item objectid="2"/></build>',
+      ),
+    });
+    const plates = parseThreeMf(buffer);
+    expect(plates[0].map((part) => part.item)).toEqual([0, 1, 2]);
+    expect(buildPlates(plates)[0].children.map((child) => child.userData.item)).toEqual([0, 1, 2]);
+  });
 });

@@ -9,7 +9,7 @@ const reply = (result: RecolourResult, transfer: ArrayBuffer[] = []) =>
 
 onmessage = ({ data }: MessageEvent<RecolourRequest>) => {
   try {
-    const buffer = recolourThreeMf(data.buffer, data.mapping);
+    const buffer = recolourThreeMf(data.buffer, data.mapping, data.removed);
     reply({ buffer }, [buffer]);
   } catch (error) {
     reply({ error: error instanceof Error ? error.message : 'Could not recolour this file' });

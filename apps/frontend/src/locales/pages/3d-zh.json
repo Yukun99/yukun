@@ -26,6 +26,8 @@
   "originalColour": "原始颜色 {{colour}}",
   "mappedColour": "更改颜色 {{colour}}",
   "download": "下载已映射颜色的 3MF",
+  "reload": "重新加载模型",
+  "deleteObjects": "删除所选对象",
   "apply": "应用",
   "pickColour": "选择颜色",
   "swapCopy": "交换 / 复制",

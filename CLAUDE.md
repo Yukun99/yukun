@@ -99,6 +99,10 @@ with `no-restricted-imports`, and `import/no-cycle` rejects import cycles; both 
 - Tests live in a `test/` folder beside `src/` in each app, never next to the code. In the frontend a spec keeps the
   same path relative to `test/` as the file it tests has relative to `src/`, e.g.
   `src/features/footer/footer-view-counter.tsx` is tested by `test/features/footer/footer-view-counter.spec.tsx`.
+- Don't write XML or HTML fixtures as raw markup in string literals in a spec. WebStorm reads such a literal as HTML
+  and warns about every attribute it does not know on a tag it does know, for example `objectid` on `<object>` in a
+  3MF fixture. Build the markup from parts with a small helper instead, and reuse that helper in the assertions; see
+  `el` in `test/pages/3d/utils/remove-items.spec.ts`.
 - TS is strict with `noUnusedLocals` and `noImplicitReturns`.
 - Avoid code comments. Only where a weird interaction or complicated logic really needs one, keep it to 1 line (2 at
   most).

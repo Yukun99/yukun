@@ -5,8 +5,10 @@ import {
   IconGradient,
 } from '@/common/components/buttons/round-icon-button';
 import ColourMapping from '@/pages/3d/components/colour-mapping';
+import useRemoval from '@/pages/3d/use-removal';
 import { placeCamera } from '@/pages/3d/utils/camera';
 import { disposeObject } from '@/pages/3d/utils/dispose';
+import { isShown, itemOf } from '@/pages/3d/utils/items';
 import { PAGE } from '@/pages/3d/utils/page';
 import { AMBIENT, DIRECTIONAL } from '@/pages/3d/utils/scene';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
@@ -16,7 +18,7 @@ import CircularProgress, { circularProgressClasses } from '@mui/material/Circula
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { Center, type OnCenterCallbackProps, OrbitControls } from '@react-three/drei';
-import { Canvas, useThree } from '@react-three/fiber';
+import { Canvas, type ThreeEvent, useThree } from '@react-three/fiber';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Mesh, type Object3D, PerspectiveCamera, Vector2, type Vector3 } from 'three';
@@ -29,6 +31,7 @@ type ModelViewerProps = {
   plate?: number;
   onPlateChange?: (plate: number) => void;
   title?: string;
+  editable?: boolean;
   recolour?: {
     id?: number;
     updatedAt?: number;
@@ -38,6 +41,7 @@ type ModelViewerProps = {
   };
 };
 const SPINNER_DELAY = 500;
+const CLICK_DRAG = 4;
 
 type Controls = { target: Vector3; update: () => void };
 
@@ -93,8 +97,25 @@ const Rig = ({ plate, radius }: { plate: number; radius: number }) => {
   return null;
 };
 
+const pick = (event: ThreeEvent<MouseEvent>, onPick: (item: number) => void) => {
+  // r3f calls the handler once per face hit, so only the first call may toggle
+  event.stopPropagation();
+  if (event.delta > CLICK_DRAG) return;
+  const hit = event.intersections.find(({ object }) => isShown(object));
+  const item = itemOf(hit?.object ?? null);
+  if (item !== null) onPick(item);
+};
+
 // radius state lives inside the canvas so the camera is placed in the same commit as the model
-const Stage = ({ object, plate }: { object: Object3D; plate: number }) => {
+const Stage = ({
+  object,
+  plate,
+  onPick,
+}: {
+  object: Object3D;
+  plate: number;
+  onPick?: (item: number) => void;
+}) => {
   const [radius, setRadius] = useState(0);
   const onCentered = useCallback(
     ({ boundingSphere }: OnCenterCallbackProps) => setRadius(boundingSphere.radius),
@@ -104,14 +125,17 @@ const Stage = ({ object, plate }: { object: Object3D; plate: number }) => {
   return (
     <>
       <Center key={object.uuid} onCentered={onCentered}>
-        <primitive object={object} />
+        <primitive
+          object={object}
+          onClick={onPick && ((event: ThreeEvent<MouseEvent>) => pick(event, onPick))}
+        />
       </Center>
       <Rig plate={plate} radius={radius} />
     </>
   );
 };
 
-const useScenes = (url: string | undefined) => {
+const useScenes = (url: string | undefined, version: number) => {
   const [scenes, setScenes] = useState<Object3D[]>([]);
   const [loading, setLoading] = useState(!!url);
   useEffect(() => {
@@ -134,7 +158,7 @@ const useScenes = (url: string | undefined) => {
       owned.forEach(disposeObject);
       setScenes([]);
     };
-  }, [url]);
+  }, [url, version]);
   return { scenes, loading };
 };
 
@@ -145,20 +169,30 @@ const ModelViewer = ({
   plate: plateProp,
   onPlateChange,
   title,
+  editable = false,
   recolour,
 }: ModelViewerProps) => {
   const { t } = useTranslation(PAGE);
-  const { scenes: loaded, loading: scenesLoading } = useScenes(url);
+  const [version, setVersion] = useState(0);
+  const { scenes: loaded, loading: scenesLoading } = useScenes(url, version);
   const [innerPlate, setInnerPlate] = useState(0);
   const plate = plateProp ?? innerPlate;
   const setPlate = (value: number) => {
+    removal.deselect();
     if (plateProp === undefined) setInnerPlate(value);
     onPlateChange?.(value);
   };
   const plates = objects ?? loaded;
   const current = plates[Math.min(plate, plates.length - 1)];
   const busy = (objects ? loading : scenesLoading) && !current;
+  const removal = useRemoval(plates, editable && !!recolour?.sourceUrl);
   const [show, setShow] = useState(false);
+
+  const reload = () => {
+    removal.reset();
+    setPlate(0);
+    setVersion((value) => value + 1);
+  };
 
   useEffect(() => {
     if (!busy) return setShow(false);
@@ -179,7 +213,13 @@ const ModelViewer = ({
         {DIRECTIONAL.map(({ position, intensity }) => (
           <directionalLight key={position.join()} position={position} intensity={intensity} />
         ))}
-        {current && <Stage object={current} plate={plate} />}
+        {current && (
+          <Stage
+            object={current}
+            plate={plate}
+            onPick={removal.active ? removal.toggle : undefined}
+          />
+        )}
         <OrbitControls
           makeDefault
           enableDamping
@@ -231,6 +271,10 @@ const ModelViewer = ({
             name={recolour.name}
             sourceUrl={recolour.sourceUrl}
             noSwap={recolour.noSwap}
+            removed={removal.removed}
+            empty={removal.empty}
+            onReload={editable ? reload : undefined}
+            onDelete={removal.selected.size ? removal.remove : undefined}
           />
         </Box>
       )}

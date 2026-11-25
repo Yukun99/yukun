@@ -26,12 +26,14 @@ export const buildPlates = (plates: PlateData[]): Group[] => {
 
   return plates.map((meshes) => {
     const plate = new Group();
-    for (const { positions, index, groups, colours } of meshes) {
+    for (const { positions, index, groups, colours, item } of meshes) {
       const geometry = new BufferGeometry();
       geometry.setAttribute('position', new BufferAttribute(positions, 3));
       geometry.setIndex(new BufferAttribute(index, 1));
       groups.forEach(({ start, count }, i) => geometry.addGroup(start, count, i));
-      plate.add(new Mesh(geometry, colours.map(materialOf)));
+      const mesh = new Mesh(geometry, colours.map(materialOf));
+      mesh.userData.item = item;
+      plate.add(mesh);
     }
     plate.rotation.x = -Math.PI / 2;
     return plate;

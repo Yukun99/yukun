@@ -1,6 +1,8 @@
 import { remapPaint } from '@/pages/3d/utils/paint';
 import { recolourBambu, recolourLayers, recolourModelSettings } from '@/pages/3d/utils/recolour-bambu';
 import { recolourMaterials } from '@/pages/3d/utils/recolour-materials';
+import { removeItems } from '@/pages/3d/utils/remove-items';
+import rewrite from '@/pages/3d/utils/rewrite';
 import { runWorker } from '@/pages/3d/utils/worker';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'three/examples/jsm/libs/fflate.module.js';
 
@@ -10,7 +12,11 @@ const LAYERS = ['Metadata/layer_config_ranges.xml', 'Metadata/custom_gcode_per_l
 const TRIANGLE = /<triangle\b[^>]*>/g;
 const PAINT = /(?<=\s)(paint_color|mmu_segmentation)=(["'])([^"']*)\2/g;
 
-export type RecolourRequest = { buffer: ArrayBuffer; mapping: Record<string, string> };
+export type RecolourRequest = {
+  buffer: ArrayBuffer;
+  mapping: Record<string, string>;
+  removed: number[];
+};
 export type RecolourResult = { buffer: ArrayBuffer } | { error: string };
 
 const remapTriangles = (text: string, index: (state: number) => number) =>
@@ -33,14 +39,13 @@ const parseProject = (bytes: Uint8Array | undefined) => {
   }
 };
 
-const rewrite = (bytes: Uint8Array<ArrayBuffer>, edit: (text: string) => string) => {
-  const text = strFromU8(bytes);
-  const next = edit(text);
-  return next === text ? bytes : new Uint8Array(strToU8(next));
-};
-
-export const recolourThreeMf = (buffer: ArrayBuffer, mapping: Record<string, string>) => {
+export const recolourThreeMf = (
+  buffer: ArrayBuffer,
+  mapping: Record<string, string>,
+  removed: number[] = [],
+) => {
   const files = unzipSync(new Uint8Array(buffer));
+  removeItems(files, removed);
   const settings = parseProject(files[PROJECT]);
   const bambu = settings && recolourBambu(settings, mapping);
   if (bambu?.changed) {
@@ -69,11 +74,12 @@ export const recolourThreeMf = (buffer: ArrayBuffer, mapping: Record<string, str
 export const recolourInWorker = async (
   buffer: ArrayBuffer,
   mapping: Record<string, string>,
+  removed: number[],
   signal?: AbortSignal,
 ): Promise<ArrayBuffer> => {
   const result = await runWorker<RecolourRequest, RecolourResult>(
     () => new Worker(new URL('./recolour.worker.ts', import.meta.url), { type: 'module' }),
-    { buffer, mapping },
+    { buffer, mapping, removed },
     [buffer],
     signal,
   );

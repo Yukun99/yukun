@@ -48,4 +48,16 @@ describe('useColourMapping', () => {
     expect(red.color.getHexString()).toBe('ff0000');
     expect(blue.color.getHexString()).toBe('ffff00');
   });
+
+  it('should unlist a colour once every mesh using it is removed', () => {
+    const { plates } = setup();
+    plates.forEach((plate, item) => (plate.children[0].userData.item = item));
+    const { result, rerender } = renderHook(({ removed }) => useColourMapping(plates, removed), {
+      initialProps: { removed: new Set<number>() },
+    });
+    rerender({ removed: new Set([1]) });
+    expect(result.current.colours).toEqual(['ff0000', '0000ff']);
+    rerender({ removed: new Set([0, 1]) });
+    expect(result.current.colours).toEqual([]);
+  });
 });

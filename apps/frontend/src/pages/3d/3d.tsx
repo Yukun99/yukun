@@ -40,6 +40,7 @@ const ThreeD = () => {
                 key={selected}
                 url={fileUrl(selected)}
                 title={model?.name}
+                editable
                 recolour={
                   model && {
                     id: model.id,

@@ -26,6 +26,8 @@
   "originalColour": "Original colour {{colour}}",
   "mappedColour": "Change colour {{colour}}",
   "download": "Download 3MF with mapped colours",
+  "reload": "Reload model",
+  "deleteObjects": "Delete selected objects",
   "apply": "Apply",
   "pickColour": "Pick colour",
   "swapCopy": "Swap / copy",

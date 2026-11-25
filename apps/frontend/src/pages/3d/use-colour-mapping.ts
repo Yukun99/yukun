@@ -1,9 +1,12 @@
 import type { Rgba } from '@/pages/3d/utils/colour';
 import { applyColour, collectColours } from '@/pages/3d/utils/colours';
+import { itemOf } from '@/pages/3d/utils/items';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { Object3D } from 'three';
+import { type Material, Mesh, type Object3D } from 'three';
 
-const useColourMapping = (plates: Object3D[]) => {
+const NONE: ReadonlySet<number> = new Set();
+
+const useColourMapping = (plates: Object3D[], removed = NONE) => {
   const groups = useMemo(() => collectColours(plates), [plates]);
   const [state, setState] = useState<{ plates: Object3D[]; mapping: Record<string, Rgba> }>({
     plates,
@@ -41,7 +44,21 @@ const useColourMapping = (plates: Object3D[]) => {
     [plates],
   );
 
-  return { colours: useMemo(() => [...groups.keys()], [groups]), mapping, set, replace };
+  const colours = useMemo(() => {
+    const used = new Set<Material>();
+    for (const plate of plates) {
+      plate.traverse((node) => {
+        const item = itemOf(node);
+        if (!(node instanceof Mesh) || (item !== null && removed.has(item))) return;
+        [node.material].flat().forEach((material) => used.add(material));
+      });
+    }
+    return [...groups]
+      .filter(([, entries]) => entries.some(({ material }) => used.has(material)))
+      .map(([hex]) => hex);
+  }, [groups, plates, removed]);
+
+  return { colours, mapping, set, replace };
 };
 
 export default useColourMapping;

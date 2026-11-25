@@ -110,6 +110,20 @@ describe('recolourThreeMf', () => {
   it('should return a tight buffer', () => {
     expect(new Uint8Array(out).subarray(0, 4)).toEqual(new Uint8Array([0x50, 0x4b, 0x03, 0x04]));
   });
+
+  it('should drop removed items and leave the result parseable', () => {
+    const removed = recolourThreeMf(build(), {}, [0]);
+    expect(parseThreeMf(removed).flat().map((part) => part.item)).toEqual([0]);
+    expect(strFromU8(unzipSync(new Uint8Array(removed))['3D/3dmodel.model'])).not.toContain(
+      '<object id="1"',
+    );
+  });
+
+  it('should match the output without removals when the list is empty', () => {
+    expect(new Uint8Array(recolourThreeMf(build(), {}, []))).toEqual(
+      new Uint8Array(recolourThreeMf(build(), {})),
+    );
+  });
 });
 
 describe('recolourThreeMf on a real Bambu project', { timeout: 30_000 }, () => {
@@ -142,5 +156,17 @@ describe('recolourThreeMf on a real Bambu project', { timeout: 30_000 }, () => {
     const after = parseThreeMf(recolourThreeMf(buffer(), {}));
     expect(total(after)).toBe(total(before));
     expect(colours(after)).toEqual(colours(before));
+  });
+
+  it('should strip a removed object from every Bambu file that names it', () => {
+    const out = unzipSync(new Uint8Array(recolourThreeMf(buffer(), {}, [0])));
+    expect(strFromU8(out['3D/3dmodel.model'])).not.toContain('<item');
+    expect(out['3D/Objects/object_1.model']).toBeUndefined();
+    expect(strFromU8(out['3D/_rels/3dmodel.model.rels'])).not.toContain('object_1.model');
+    const settings = strFromU8(out['Metadata/model_settings.config']);
+    expect(settings).not.toContain('<model_instance');
+    expect(settings).not.toContain('<assemble_item');
+    expect(settings).not.toContain('<part');
+    expect(out['Metadata/slice_info.config']).toEqual(unzipSync(original)['Metadata/slice_info.config']);
   });
 });
